@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/color_utils.dart';
 // import 'SecondScreen.dart';
 import 'package:fyp/homepage/homepage.dart';
 import 'package:fyp/signup/view/signup.dart';
@@ -31,24 +32,54 @@ class _LoginScreenState extends State<LoginScreen>{
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xFF163ABB),
-        body: Column(
-          children: [
-            SizedBox(
+
+     //   backgroundColor:
+       // const Color(0xFF163ABB),
+        body:
+
+        ListView(
+          children: [ Container(
+            decoration: BoxDecoration(gradient: LinearGradient(colors: [
+              hexStringColor("163ABB"),
+              hexStringColor("061A62")
+              //  hexStringColor("69EFF8")
+
+            ]),),
+            child: const SizedBox(
+
+                height:100),
+
+          ),
+            Container(decoration: BoxDecoration(gradient: LinearGradient(colors: [
+              hexStringColor("163ABB"),
+              hexStringColor("061A62")
+            //  hexStringColor("69EFF8")
+
+            ]),),
+
+            child: SizedBox(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height / 3,
+              height: MediaQuery.of(context).size.height / 5,
              // child: Image.asset('lib/images/facebook.png'),
-            ),
+            ),),
             Expanded(
               child: Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
 
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ),
-                ),
+                width: double.infinity,
+                decoration:  BoxDecoration(
+                  // borderRadius: const BorderRadius.only(
+                  //   topLeft: Radius.circular(30),
+                  //   topRight: Radius.circular(30),
+                  // ),
+                  gradient: LinearGradient(colors: [
+                    hexStringColor("163ABB"),
+                    hexStringColor("061A62")
+                  //  hexStringColor("69EFF8")
+
+                  ]
+
+
+                ),),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: SingleChildScrollView(
@@ -171,38 +202,51 @@ class _LoginScreenState extends State<LoginScreen>{
                           ),
                         ),
                         const SizedBox(height: 10),
-                        GestureDetector(
-                          onTap: () {
-                            // String email = emailController.text;
-                            // String pass = passwordController.text;
-                            Navigator.push(context,
-                                MaterialPageRoute(
+                     GestureDetector(
+                       onTap: () {
+                         // String email = emailController.text;
+                         // String pass = passwordController.text;
+                         Navigator.push(context,
+                             MaterialPageRoute(
 
-                                    builder: (context) => const SignUp(title: '',)));
-                          },
-                        child: const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "SignUp",
-                          style: TextStyle(
-                            color: Color(0xFF69EFF8),
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
+                                 builder: (context) => const SignUp(title: '',)));
+                       },
+                     child: const Center(
+                       child: Padding(
+                         padding: EdgeInsets.all(10.0),
+                     child: Text(
+                       "SignUp",
+                       style: TextStyle(
+                         color: Color(0xFF69EFF8),
+                         fontSize: 20,
+                         fontWeight: FontWeight.w800,
 
-                          ),
+                       ),
+                     ),
+                     ),
+
+
+                     ),),
+                        Container(
+                          decoration: BoxDecoration(gradient: LinearGradient(colors: [
+                            hexStringColor("163ABB"),
+                            hexStringColor("061A62")
+                            //  hexStringColor("69EFF8")
+
+                          ]),),
+                          child: const SizedBox(
+
+                              height:200),
+
                         ),
-                        ),
-
-
-                        ),),
                       ],
-                    ),
+                    ),  ),
                   ),
                 ),
+
               ),
-            )
-          ],
+
+            ],
         ),
       ),
     );

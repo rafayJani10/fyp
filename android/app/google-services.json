@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "974855254959",
+    "project_id": "bukc-sports-hub",
+    "storage_bucket": "bukc-sports-hub.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:974855254959:android:4b316e1eeef9061293755a",
+        "android_client_info": {
+          "package_name": "com.example.fyp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "974855254959-dvv0hddsubq73lc65rusa5t91daggkt0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtm0Y-Hw7vaPwUp9xmsJ9LlDxANh0Lpu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "974855254959-dvv0hddsubq73lc65rusa5t91daggkt0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

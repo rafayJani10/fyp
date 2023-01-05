@@ -13,7 +13,7 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
 //User user = 'UserPreferences.myUser';
-  get user => null;
+  get user => 'null';
 @override
 Widget build(BuildContext context) => ThemeSwitchingArea(
 child: Builder(
