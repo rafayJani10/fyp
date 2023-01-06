@@ -1,18 +1,22 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/color_utils.dart';
 // import 'SecondScreen.dart';
 import 'package:fyp/homepage/homepage.dart';
+import 'package:fyp/services/firebase_services.dart';
 import 'package:fyp/signup/view/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../useable.dart';
 
-void main() {
+void main()  async{
   WidgetsFlutterBinding.ensureInitialized();
+ await Firebase.initializeApp();
   runApp(
     const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Login Screen ",
-      home: LoginScreen(),
+       title: "Login Screen ",
+       home: LoginScreen(),
     ),
   );
 }
@@ -25,64 +29,116 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>{
+class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height,
         decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
+            gradient: LinearGradient(colors: [
               hexStringColor("163ABB"),
               hexStringColor("061A62")
               //  hexStringColor("69EFF8")
-              ], begin: Alignment.topCenter, end: Alignment.bottomCenter  )),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).size.height * 0.2, 20,0),
-                  child: Column(
-                    children: <Widget>[
-                      reusableTextField("Email", Icons.person_outline, false, emailController),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      reusableTextField("Password", Icons.lock_outline, true, passwordController),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      signInSignUpButton(context, true, () {}),
-                      signUpOption()
-                    ],
-                  ),
+            ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(20, MediaQuery
+                .of(context)
+                .size
+                .height * 0.2, 20, 0),
+            child: Column(
+              children: <Widget>[
+                reusableTextField(
+                    "Email", Icons.person_outline, false, emailController),
+                SizedBox(
+                  height: 30,
                 ),
-              ),
-    ),
+                reusableTextField(
+                    "Password", Icons.lock_outline, true, passwordController),
+                SizedBox(
+                  height: 30,
+                ),
+                signInSignUpButton(context, true, () {
+                  FirebaseAuth.instance.signInWithEmailAndPassword(
+                      email: emailController.text,
+                      password: passwordController.text)
+                      .then((value) {
+                    Navigator.push(context, MaterialPageRoute(builder: (
+                        context) => const MyHomePage(title: '',)));
+                  });
+                }),
+
+                signUpOption(),
+
+                const SizedBox(
+            height: 30,
+
+          ),
+
+
+              ],
+
+            ),
+          ),
+        ),
+      ),
     );
   }
-Row signUpOption() {
-    return Row(
+
+  Column signUpOption() {
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-      const Text("Don't have an account?",
-        style: TextStyle(color:  Colors.white70)),
-      GestureDetector(
-        onTap: () {
-          Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const SignUp(title: '',) ));
-        },
-        child: const Text(
-          "  Sign Up",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        const Text("Don't have an account?",
+            style: TextStyle(color: Colors.white70)),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(
+                    builder: (context) => const SignUp(title: '',)));
+          },
+          child: const Text(
+            "  Sign Up",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
-      )
+        const SizedBox(
+          height: 10,
+
+        ),
+        Text("Login With Google", style: TextStyle(color: Colors.white70)),
+        const SizedBox(
+          height: 10,
+
+        ),
+        GestureDetector(
+          onTap:() async {
+            await FirebaseServices().signInWithGoogle();
+            Navigator.push(context,
+                MaterialPageRoute(
+                    builder: (context) => MyHomePage(title: '',)));
+        },
+          child:
+          Image.asset('assets/images/googlecolor.png', width: 40, height: 40,),
+        )
+
       ],
     );
-}
-}
 
+
+  }
+}
     //   child: Scaffold(
     //
     //  //   backgroundColor:

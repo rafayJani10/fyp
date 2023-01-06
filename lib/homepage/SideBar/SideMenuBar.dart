@@ -1,7 +1,9 @@
 // TODO Implement this library.
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/login/view/LoginScreen.dart';
 import 'package:fyp/profile/userprofile.dart';
+import 'package:fyp/services/firebase_services.dart';
 
 //import 'package:easy_sidemenu/easy_sidemenu.dart';
 
@@ -20,15 +22,18 @@ class SideMenueBar extends StatelessWidget {
         // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: [
+
            DrawerHeader(
             decoration: const BoxDecoration(
               color: Colors.blue,
             ),
+
             child: CircleAvatar(
               radius: 50,
               child: ClipOval(
-                child: Image.network('https://media.licdn.com/dms/image/C5603AQGkN-nR2UCVPQ/profile-displayphoto-shrink_800_800/0/1646931414781?e=1677715200&v=beta&t=Nvt7V0gjnGPFMP1euDP0a2ReGO8b56MSLNLPG2Xjz4o'
+                child: Image.network(FirebaseAuth.instance.currentUser!.photoURL!
                     ,
+
                     width: 130,
                     fit: BoxFit.fill
                 ),
@@ -36,12 +41,13 @@ class SideMenueBar extends StatelessWidget {
                               // backgroundImage:
                               // NetworkImage('https://media.licdn.com/dms/image/C5603AQGkN-nR2UCVPQ/profile-displayphoto-shrink_800_800/0/1646931414781?e=1677715200&v=beta&t=Nvt7V0gjnGPFMP1euDP0a2ReGO8b56MSLNLPG2Xjz4o',fit: BoxFit.fill),
                               // radius: 30,
+              // Text('Drawer Header'),
+          ),
 
-           // Text('Drawer Header'),
           ),
-          ),
+
           ListTile(
-            title:  const Text('My Profile'),
+            title:   Text("${FirebaseAuth.instance.currentUser!.displayName}"),
             leading: const Icon(
                 Icons.account_circle_outlined
             ),
@@ -95,14 +101,19 @@ class SideMenueBar extends StatelessWidget {
               Icons.logout_outlined
             ),
 
-            onTap: () {
+            onTap: () async {
+              await FirebaseServices().signOut();
+              FirebaseAuth.instance.signOut().then((value) {
+                print("Signed Out");
+                Navigator.push(context,
+                    MaterialPageRoute(
+
+                        builder: (context) => const LoginScreen()));
+              });
               // Update the state of the app
               // ...
               // Then close the drawer
-              Navigator.push(context,
-                                    MaterialPageRoute(
 
-                                        builder: (context) => const LoginScreen()));
            //   Navigator.pop(context);
             },
           ),
