@@ -7,3 +7,4 @@ hexStringColor(String hexColor) {
   }
   return Color(int.parse(hexColor, radix: 16));
 }
+
