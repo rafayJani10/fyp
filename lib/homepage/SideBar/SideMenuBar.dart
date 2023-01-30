@@ -31,8 +31,10 @@ class SideMenueBar extends StatelessWidget {
             child: CircleAvatar(
               radius: 50,
               child: ClipOval(
-                child: Image.network(FirebaseAuth.instance.currentUser!.photoURL!
-                    ,
+
+                child: Image.network(''
+                    //FirebaseAuth.instance.currentUser!.photoURL!
+                   ,
 
                     width: 130,
                     fit: BoxFit.fill
@@ -47,7 +49,9 @@ class SideMenueBar extends StatelessWidget {
           ),
 
           ListTile(
-            title:   Text("${FirebaseAuth.instance.currentUser!.displayName}"),
+            title:   Text(""
+            //    "${FirebaseAuth.instance.currentUser!.displayName}"
+            ),
             leading: const Icon(
                 Icons.account_circle_outlined
             ),

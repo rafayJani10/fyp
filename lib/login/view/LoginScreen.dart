@@ -113,25 +113,25 @@ class _LoginScreenState extends State<LoginScreen> {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
-        const SizedBox(
-          height: 10,
-
-        ),
-        Text("Login With Google", style: TextStyle(color: Colors.white70)),
-        const SizedBox(
-          height: 10,
-
-        ),
-        GestureDetector(
-          onTap:() async {
-            await FirebaseServices().signInWithGoogle();
-            Navigator.push(context,
-                MaterialPageRoute(
-                    builder: (context) => MyHomePage(title: '',)));
-        },
-          child:
-          Image.asset('assets/images/googlecolor.png', width: 40, height: 40,),
-        )
+        // const SizedBox(
+        //   height: 10,
+        //
+        // ),
+        // Text("Login With Google", style: TextStyle(color: Colors.white70)),
+        // const SizedBox(
+        //   height: 10,
+        //
+        // ),
+        // GestureDetector(
+        //   onTap:() async {
+        //     await FirebaseServices().signInWithGoogle();
+        //     Navigator.push(context,
+        //         MaterialPageRoute(
+        //             builder: (context) => MyHomePage(title: '',)));
+        // },
+        //   child:
+        //   Image.asset('assets/images/googlecolor.png', width: 40, height: 40,),
+        // )
 
       ],
     );

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,9 @@ import 'package:fyp/homepage/homepage.dart';
 import 'package:fyp/color_utils.dart';
 import 'package:fyp/signup/view/signup.dart';
 import 'package:fyp/signup/view/signup.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../databaseManager/databaseManager.dart';
 import '../../useable.dart';
 
 void main() async {
@@ -30,12 +33,17 @@ State<SignUp> createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
+
+  var dbmanager = DatabaseManager();
   TextEditingController fullnameController = TextEditingController();
   TextEditingController EnrollmentIdController = TextEditingController();
   TextEditingController EmailController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
   TextEditingController ConfirmPasswordController = TextEditingController();
  userselect? user = userselect.Student;
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -155,12 +163,36 @@ class _SignUpState extends State<SignUp> {
                 SizedBox(
                   height: 30,
                 ),
-                signInSignUpButton(context, false, () {
-                  FirebaseAuth.instance
-                  .createUserWithEmailAndPassword(email: EmailController.text, password: PasswordController.text )
-                  .then((value) {
-                    print("Created New Account");
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(title: '',)));
+                signInSignUpButton(context, false, () async{
+                  CollectionReference userdata = FirebaseFirestore.instance.collection("users");
+                  await FirebaseAuth.instance
+                  .createUserWithEmailAndPassword(
+                      email: EmailController.text,
+                      password: PasswordController.text
+                  )
+                  .then((value) async {
+                   print( value.user?.uid);
+                   print("Created New Account");
+
+                    // add users
+                    dbmanager.createUserData(value.user?.uid,fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text);
+
+
+
+
+
+
+
+
+                    // FirebaseFirestore.instance.collection('UserData').doc(value.user?.uid).add(
+                    //     {
+                    //       "email":value.user?.email,
+                    //       "username": fullnameController.text
+                    //     }).then((value) {
+                    //   print("data save in data stored");
+                    //   });
+
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
                   }).onError((error, stackTrace) {
                     print("Error ${error.toString()}");
 
