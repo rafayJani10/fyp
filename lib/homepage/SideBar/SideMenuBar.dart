@@ -25,7 +25,7 @@ class SideMenueBar extends StatelessWidget {
 
            DrawerHeader(
             decoration: const BoxDecoration(
-              color: Colors.blue,
+              color: Color(0xff004D40),
             ),
 
             child: CircleAvatar(
@@ -35,7 +35,6 @@ class SideMenueBar extends StatelessWidget {
                 child: Image.network(''
                     //FirebaseAuth.instance.currentUser!.photoURL!
                    ,
-
                     width: 130,
                     fit: BoxFit.fill
                 ),

@@ -1,20 +1,28 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/color_utils.dart';
+import 'package:fyp/databaseManager/databaseManager.dart';
 // import 'SecondScreen.dart';
 import 'package:fyp/homepage/homepage.dart';
 import 'package:fyp/services/firebase_services.dart';
 import 'package:fyp/signup/view/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../UIcomponents/UIcomponents.dart';
 import '../../useable.dart';
 
 void main()  async{
   WidgetsFlutterBinding.ensureInitialized();
  await Firebase.initializeApp();
   runApp(
-    const MaterialApp(
+     MaterialApp(
       debugShowCheckedModeBanner: false,
+       theme: ThemeData(
+         primaryColor: Colors.white,
+         accentColor: Colors.white,
+         highlightColor: Colors.white,
+         hintColor: Colors.white
+       ),
        title: "Login Screen ",
        home: LoginScreen(),
     ),
@@ -33,6 +41,9 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+
+  var dbmanager = DatabaseManager();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,46 +58,93 @@ class _LoginScreenState extends State<LoginScreen> {
             .height,
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
-              hexStringColor("163ABB"),
-              hexStringColor("061A62")
-              //  hexStringColor("69EFF8")
+              hexStringColor("06424c"),
+              hexStringColor("104f56"),
+              hexStringColor("19676b"),
+              hexStringColor("19676b"),
             ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(20, MediaQuery
+            padding: EdgeInsets.fromLTRB(10, MediaQuery
                 .of(context)
                 .size
-                .height * 0.2, 20, 0),
+                .height * 0.1, 20, 0),
             child: Column(
               children: <Widget>[
+                Container(
+                    height: 200,
+                    width: double.infinity,
+                    //color: Colors.orange,
+                    child: Center(
+                        child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                const RotatedBox(
+                                  quarterTurns: 3,
+                                  child: Text("Sign In",
+                                    style: TextStyle(
+                                        fontSize: 40,
+                                        color: Colors.white,
+                                        letterSpacing: 3,
+                                        fontWeight: FontWeight.bold
+                                    ),),
+                                ),
+                                const SizedBox(width: 20),
+                                Column(
+                                  children: const [
+                                    Padding(padding: EdgeInsets.only(top: 30)),
+                                    Text("Be a guest     ",
+                                      style: TextStyle(
+                                          fontSize: 30,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold
+                                      ),),
+                                    Text("at your own   ",
+                                      style: TextStyle(
+                                          fontSize: 30,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold
+                                      ),),
+                                    Text("event              ",
+                                      style: TextStyle(
+                                          fontSize: 30,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold
+                                      ),),
+                                  ],
+                                ),
+                              ],
+                            )
+                        )
+                    )
+                ),
                 reusableTextField(
                     "Email", Icons.person_outline, false, emailController),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 reusableTextField(
                     "Password", Icons.lock_outline, true, passwordController),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
-                signInSignUpButton(context, true, () {
-                  FirebaseAuth.instance.signInWithEmailAndPassword(
-                      email: emailController.text,
-                      password: passwordController.text)
-                      .then((value) {
-                    Navigator.push(context, MaterialPageRoute(builder: (
-                        context) => const MyHomePage(title: '',)));
-                  });
+                signInSignUpButton(context, true, () async{
+                  print("object ::::::::::::::::::");
+                  var loginCheck = await dbmanager.getDataFromFirestore(emailController.text, passwordController.text);
+                  print(loginCheck);
+                  if (loginCheck ==  true){
+                    print(loginCheck);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
+
+                  }else{
+                    showAlertDialog(context,"Verification Failed", "Incorrect Usernaem or password");
+                  }
+
                 }),
 
                 signUpOption(),
-
-                const SizedBox(
-            height: 30,
-
-          ),
-
-
+                const SizedBox(height: 30,),
               ],
 
             ),
@@ -96,8 +154,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Column signUpOption() {
-    return Column(
+  Row signUpOption() {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text("Don't have an account?",

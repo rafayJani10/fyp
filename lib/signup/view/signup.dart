@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,21 +9,11 @@ import 'package:fyp/color_utils.dart';
 import 'package:fyp/signup/view/signup.dart';
 import 'package:fyp/signup/view/signup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import '../../UIcomponents/UIcomponents.dart';
 import '../../databaseManager/databaseManager.dart';
 import '../../useable.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(
-    const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Signup Screen ",
-      home: SignUp(title: '',),
-    ),
-  );
-}
+
 enum userselect {Student , Organiser}
 class SignUp extends StatefulWidget {
   const SignUp({super.key, required String title});
@@ -40,8 +32,16 @@ class _SignUpState extends State<SignUp> {
   TextEditingController EmailController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
   TextEditingController ConfirmPasswordController = TextEditingController();
- userselect? user = userselect.Student;
+  userselect? userRole = userselect.Student;
+  var userStatus = false;
+  Timer? timer;
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    timer?.cancel();
+    super.dispose();
+  }
 
 
 
@@ -49,157 +49,225 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
-        height: MediaQuery
-            .of(context)
-            .size
-            .height,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
-              hexStringColor("163ABB"),
-              hexStringColor("061A62")
+              hexStringColor("06424c"),
+              hexStringColor("104f56"),
+              hexStringColor("19676b"),
+              hexStringColor("19676b"),
               //  hexStringColor("69EFF8")
             ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(20, MediaQuery
-                .of(context)
-                .size
-                .height * 0.2, 20, 0),
+            padding: EdgeInsets.only(top: 40),
             child: Column(
               children: <Widget>[
-               Container(
-                width: 200,
-                 height: 55,
-                 decoration: BoxDecoration(
-
-                       borderRadius: BorderRadius.circular(30.0),
-                       color: Colors.white70.withOpacity(0.3),
-
-                       //borderSide: const BorderSide(width: 0, style: BorderStyle.none)
-
-                 ),
-                child: ListTile(
-
-                  title: const Text('Student',
-                    style: TextStyle(color: Colors.white,
-                    fontSize: 16,
-                      fontWeight: FontWeight.normal
-                    ),
-
-
-                  ),
-                  leading: Radio<userselect>(
-                    fillColor: MaterialStateColor.resolveWith((states) => Colors.white70),
-                    value: userselect.Student,
-                    groupValue: user,
-                    onChanged: (userselect? value) {
-                      setState(() {
-                        user = value;
-                      });
-                    },
-                  ),
-                ),),
-                SizedBox(
-                  height: 10,
-                ),
-
                 Container(
-                  width: 200,
-                  height: 55,
-                  decoration: BoxDecoration(
-
-                    borderRadius: BorderRadius.circular(30.0),
-                    color: Colors.white70.withOpacity(0.3),
-
-                    //borderSide: const BorderSide(width: 0, style: BorderStyle.none)
-
-                  ),
-                  child: ListTile(
-
-                    title: const Text('Organiser',
-                      style: TextStyle(color: Colors.white,
-                          fontSize: 16,
-                          //fontWeight: FontWeight.normal
-                      ),
-
-
-                    ),
-                    leading: Radio<userselect>(
-                      fillColor: MaterialStateColor.resolveWith((states) => Colors.white70),
-                      value: userselect.Organiser,
-                      groupValue: user,
-                      onChanged: (userselect? value) {
-                        setState(() {
-                          user = value;
-                        });
-                      },
-                    ),
-                  ),),
-                SizedBox(
-                  height: 30,
+                  height: 200,
+                  width: double.infinity,
+                  //color: Colors.orange,
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          const RotatedBox(
+                            quarterTurns: 3,
+                            child: Text("Sign Up",
+                            style: TextStyle(
+                                fontSize: 40,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold
+                            ),),
+                          ),
+                          const SizedBox(width: 20),
+                          Column(
+                            children: const [
+                              Padding(padding: EdgeInsets.only(top: 30)),
+                              Text("We can start",
+                                style: TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold
+                                ),),
+                              Text("Something   ",
+                                style: TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold
+                                ),),
+                              Text("New             ",
+                                style: TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold
+                                ),),
+                            ],
+                          ),
+                        ],
+                      )
+                    )
+                  )
                 ),
 
                 reusableTextField("Full Name", Icons.person_outline, false,
                     fullnameController),
-                SizedBox(
-                  height: 30,
-                ),
                 reusableTextField(
                     "Email", Icons.email_outlined, false, EmailController),
-                SizedBox(
-                  height: 30,
-                ),
                 reusableTextField(
                     "Password", Icons.lock_outline, true, PasswordController),
-                SizedBox(
-                  height: 30,
-                ),
                 reusableTextField(
                     "Confirm Password", Icons.lock_outline, true, ConfirmPasswordController),
-                SizedBox(
-                  height: 30,
+                SizedBox(height: 20,),
+                Padding(
+                  padding: EdgeInsets.only(left: 50),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colors.white70.withOpacity(0.3),
+                        ),
+                        child: Row(
+                          children: [
+                            Radio<userselect>(
+                              fillColor: MaterialStateColor.resolveWith((states) => Colors.white70),
+                              value: userselect.Student,
+                              groupValue: userRole,
+                              onChanged: (userselect? value) {
+                                setState(() {
+                                  userRole = value;
+                                  print(value);
+                                });
+                              },
+                            ),
+                            Text('Student',
+                              style: TextStyle(color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.normal
+                              ),
+                            ),
+                          ],
+                        ),
+
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Container(
+                          width: 150,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Colors.white70.withOpacity(0.3),
+                          ),
+                          child: Row(
+                            children: [
+                              Radio<userselect>(
+                                fillColor: MaterialStateColor.resolveWith((states) => Colors.white70),
+                                value: userselect.Organiser,
+                                groupValue: userRole,
+                                onChanged: (userselect? value) {
+                                  setState(() {
+                                    userRole = value;
+                                    print(value);
+                                  });
+                                },
+                              ),
+                              const Text('Organiser',
+                                style: TextStyle(color: Colors.white,
+                                  fontSize: 15,
+                                ),
+                              )
+                            ],
+                          )
+                      ),
+
+                    ],
+                  ),
                 ),
                 signInSignUpButton(context, false, () async{
-                  CollectionReference userdata = FirebaseFirestore.instance.collection("users");
-                  await FirebaseAuth.instance
-                  .createUserWithEmailAndPassword(
-                      email: EmailController.text,
-                      password: PasswordController.text
-                  )
-                  .then((value) async {
-                   print( value.user?.uid);
-                   print("Created New Account");
+                  dbmanager.loginWithEmailPassword(EmailController.text, PasswordController.text);
 
-                    // add users
-                    dbmanager.createUserData(value.user?.uid,fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text);
+                  setState(() {
+                    if (userStatus == false){
 
+                      timer = Timer.periodic(
+                        Duration(seconds: 3),
+                            (_) async {
+                          var isVerified = await dbmanager.checkEmailVerified();
+                          if(isVerified!){
 
+                            print("Email verified successfully :::::::::::::::::::::::::::::::::");
+                            dbmanager.createUserData(fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text, userRole.toString());
+                            Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
+                            timer!.cancel();
 
-
-
-
-
-
-                    // FirebaseFirestore.instance.collection('UserData').doc(value.user?.uid).add(
-                    //     {
-                    //       "email":value.user?.email,
-                    //       "username": fullnameController.text
-                    //     }).then((value) {
-                    //   print("data save in data stored");
-                    //   });
-
-                    Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
-                  }).onError((error, stackTrace) {
-                    print("Error ${error.toString()}");
-
+                          }else{
+                            print("email not verified");
+                            showAlertDialog(context,"Verification Failed","Invalid Email or Paasowrd");
+                          }
+                        },
+                      );
+                    }else{
+                      print('suceesfully added darat:::::::::::');
+                    }
                   });
 
 
+                  // await FirebaseAuth.instance
+                  // .createUserWithEmailAndPassword(
+                  //     email: EmailController.text,
+                  //     password: PasswordController.text
+                  // )
+                  // .then((value) async {
+                  //  print( value.user?.uid);
+                  //  print("Created New Account");
+                  //  print(value.user?.emailVerified);
+                  //
+                  //  if (value.user?.emailVerified == true){
+                  //    print(userRole);
+                  //    dbmanager.createUserData(value.user?.uid,fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text, userRole as String);
+                  //    Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
+                  //  }else{
+                  //    print("email not verified");
+                  //    _showAlertDialog("Verification Failed","Invalid Email or Paasowrd");
+                  //  }
+                  // }).onError((error, stackTrace) {
+                  //   print("Error ${error.toString()}");
+                  //   _showAlertDialog("Verification Failed",error.toString());
+                  // });
                 }),
+
+                Padding(
+                  padding: EdgeInsets.only(bottom: 10,left: 10),
+                  child: Row(
+                    children: [
+                      Text("have we met before",
+                        style: TextStyle(
+                            //fontWeight: FontWeight.bold,
+                            color: Colors.white54,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          Navigator.pop(context);
+
+                        },
+                        child: Text("SignIn ",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white
+                          ),),
+                      )
+                    ],
+                  ),
+                ),
+
               ],
             ),
           ),
@@ -208,6 +276,8 @@ class _SignUpState extends State<SignUp> {
     );
   }
 }
+
+
 //         child: Scaffold(
 //        //   backgroundColor: Color(0xFF163ABB),
 //           body: ListView(
@@ -447,3 +517,64 @@ class _SignUpState extends State<SignUp> {
 //   }
 // //
 //
+
+// Container(
+// width: 150,
+// height: 45,
+// decoration: BoxDecoration(
+// borderRadius: BorderRadius.circular(30.0),
+// color: Colors.white70.withOpacity(0.3),
+// ),
+// child: Center(
+// child: ListTile(
+// title:  Text('Student',
+// style: TextStyle(color: Colors.white,
+// fontSize: 15,
+// fontWeight: FontWeight.normal
+// ),
+//
+//
+// ),
+// leading: Radio<userselect>(
+// fillColor: MaterialStateColor.resolveWith((states) => Colors.white70),
+// value: userselect.Student,
+// groupValue: user,
+// onChanged: (userselect? value) {
+// setState(() {
+// user = value;
+// print(value);
+// });
+// },
+// ),
+// ),
+// )
+// ),
+// SizedBox(
+// width: 5,
+// ),
+// Container(
+// width: 150,
+// height: 45,
+// decoration: BoxDecoration(
+// borderRadius: BorderRadius.circular(30.0),
+// color: Colors.white70.withOpacity(0.3),
+// ),
+// child: ListTile(
+// title: const Text('Organiser',
+// style: TextStyle(color: Colors.white,
+// fontSize: 16,
+// ),
+// ),
+// leading: Radio<userselect>(
+// fillColor: MaterialStateColor.resolveWith((states) => Colors.white70),
+// value: userselect.Organiser,
+// groupValue: user,
+// onChanged: (userselect? value) {
+// setState(() {
+// user = value;
+// print(value);
+// });
+// },
+// ),
+// )
+// ),
