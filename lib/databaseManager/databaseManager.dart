@@ -87,12 +87,6 @@ class DatabaseManager {
   Future<void> createUserData(String fullname, String email, String password,
       String confirmpass, String userrole) async {
 
-    if (userPic == ""){
-      userPic = "https://www.pngitem.com/pimgs/m/168-1686201_clip-art-headshot-person-placeholder-image-png-transparent.png";
-    }else{
-      print("already has a image");
-    }
-
     await userData.doc(userid).set(
         {
           'fullname': fullname,
@@ -100,7 +94,7 @@ class DatabaseManager {
           'password': password,
           'confirmpassword': confirmpass,
           'userRole': userrole,
-          'picture' : userPic,
+          'picture' :  "https://www.pngitem.com/pimgs/m/168-1686201_clip-art-headshot-person-placeholder-image-png-transparent.png",
           'phoneNumber': userNumber
         }
     ).then((value) => print("data added ::::::::::::::"));

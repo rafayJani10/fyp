@@ -55,7 +55,6 @@ class _SideMenueBarState extends State<SideMenueBar> {
                     radius: 50,
                     child: ClipOval(
                       child: Image.network(userImage,  fit: BoxFit.fill)
-
                     ),
                   ),
                   Padding(
