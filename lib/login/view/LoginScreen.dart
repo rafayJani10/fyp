@@ -131,7 +131,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 signInSignUpButton(context, true, () async{
                   print("object ::::::::::::::::::");
-                  var loginCheck = await dbmanager.getDataFromFirestore(emailController.text, passwordController.text);
+                  emailController.text = "tingeniouslab@gmail.com";
+                  passwordController.text = "Nopass70";
+                  var loginCheck = await dbmanager.LoginAuth(emailController.text, passwordController.text);
                   print(loginCheck);
                   if (loginCheck ==  true){
                     print(loginCheck);

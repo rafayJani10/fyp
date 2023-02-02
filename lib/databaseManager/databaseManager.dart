@@ -1,7 +1,10 @@
 import 'dart:async';
-import 'dart:ffi';
+import 'dart:convert';
+// import 'dart:ffi';
+// import 'dart:html';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Model {
   final String fullname;
@@ -39,6 +42,8 @@ class DatabaseManager {
   bool isEmailVerified = false;
   Timer? timer;
   var userid = "";
+  var userPic = "";
+  var userNumber = "";
   var emailVerifyStatus = false;
 
   Future sendVerificationEmail() async {
@@ -55,22 +60,22 @@ class DatabaseManager {
     isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
     if (isEmailVerified) {
       timer?.cancel();
-      emailVerifyStatus = true;
-
       return true;
     }
+    return false;
   }
 
-  Future<void> loginWithEmailPassword(String email, String password) async {
+  Future<void> SignupWithEmailPassword(String email, String password) async {
     await FirebaseAuth.instance
         .createUserWithEmailAndPassword(
         email: email,
         password: password
     ).then((value) {
       userid = (value.user?.uid)!;
+      userPic = (value.user?.photoURL) ?? "null";
+      userNumber = (value.user?.phoneNumber) ?? "null";
       print("start verify the email address ::::::::::::::::::::::::");
       isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
-
       if (!isEmailVerified) {
         sendVerificationEmail();
       }
@@ -81,18 +86,27 @@ class DatabaseManager {
 
   Future<void> createUserData(String fullname, String email, String password,
       String confirmpass, String userrole) async {
+
+    if (userPic == ""){
+      userPic = "https://www.pngitem.com/pimgs/m/168-1686201_clip-art-headshot-person-placeholder-image-png-transparent.png";
+    }else{
+      print("already has a image");
+    }
+
     await userData.doc(userid).set(
         {
           'fullname': fullname,
           'email': email,
           'password': password,
           'confirmpassword': confirmpass,
-          'userRole': userrole
+          'userRole': userrole,
+          'picture' : userPic,
+          'phoneNumber': userNumber
         }
     ).then((value) => print("data added ::::::::::::::"));
   }
 
-  Future<bool?> getDataFromFirestore(emailcheck, passwordcheck) async {
+  Future<bool?> LoginAuth(emailcheck, passwordcheck) async {
 
     var collection = FirebaseFirestore.instance.collection('users');
     var querySnapshot = await collection.get();
@@ -101,7 +115,10 @@ class DatabaseManager {
       var emails = data['email'];
       var password = data['password'];
       print(emails);
+
       if(emails == emailcheck) {
+        /// user Data save in shared prefernce
+        saveData('userBioData', data);
         return true;
       }
 
@@ -109,6 +126,18 @@ class DatabaseManager {
     return false;
   }
 
+  /// Login user data save in shared prefernce
+  saveData(String key, Map<String, dynamic> value) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(key, jsonEncode(value));
+  }
+
+  Future<dynamic> getData(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    print("isnide get function ::::::::::::::::::::::::::::::");
+    print(prefs.get(key));
+    return prefs.get(key);
+  }
 
 
   }

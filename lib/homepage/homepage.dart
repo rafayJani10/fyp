@@ -6,7 +6,6 @@ import 'SideBar//SideMenuBar.dart';
 void main() {
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
 
   const MyApp({super.key});
@@ -23,10 +22,9 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-
-
   final String title;
+
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -36,8 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer:
-        const SideMenueBar(),
+        drawer: SideMenueBar(),
         appBar: AppBar(
           title: const Text("Event List"),
           backgroundColor: Colors.teal[900],
@@ -47,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             for (var i = 0; i < 5; i++) ...[
               Container(
-                margin: EdgeInsets.only(left: 5, top: 30, right: 10, bottom: 5),
+                margin: EdgeInsets.only(left: 5, top: 30, right: 5, bottom: 5),
                 height: 150,
                 //width: double.infinity,
                 decoration: BoxDecoration(
@@ -66,13 +63,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     Flexible(
                        flex: 3,
                        child: SizedBox(
-                         height: 150,
-                         //width: 100,
-                          //color: Colors.red,
+                         height: 130,
                          child: Center(
                              child:  Image.network(
                                'https://picsum.photos/250?image=9',
-                               height: 150,
+                               //height: 150,
                                fit: BoxFit.fitHeight,
                              )
                          ),
@@ -80,132 +75,129 @@ class _MyHomePageState extends State<MyHomePage> {
                    ),
                     Flexible(
                       flex: 5,
-                      child: SizedBox(
-                        height: 150,
-                        //width: 100,
-                        //color: Colors.red,
-                        child: Container(
-                          height: 150,
-                          //width: 200,
-                          //color: Colors.green,
-                          child: Column(
-                            children: <Widget>[
-                              Padding(
-                                padding:const EdgeInsets.only(right: 90.0,top: 5),
+                      child: Column(
+                        children: [
+                          Flexible(
+                              flex: 2,
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.only(left: 10,top: 15),
+                                //color: Colors.yellow,
+                                height: 50,
                                 child: Text("FutSoll",
                                     style: TextStyle(
                                         color: Colors.grey[800],
                                         fontWeight: FontWeight.bold,
                                         fontSize: 25)),
-                              ),
-                              Padding(
-                                  padding:const EdgeInsets.only(left: 10.0,top: 5),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                          height: 25,
-                                          width: 25,
-                                          // color: Colors.yellow,
-                                          child:  const Icon(
-                                            Icons.location_on_rounded,
-                                            color: Colors.black,
-                                            size: 20.0,
-                                          )
-                                      ),
-                                      Text("defense ",
-                                          style: TextStyle(
-                                              color: Colors.grey[600],
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15)),
-                                    ],
-                                  )
-                              ),
-                              Container(
-                                height: 11,
-                              ),
-                              Padding(
-                                  padding:const EdgeInsets.only(left: 10.0,top: 5),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        height: 50,
-                                        width: 45,
-                                        //color: Colors.green,
-                                        child: Column(
-                                          children: const <Widget>[
-                                            Icon(
-                                              Icons.calendar_month,
-                                              color: Colors.grey,
-                                              size: 30.0,
-                                            ),
-                                            Text("22/dec",
-                                                style: TextStyle(
-                                                    fontSize: 12)),
-                                          ],
-                                        ),
+                              )),
+                          Flexible(
+                              flex: 2,
+                              child: Container(
+                                width: double.infinity,
+                                height: 50,
+                                  padding: EdgeInsets.only(left: 10),
+                                //color: Colors.green,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.location_on_rounded,
+                                      color: Colors.red,
+                                      size: 20.0,
+                                    ),
+                                    Text("FutSoll",
+                                        style: TextStyle(
+                                            color: Colors.grey[800],
+                                            fontSize: 18))
 
-                                      ),
-                                      Container(
-                                        height: 50,
-                                        width: 45,
-                                        //color: Colors.green,
-                                        child: Column(
-                                          children: const <Widget>[
-                                            Icon(
-                                              Icons.timer,
-                                              color: Colors.black,
-                                              size: 30.0,
-                                            ),
-                                            Text("5:44p",
-                                                style: TextStyle(
-                                                    fontSize: 12)),
-                                          ],
-                                        ),
+                                  ],
+                                )
+                              )),
+                          Flexible(
+                              flex: 3,
+                              child: Container(
+                                //color: Colors.red,
+                                child:  Padding(
+                                    padding:const EdgeInsets.only(left: 10.0,top: 15),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          height: 50,
+                                          width: 45,
+//color: Colors.green,
+                                          child: Column(
+                                            children: const <Widget>[
+                                              Icon(
+                                                Icons.calendar_month,
+                                                color: Colors.grey,
+                                                size: 30.0,
+                                              ),
+                                              Text("22/dec",
+                                                  style: TextStyle(
+                                                      fontSize: 12)),
+                                            ],
+                                          ),
 
-                                      ),
-                                      Container(
-                                        height: 50,
-                                        width: 45,
-                                        //color: Colors.green,
-                                        child: Column(
-                                          children: const <Widget>[
-                                            Icon(
-                                              Icons.person,
-                                              color: Colors.black,
-                                              size: 30.0,
-                                            ),
-                                            Text("35",
-                                                style: TextStyle(
-                                                    fontSize: 12)),
-                                          ],
                                         ),
+                                        Container(
+                                          height: 50,
+                                          width: 45,
+//color: Colors.green,
+                                          child: Column(
+                                            children: const <Widget>[
+                                              Icon(
+                                                Icons.timer,
+                                                color: Colors.black,
+                                                size: 30.0,
+                                              ),
+                                              Text("5:44p",
+                                                  style: TextStyle(
+                                                      fontSize: 12)),
+                                            ],
+                                          ),
 
-                                      ),
-                                      Container(
-                                        height: 50,
-                                        width: 45,
-                                        //color: Colors.green,
-                                        child: Column(
-                                          children: const <Widget>[
-                                            Icon(
-                                              Icons.person_add,
-                                              color: Colors.green,
-                                              size: 30.0,
-                                            ),
-                                            Text("5",
-                                                style: TextStyle(
-                                                    fontSize: 12)),
-                                          ],
                                         ),
+                                        Container(
+                                          height: 50,
+                                          width: 45,
+//color: Colors.green,
+                                          child: Column(
+                                            children: const <Widget>[
+                                              Icon(
+                                                Icons.person,
+                                                color: Colors.black,
+                                                size: 30.0,
+                                              ),
+                                              Text("35",
+                                                  style: TextStyle(
+                                                      fontSize: 12)),
+                                            ],
+                                          ),
 
-                                      ),
-                                    ],
-                                  )
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                                        ),
+                                        Container(
+                                          height: 50,
+                                          width: 45,
+//color: Colors.green,
+                                          child: Column(
+                                            children: const <Widget>[
+                                              Icon(
+                                                Icons.person_add,
+                                                color: Colors.green,
+                                                size: 30.0,
+                                              ),
+                                              Text("5",
+                                                  style: TextStyle(
+                                                      fontSize: 12)),
+                                            ],
+                                          ),
+
+                                        ),
+                                      ],
+                                    )
+                                ),
+                              ))
+                        ],
+                      )
                     ),
                     Flexible(
                       flex: 1,

@@ -191,11 +191,10 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
                 signInSignUpButton(context, false, () async{
-                  dbmanager.loginWithEmailPassword(EmailController.text, PasswordController.text);
+                  dbmanager.SignupWithEmailPassword(EmailController.text, PasswordController.text);
 
                   setState(() {
                     if (userStatus == false){
-
                       timer = Timer.periodic(
                         Duration(seconds: 3),
                             (_) async {
@@ -203,9 +202,11 @@ class _SignUpState extends State<SignUp> {
                           if(isVerified!){
 
                             print("Email verified successfully :::::::::::::::::::::::::::::::::");
+                            userStatus = true;
                             dbmanager.createUserData(fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text, userRole.toString());
                             Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
                             timer!.cancel();
+
 
                           }else{
                             print("email not verified");
