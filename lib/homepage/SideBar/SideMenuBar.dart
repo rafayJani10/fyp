@@ -54,7 +54,7 @@ class _SideMenueBarState extends State<SideMenueBar> {
                   CircleAvatar(
                     radius: 50,
                     child: ClipOval(
-                      child: Image.network(userImage,  fit: BoxFit.fill)
+                        child: Image.network(userImage,  fit: BoxFit.fill)
                     ),
                   ),
                   Padding(
@@ -146,4 +146,3 @@ class _SideMenueBarState extends State<SideMenueBar> {
     );
   }
 }
-

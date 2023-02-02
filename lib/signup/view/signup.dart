@@ -6,9 +6,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/homepage/homepage.dart';
 import 'package:fyp/color_utils.dart';
-import 'package:fyp/signup/view/signup.dart';
-import 'package:fyp/signup/view/signup.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:fyp/signup/view/signup.dart';
+// import 'package:fyp/signup/view/signup.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../UIcomponents/UIcomponents.dart';
 import '../../databaseManager/databaseManager.dart';
 import '../../useable.dart';
@@ -248,7 +248,7 @@ class _SignUpState extends State<SignUp> {
                   padding: EdgeInsets.only(bottom: 10,left: 10),
                   child: Row(
                     children: [
-                      Text("have we met before",
+                      Text("    have we met before",
                         style: TextStyle(
                             //fontWeight: FontWeight.bold,
                             color: Colors.white54,
@@ -259,7 +259,7 @@ class _SignUpState extends State<SignUp> {
                           Navigator.pop(context);
 
                         },
-                        child: Text("SignIn ",
+                        child: Text("  SignIn ",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white

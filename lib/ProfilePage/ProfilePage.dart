@@ -151,8 +151,8 @@ class _ProflePageState extends State<ProflePage> {
                                 color: Colors.black
                             ),
                             border: OutlineInputBorder(),
-                            labelText: userName,
-                            hintText: "userName",
+                            labelText: userEmail,
+                            hintText: "userEmail",
                           ),
                         ),
                       ),

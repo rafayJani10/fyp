@@ -117,81 +117,109 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Container(
                                 //color: Colors.red,
                                 child:  Padding(
-                                    padding:const EdgeInsets.only(left: 10.0,top: 15),
+                                    padding:const EdgeInsets.only(left: 0.0,top: 15),
+
                                     child: Row(
                                       children: [
-                                        Container(
-                                          height: 50,
-                                          width: 45,
+                                       Flexible(
+                                           flex: 1,
+                                           child: Container(
+                                             height: 50,
+                                           //  color:   Colors.green,
+                                             child: Container(
+                                               height: 50,
+                                               width: 45,
 //color: Colors.green,
-                                          child: Column(
-                                            children: const <Widget>[
-                                              Icon(
-                                                Icons.calendar_month,
-                                                color: Colors.grey,
-                                                size: 30.0,
-                                              ),
-                                              Text("22/dec",
-                                                  style: TextStyle(
-                                                      fontSize: 12)),
-                                            ],
-                                          ),
 
-                                        ),
-                                        Container(
-                                          height: 50,
-                                          width: 45,
+                                               child: Column(
+                                                 children: const <Widget>[
+                                                   Icon(
+                                                     Icons.calendar_month,
+                                                     color: Colors.grey,
+                                                     size: 30.0,
+                                                   ),
+                                                   Text("22/dec",
+                                                       style: TextStyle(
+                                                           fontSize: 12)),
+                                                 ],
+                                               ),
+
+                                             ),
+                                           )),
+                                        Flexible(
+                                            flex: 1,
+                                            child: Container(
+                                              height: 50,
+                                              //color:   Colors.yellow,
+                                              child: Container(
+                                                height: 50,
+                                                width: 45,
 //color: Colors.green,
-                                          child: Column(
-                                            children: const <Widget>[
-                                              Icon(
-                                                Icons.timer,
-                                                color: Colors.black,
-                                                size: 30.0,
-                                              ),
-                                              Text("5:44p",
-                                                  style: TextStyle(
-                                                      fontSize: 12)),
-                                            ],
-                                          ),
+                                                child: Column(
+                                                  children: const <Widget>[
+                                                    Icon(
+                                                      Icons.timer,
+                                                      color: Colors.black,
+                                                      size: 30.0,
+                                                    ),
+                                                    Text("5:44p",
+                                                        style: TextStyle(
+                                                            fontSize: 12)),
+                                                  ],
+                                                ),
 
-                                        ),
-                                        Container(
-                                          height: 50,
-                                          width: 45,
+                                              ),
+                                            )),
+                                        Flexible(
+                                            flex: 1,
+                                            child: Container(
+                                              height: 50,
+                                             // color:   Colors.orange,
+                                              child:
+                                              Container(
+                                                height: 50,
+                                                width: 45,
 //color: Colors.green,
-                                          child: Column(
-                                            children: const <Widget>[
-                                              Icon(
-                                                Icons.person,
-                                                color: Colors.black,
-                                                size: 30.0,
-                                              ),
-                                              Text("35",
-                                                  style: TextStyle(
-                                                      fontSize: 12)),
-                                            ],
-                                          ),
+                                                child: Column(
+                                                  children: const <Widget>[
+                                                    Icon(
+                                                      Icons.person,
+                                                      color: Colors.black,
+                                                      size: 30.0,
+                                                    ),
+                                                    Text("35",
+                                                        style: TextStyle(
+                                                            fontSize: 12)),
+                                                  ],
+                                                ),
 
-                                        ),
-                                        Container(
-                                          height: 50,
-                                          width: 45,
+                                              ),
+                                            )),
+                                        Flexible(
+                                            flex: 1,
+                                            child: Container(
+                                              height: 50,
+                                             // color:   Colors.brown,
+                                              child: Container(
+                                                  height: 50,
+                                                  width: 45,
 //color: Colors.green,
-                                          child: Column(
-                                            children: const <Widget>[
-                                              Icon(
-                                                Icons.person_add,
-                                                color: Colors.green,
-                                                size: 30.0,
-                                              ),
-                                              Text("5",
-                                                  style: TextStyle(
-                                                      fontSize: 12)),
-                                            ],
-                                          ),
+                                                  child: Flexible(
+                                                    child: Column(
+                                                      children: const <Widget>[
+                                                        Icon(
+                                                          Icons.person_add,
+                                                          color: Colors.green,
+                                                          size: 30.0,
+                                                        ),
+                                                        Text("5",
+                                                            style: TextStyle(
+                                                                fontSize: 12)),
+                                                      ],
+                                                    ),
 
-                                        ),
+                                                  )),
+                                            ))
                                       ],
                                     )
                                 ),
