@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/CreateEvents/CreateEvents.dart';
 import 'package:fyp/login/view/LoginScreen.dart';
 import 'package:fyp/services/firebase_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,6 +41,7 @@ class _SideMenueBarState extends State<SideMenueBar> {
 
   @override
   Widget build(BuildContext context) {
+    //getUserData();
     return Drawer(
       child: ListView(
         // Important: Remove any padding from the ListView.
@@ -77,15 +79,13 @@ class _SideMenueBarState extends State<SideMenueBar> {
                 Icons.account_circle_outlined
             ),
             onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
               Navigator.push(context,
                   MaterialPageRoute(
-                      builder: (context) => ProflePage()));
-              // Then close the drawer
-              // Navigator.pop(context);
+                      builder: (context) => ProflePage()
+                  )
+              );
 
+              //Navigator.pop(context);
             },
           ),
           ListTile(
@@ -95,16 +95,7 @@ class _SideMenueBarState extends State<SideMenueBar> {
             leading: const Icon(
                 Icons.event_available_outlined
             ),
-            onTap: () {
-              // Update the state of the app
-              // ...
-              // Navigator.push(context,
-              //     MaterialPageRoute(
-              //
-              //         builder: (context) => userprofile()));
-              // Then close the drawer
-              // Navigator.pop(context);
-            },
+            onTap: () {},
           ),
           ListTile(
 
@@ -113,10 +104,12 @@ class _SideMenueBarState extends State<SideMenueBar> {
                 Icons.add_circle_outline_outlined
             ),
             onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(
+                      builder: (context) => createEvents()
+                  )
+              );
+
             },
           ),
           ListTile(
@@ -131,7 +124,6 @@ class _SideMenueBarState extends State<SideMenueBar> {
                 print("Signed Out");
                 Navigator.push(context,
                     MaterialPageRoute(
-
                         builder: (context) => const LoginScreen()));
               });
               // Update the state of the app

@@ -199,18 +199,17 @@ class _SignUpState extends State<SignUp> {
                         Duration(seconds: 3),
                             (_) async {
                           var isVerified = await dbmanager.checkEmailVerified();
-                          if(isVerified!){
-
+                          if(isVerified! == "f"){
+                            print("email not verified");
+                            showAlertDialog(context,"Verification Failed","Invalid Email or Paasowrd");
+                          }else{
                             print("Email verified successfully :::::::::::::::::::::::::::::::::");
                             userStatus = true;
+                            dbmanager.userid;
                             dbmanager.createUserData(fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text, userRole.toString());
                             Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
                             timer!.cancel();
 
-
-                          }else{
-                            print("email not verified");
-                            showAlertDialog(context,"Verification Failed","Invalid Email or Paasowrd");
                           }
                         },
                       );
@@ -218,30 +217,6 @@ class _SignUpState extends State<SignUp> {
                       print('suceesfully added darat:::::::::::');
                     }
                   });
-
-
-                  // await FirebaseAuth.instance
-                  // .createUserWithEmailAndPassword(
-                  //     email: EmailController.text,
-                  //     password: PasswordController.text
-                  // )
-                  // .then((value) async {
-                  //  print( value.user?.uid);
-                  //  print("Created New Account");
-                  //  print(value.user?.emailVerified);
-                  //
-                  //  if (value.user?.emailVerified == true){
-                  //    print(userRole);
-                  //    dbmanager.createUserData(value.user?.uid,fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text, userRole as String);
-                  //    Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
-                  //  }else{
-                  //    print("email not verified");
-                  //    _showAlertDialog("Verification Failed","Invalid Email or Paasowrd");
-                  //  }
-                  // }).onError((error, stackTrace) {
-                  //   print("Error ${error.toString()}");
-                  //   _showAlertDialog("Verification Failed",error.toString());
-                  // });
                 }),
 
                 Padding(
