@@ -133,7 +133,7 @@ class _MyEventsState extends State<MyEvents> {
                                            Text(snapshot.data?['address'],
                                                style: TextStyle(
                                                    color: Colors.grey[800],
-                                                   fontSize: 18))
+                                                   fontSize: 12))
 
                                          ],
                                        )
@@ -160,7 +160,7 @@ class _MyEventsState extends State<MyEvents> {
                                                    ),
                                                    Text(snapshot.data?['date'],
                                                        style: TextStyle(
-                                                           fontSize: 9)),
+                                                           fontSize: 7)),
                                                  ],
                                                ),
 

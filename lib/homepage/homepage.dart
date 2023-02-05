@@ -149,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                               Text(snapshot.data?.docs[index]['address'],
                                                   style: TextStyle(
                                                       color: Colors.grey[800],
-                                                      fontSize: 18))
+                                                      fontSize: 12))
 
                                             ],
                                           )
@@ -163,78 +163,94 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 left: 10.0, top: 15),
                                             child: Row(
                                               children: [
-                                                Container(
-                                                  height: 50,
-                                                  width: 45,
+                                               Flexible(
+                                                   flex: 3,
+                                                   child: Container(
+                                                     height: 50,
+                                                     width: 45,
 //color: Colors.green,
-                                                  child: Column(
-                                                    children:  <Widget>[
-                                                      Icon(
-                                                        Icons.calendar_month,
-                                                        color: Colors.grey,
-                                                        size: 30.0,
-                                                      ),
-                                                      Text(snapshot.data?.docs[index]['date'],
-                                                          style: TextStyle(
-                                                              fontSize: 9)),
-                                                    ],
-                                                  ),
+                                                     child: Column(
+                                                       children:  <Widget>[
+                                                         Icon(
+                                                           Icons.calendar_month,
+                                                           color: Colors.grey,
+                                                           size: 30.0,
+                                                         ),
+                                                         Text(snapshot.data?.docs[index]['date'],
+                                                             style: TextStyle(
+                                                                 fontSize: 7)),
+                                                       ],
+                                                     ),
 
-                                                ),
-                                                Container(
-                                                  height: 50,
-                                                  width: 45,
+
+                                               )),
+                                                Flexible(
+                                                    flex: 3,
+                                                    child: Container(
+                                                      height: 50,
+                                                      width: 45,
 //color: Colors.green,
-                                                  child: Column(
-                                                    children:  <Widget>[
-                                                      Icon(
-                                                        Icons.timer,
-                                                        color: Colors.black,
-                                                        size: 30.0,
+                                                      child: Column(
+                                                        children:  <Widget>[
+                                                          Icon(
+                                                            Icons.timer,
+                                                            color: Colors.black,
+                                                            size: 30.0,
+                                                          ),
+                                                          Text(snapshot.data?.docs[index]['time'],
+                                                              style: TextStyle(
+                                                                  fontSize: 9)),
+                                                        ],
                                                       ),
-                                                      Text(snapshot.data?.docs[index]['time'],
-                                                          style: TextStyle(
-                                                              fontSize: 9)),
-                                                    ],
-                                                  ),
 
-                                                ),
-                                                Container(
-                                                  height: 50,
-                                                  width: 45,
+                                                    ),
+
+
+                                                    ),
+                                                Flexible(
+                                                    flex: 3,
+                                                    child: Container(
+                                                      height: 50,
+                                                      width: 45,
 //color: Colors.green,
-                                                  child: Column(
-                                                    children:  <Widget>[
-                                                      Icon(
-                                                        Icons.person,
-                                                        color: Colors.black,
-                                                        size: 30.0,
+                                                      child: Column(
+                                                        children:  <Widget>[
+                                                          Icon(
+                                                            Icons.person,
+                                                            color: Colors.black,
+                                                            size: 30.0,
+                                                          ),
+                                                          Text(snapshot.data?.docs[index]['totalperso'],
+                                                              style: TextStyle(
+                                                                  fontSize: 9)),
+                                                        ],
                                                       ),
-                                                      Text(snapshot.data?.docs[index]['totalperso'],
-                                                          style: TextStyle(
-                                                              fontSize: 9)),
-                                                    ],
-                                                  ),
 
-                                                ),
-                                                Container(
-                                                  height: 50,
-                                                  width: 45,
+                                                    ),
+
+
+                                                    ),
+                                                Flexible(
+                                                    flex: 3,
+                                                    child: Container(
+                                                      height: 50,
+                                                      width: 45,
 //color: Colors.green,
-                                                  child: Column(
-                                                    children:  <Widget>[
-                                                      Icon(
-                                                        Icons.person_add,
-                                                        color: Colors.green,
-                                                        size: 30.0,
+                                                      child: Column(
+                                                        children:  <Widget>[
+                                                          Icon(
+                                                            Icons.person_add,
+                                                            color: Colors.green,
+                                                            size: 30.0,
+                                                          ),
+                                                          Text((snapshot.data?.docs[index]['TjoinPerson']).toString(),
+                                                              style: TextStyle(
+                                                                  fontSize: 9)),
+                                                        ],
                                                       ),
-                                                      Text((snapshot.data?.docs[index]['TjoinPerson']).toString(),
-                                                          style: TextStyle(
-                                                              fontSize: 9)),
-                                                    ],
-                                                  ),
 
-                                                ),
+
+                                                    )),
                                               ],
                                             )
                                         ),
@@ -321,3 +337,75 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+// Container(
+// height: 50,
+// width: 45,
+// //color: Colors.green,
+// child: Column(
+// children:  <Widget>[
+// Icon(
+// Icons.calendar_month,
+// color: Colors.grey,
+// size: 30.0,
+// ),
+// Text(snapshot.data?.docs[index]['date'],
+// style: TextStyle(
+// fontSize: 9)),
+// ],
+// ),
+//
+// ),
+// Container(
+// height: 50,
+// width: 45,
+// //color: Colors.green,
+// child: Column(
+// children:  <Widget>[
+// Icon(
+// Icons.timer,
+// color: Colors.black,
+// size: 30.0,
+// ),
+// Text(snapshot.data?.docs[index]['time'],
+// style: TextStyle(
+// fontSize: 9)),
+// ],
+// ),
+//
+// ),
+// // Container(
+// height: 50,
+// width: 45,
+// //color: Colors.green,
+// child: Column(
+// children:  <Widget>[
+// Icon(
+// Icons.person,
+// color: Colors.black,
+// size: 30.0,
+// ),
+// Text(snapshot.data?.docs[index]['totalperso'],
+// style: TextStyle(
+// fontSize: 9)),
+// ],
+// ),
+//
+// ),
+// Container(
+// height: 50,
+// width: 45,
+// //color: Colors.green,
+// child: Column(
+// children:  <Widget>[
+// Icon(
+// Icons.person_add,
+// color: Colors.green,
+// size: 30.0,
+// ),
+// Text((snapshot.data?.docs[index]['TjoinPerson']).toString(),
+// style: TextStyle(
+// fontSize: 9)),
+// ],
+// ),
+//
+// ),
