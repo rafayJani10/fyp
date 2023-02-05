@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/CreateEvents/CreateEvents.dart';
+import 'package:fyp/MyEvents/MyEvents.dart';
+import 'package:fyp/homepage/homepage.dart';
 import 'package:fyp/login/view/LoginScreen.dart';
 import 'package:fyp/services/firebase_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -73,6 +75,22 @@ class _SideMenueBarState extends State<SideMenueBar> {
 
           ),
           ListTile(
+            title:   Text("Home"
+            ),
+            leading: const Icon(
+                Icons.home_filled
+            ),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(
+                      builder: (context) => MyHomePage(title: "Home Page")
+                  )
+              );
+
+              //Navigator.pop(context);
+            },
+          ),
+          ListTile(
             title:   Text("Profile"
             ),
             leading: const Icon(
@@ -95,7 +113,13 @@ class _SideMenueBarState extends State<SideMenueBar> {
             leading: const Icon(
                 Icons.event_available_outlined
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(
+                      builder: (context) => MyEvents()
+                  )
+              );
+            },
           ),
           ListTile(
 

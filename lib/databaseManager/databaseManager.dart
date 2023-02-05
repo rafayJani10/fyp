@@ -99,7 +99,8 @@ class DatabaseManager {
           'picture' :  "https://www.pngitem.com/pimgs/m/168-1686201_clip-art-headshot-person-placeholder-image-png-transparent.png",
           'phoneNumber': userNumber,
           'age':'',
-          'gender':''
+          'gender':'',
+          "projects": []
         }
     ).then((value) => print("data added ::::::::::::::"));
   }
@@ -143,7 +144,6 @@ class DatabaseManager {
     return updateDataStatus;
   }
 
-
   Future<bool?> createEventData(EventAuthor,name,address,totalperso,picture,time,date,TjoinPerson,joinedPerson) async{
     var newEventStatus = false;
    await _firestore.collection("events").add(
@@ -158,9 +158,13 @@ class DatabaseManager {
           'TjoinPerson':TjoinPerson,
           'joinedPerson': joinedPerson
 
-        }).then((value){
+        }).then((value) async{
           print("event created ::::::::::::::::");
+          await _firestore.collection("users").doc(EventAuthor)
+              .update({"prijects": FieldValue.arrayUnion([value.id])});
           newEventStatus = true;
+
+
 
     }).onError((error, stackTrace) {
       print("event not created ::::::::::");

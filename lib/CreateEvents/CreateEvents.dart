@@ -22,7 +22,7 @@ class _createEventsState extends State<createEvents> {
   var dbmanager = DatabaseManager();
   var date = "Pick Your Date";
   var time = "Pick Your Time";
-  var userList = ['ahad','rafay'];
+  var userList = [];
   var EventAuthor = "";
 
   TextEditingController eventNameController = TextEditingController();
