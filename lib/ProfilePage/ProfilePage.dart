@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../UIcomponents/UIcomponents.dart';
 import '../databaseManager/databaseManager.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 import '../homepage/SideBar/SideMenuBar.dart';
 
 
@@ -21,10 +21,13 @@ class ProflePage extends StatefulWidget {
 
 class _ProflePageState extends State<ProflePage> {
 
-  late File imageUrl;
+  File? _image;
   final  dbmanager = DatabaseManager();
   late final Map<String,dynamic> dataa;
   final _firebaseStorage = FirebaseStorage.instance;
+  var imageurlfromfirestore = "";
+  late File _imageFile;
+
 
 
   TextEditingController userNameController = TextEditingController();
@@ -47,42 +50,34 @@ class _ProflePageState extends State<ProflePage> {
     });
   }
 
-  uploadImage() async {
-    final _firebaseStorage = FirebaseStorage.instance;
-    final _imagePicker = ImagePicker();
-    PickedFile? image;
-    //Check Permissions
-    await Permission.photos.request();
+  Future getImage() async {
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null) {
+      return;
+    }
 
-    var permissionStatus = await Permission.photos.status;
+    final imageTemporary = File(image.path);
+    if (image != null) {
+      //Upload to Firebase
+      var snapshot = await _firebaseStorage.ref()
+          .child('image/$imageTemporary')
+          .putFile(imageTemporary);
+      var downloadUrl = await(await snapshot.ref.getDownloadURL());
+      setState(() {
+        _image = imageTemporary;
 
-    if (permissionStatus.isGranted){
-      //Select Image
-      image = await _imagePicker.getImage(source: ImageSource.gallery);
-      var file = File(image!.path);
+        print('::::::::::: image ::::');
+        print(downloadUrl);
+        imageurlfromfirestore = downloadUrl;
 
-      if (image != null){
-        //Upload to Firebase
-        var snapshot = await _firebaseStorage.ref()
-            .child('images/imageName')
-            .putFile(file);
-        var downloadUrl = await snapshot.ref.getDownloadURL();
-        setState(() {
-          print(downloadUrl);
-          //imageUrl = downloadUrl as File;
-        });
-      } else {
-        print('No Image Path Received');
-      }
-    } else {
-      print('Permission not granted. Try Again with permission access');
+      });
     }
   }
 
 
 
-  Future updateData(userId,full_name,gender,agee,PhoneNo) async {
-    var updateDataa = await dbmanager.updataUserData(userId,full_name,gender,agee,PhoneNo);
+  Future updateData(userId,full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset) async {
+    var updateDataa = await dbmanager.updataUserData(userId,full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset);
     if(updateDataa! == true){
       print("dataa updated");
       showAlertDialog(context,"Done","Data Updated Successfully");
@@ -127,8 +122,8 @@ class _ProflePageState extends State<ProflePage> {
                               radius: 69,
                               backgroundColor: Colors.teal,
                               child: ClipOval(
-                                child: imageUrl != null
-                                    ? Image.file(imageUrl! ,width: 130,height: 130, fit: BoxFit.fill)
+                                child: _image != null
+                                    ? Image.file(_image! ,width: 130,height: 130, fit: BoxFit.fill)
                                     : Image.network(dataa['picture'], fit: BoxFit.fill),
                               ),
                             ),
@@ -137,7 +132,7 @@ class _ProflePageState extends State<ProflePage> {
                             alignment: FractionalOffset.bottomRight,
                             child: InkWell(
                               onTap: (){
-                                uploadImage();
+                                getImage();
                               },
                               child: Container(
                                 margin: EdgeInsetsDirectional.only(bottom: 10),
@@ -223,8 +218,8 @@ class _ProflePageState extends State<ProflePage> {
                                 color: Colors.black
                             ),
                             border: OutlineInputBorder(),
-                            labelText: dataa["deptname"]  != "" ? dataa["deptno"] : "Deptartment Name",
-                            hintText: "Enrollment No",
+                            labelText: dataa["deptname"]  != "" ? dataa["deptname"] : "Deptartment Name",
+                            hintText: "Department Name",
                           ),
                         ),
                       ),
@@ -303,11 +298,16 @@ class _ProflePageState extends State<ProflePage> {
                           var gender = genderController.text == "" ?dataa['gender'] : genderController.text;
                           var agee = ageController.text == "" ? dataa['age'] : ageController.text;
                           var PhoneNo = phoneNumberController.text == "" ? dataa['phoneNumber'] : phoneNumberController.text;
+                          var picture = imageurlfromfirestore;
+                          var enrollment = enrollmentController.text == "" ? dataa['enrollmentNo'] : enrollmentController.text;
+                          var department = departmentController.text == "" ? dataa['deptname'] : departmentController.text;
+                          var skillset = skillsetController.text == "" ? dataa['skillset'] :  skillsetController.text;
+
                           print(full_name);
                           print(gender);
                           print(agee);
                           print(PhoneNo);
-                          updateData(dataa['id'],full_name,gender,agee,PhoneNo);
+                          updateData(dataa['id'],full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset);
 
                           // var updateData = await dbmanager.updataUserData(dataa['id'],full_name,gender,agee,PhoneNo);
                           // if (updateData == true){

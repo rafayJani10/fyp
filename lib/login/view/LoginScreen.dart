@@ -40,7 +40,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
+  bool _isHidden = true;
 
   var dbmanager = DatabaseManager();
 
@@ -120,15 +120,31 @@ class _LoginScreenState extends State<LoginScreen> {
                     )
                 ),
                 reusableTextField(
-                    "Email", Icons.person_outline, false, emailController),
+                    "Email", Icons.person_outline, false, emailController
+                  //, false
+                ),
                 const SizedBox(
                   height: 30,
                 ),
                 reusableTextField(
-                    "Password", Icons.lock_outline, true, passwordController),
+                    "Password", Icons.lock_outline, true, passwordController
+                //, true
+                ),
+
                 const SizedBox(
                   height: 30,
                 ),
+
+                // TextField(
+                //   obscureText: _isHidden,
+                //   decoration: InputDecoration(
+                //     hintText: 'Password',
+                //     suffix: InkWell(
+                //       onTap: obscure,
+                //       child: Icon( Icons.visibility),
+                //     ),
+                //   ),
+                // ),
                 signInSignUpButton(context, true, () async{
                   print("object ::::::::::::::::::");
                   emailController.text = "amnarehman3759@gmail.com";
@@ -152,7 +168,11 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
+  // void obscure() {
+  //   setState(() {
+  //     _isHidden = !_isHidden;
+  //   });
+  // }
   Row signUpOption() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -196,6 +216,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   }
 }
+
+
     //   child: Scaffold(
     //
     //  //   backgroundColor:

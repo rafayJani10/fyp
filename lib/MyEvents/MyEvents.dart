@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp/databaseManager/databaseManager.dart';
 import 'package:lottie/lottie.dart';
 
-import '../homepage/SideBar/SideMenuBar.dart';
+
 
 class MyEvents extends StatefulWidget {
 
@@ -24,7 +24,11 @@ class _MyEventsState extends State<MyEvents> {
   var myProjectId = [];
   Stream? stream ;
 
+
+
   get projectList => null;
+
+
 
   Future<dynamic> getUserData() async{
     var data =  await dbmanager.getData('userBioData');
@@ -50,6 +54,9 @@ class _MyEventsState extends State<MyEvents> {
       });
     }
   }
+
+
+
 
   @override
   void initState() {

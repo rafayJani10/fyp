@@ -125,14 +125,19 @@ class DatabaseManager {
     return "Poor Internet Connection";
   }
 
-  Future<bool?> updataUserData(useridd,username,gender,age,phoneNumber) async {
+  Future<bool?> updataUserData(useridd,username,gender,age,phoneNumber,picture,enrollment,department,skillset) async {
     var updateDataStatus = false;
     await FirebaseFirestore.instance.collection('users').doc(useridd).update(
         {
           "fullname":username,
           "gender":gender,
           "age":age,
-          "phoneNumber":phoneNumber
+          "phoneNumber":phoneNumber,
+          "picture":picture,
+          "enrollmentNo":enrollment,
+          "deptname":department,
+          "skillset":skillset
+
         })
         .then((result){
           print("new User true");
