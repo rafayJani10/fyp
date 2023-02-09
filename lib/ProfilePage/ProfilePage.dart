@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../UIcomponents/UIcomponents.dart';
 import '../databaseManager/databaseManager.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 import '../homepage/SideBar/SideMenuBar.dart';
 
 
@@ -21,7 +21,7 @@ class ProflePage extends StatefulWidget {
 
 class _ProflePageState extends State<ProflePage> {
 
-  File? _image;
+  late File imageUrl;
   final  dbmanager = DatabaseManager();
   late final Map<String,dynamic> dataa;
   final _firebaseStorage = FirebaseStorage.instance;
@@ -47,22 +47,35 @@ class _ProflePageState extends State<ProflePage> {
     });
   }
 
-  Future getImage() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image == null) {
-      return;
-    }
+  uploadImage() async {
+    final _firebaseStorage = FirebaseStorage.instance;
+    final _imagePicker = ImagePicker();
+    PickedFile? image;
+    //Check Permissions
+    await Permission.photos.request();
 
-    final imageTemporary = File(image.path);
-    if (image != null) {
-      //Upload to Firebase
-      var snapshot = await _firebaseStorage.ref()
-          .child('profileImage/')
-          .putFile(imageTemporary);
-      var downloadUrl = await snapshot.ref.getDownloadURL();
-      setState(() {
-        print(downloadUrl);
-      });
+    var permissionStatus = await Permission.photos.status;
+
+    if (permissionStatus.isGranted){
+      //Select Image
+      image = await _imagePicker.getImage(source: ImageSource.gallery);
+      var file = File(image!.path);
+
+      if (image != null){
+        //Upload to Firebase
+        var snapshot = await _firebaseStorage.ref()
+            .child('images/imageName')
+            .putFile(file);
+        var downloadUrl = await snapshot.ref.getDownloadURL();
+        setState(() {
+          print(downloadUrl);
+          //imageUrl = downloadUrl as File;
+        });
+      } else {
+        print('No Image Path Received');
+      }
+    } else {
+      print('Permission not granted. Try Again with permission access');
     }
   }
 
@@ -114,8 +127,8 @@ class _ProflePageState extends State<ProflePage> {
                               radius: 69,
                               backgroundColor: Colors.teal,
                               child: ClipOval(
-                                child: _image != null
-                                    ? Image.file(_image! ,width: 130,height: 130, fit: BoxFit.fill)
+                                child: imageUrl != null
+                                    ? Image.file(imageUrl! ,width: 130,height: 130, fit: BoxFit.fill)
                                     : Image.network(dataa['picture'], fit: BoxFit.fill),
                               ),
                             ),
@@ -124,7 +137,7 @@ class _ProflePageState extends State<ProflePage> {
                             alignment: FractionalOffset.bottomRight,
                             child: InkWell(
                               onTap: (){
-                                getImage();
+                                uploadImage();
                               },
                               child: Container(
                                 margin: EdgeInsetsDirectional.only(bottom: 10),
