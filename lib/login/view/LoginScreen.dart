@@ -131,24 +131,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 signInSignUpButton(context, true, () async{
                   print("object ::::::::::::::::::");
-                  // emailController.text = "tingeniouslab@gmail.com";
-                  // passwordController.text = "123456";
+                  emailController.text = "amnarehman3759@gmail.com";
+                  passwordController.text = "Amna3759";
                   var loginCheck = await dbmanager.LoginAuth(emailController.text, passwordController.text);
                   print(loginCheck);
-                  if (loginCheck ==  true){
+                  if (loginCheck ==  'Successfully login'){
                     print(loginCheck);
                     Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
-
-                  }else{
-                    showAlertDialog(context,"Verification Failed", "Incorrect Usernaem or password");
+                  }else if (loginCheck == "Poor Internet Connection"){
+                    showAlertDialog(context,"Verification Failed", loginCheck!);
                   }
-
                 }),
 
                 signUpOption(),
                 const SizedBox(height: 30,),
               ],
-
             ),
           ),
         ),

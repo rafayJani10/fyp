@@ -105,7 +105,7 @@ class DatabaseManager {
     ).then((value) => print("data added ::::::::::::::"));
   }
 
-  Future<bool?> LoginAuth(emailcheck, passwordcheck) async {
+  Future<String?> LoginAuth(emailcheck, passwordcheck) async {
 
     var collection = FirebaseFirestore.instance.collection('users');
     var querySnapshot = await collection.get();
@@ -117,10 +117,10 @@ class DatabaseManager {
       if(emails == emailcheck) {
         /// user Data save in shared prefernce
         saveData('userBioData', data);
-        return true;
+        return 'Successfully login';
       }
     }
-    return false;
+    return "Poor Internet Connection";
   }
 
   Future<bool?> updataUserData(useridd,username,gender,age,phoneNumber) async {

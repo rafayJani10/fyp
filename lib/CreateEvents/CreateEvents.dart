@@ -2,11 +2,9 @@
 
 import 'dart:convert';
 import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/databaseManager/databaseManager.dart';
-
 import '../UIcomponents/UIcomponents.dart';
 
 
@@ -20,8 +18,8 @@ class createEvents extends StatefulWidget {
 class _createEventsState extends State<createEvents> {
 
   var dbmanager = DatabaseManager();
-  var date = "Pick Your Date";
-  var time = "Pick Your Time";
+  var date = "Pick a Date";
+  var time = "Pick  Time";
   var userList = [];
   var EventAuthor = "";
 
@@ -63,10 +61,10 @@ class _createEventsState extends State<createEvents> {
               color: Colors.green,
             ),
             Padding(padding: EdgeInsets.only(top: 35)),
-             Padding(
+            Padding(
               padding: EdgeInsets.all(8.0),
               child:  TextField(
-                obscureText: true,
+                obscureText: false,
                 controller: eventNameController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -81,11 +79,11 @@ class _createEventsState extends State<createEvents> {
                 ),
               )
             ),
-             Padding(
+            Padding(
                 padding: EdgeInsets.all(8.0),
                 child:  TextField(
                   controller: addressController,
-                  obscureText: true,
+                  obscureText: false,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       hintStyle: TextStyle(
@@ -99,11 +97,11 @@ class _createEventsState extends State<createEvents> {
                   ),
                 )
             ),
-             Padding(
+            Padding(
                 padding: EdgeInsets.all(8.0),
                 child:  TextField(
                   controller: totalPersonNameController,
-                  obscureText: true,
+                  obscureText: false,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       hintStyle: TextStyle(
@@ -117,7 +115,7 @@ class _createEventsState extends State<createEvents> {
                   ),
                 )
             ),
-             Padding(
+            Padding(
                 padding: EdgeInsets.all(8.0),
                 child:  Container(
                   //padding: EdgeInsets.all(8.0),
@@ -264,7 +262,6 @@ class _createEventsState extends State<createEvents> {
               },
               child: Text('Create Event'),
             ),
-
           ],
         ),
       ),

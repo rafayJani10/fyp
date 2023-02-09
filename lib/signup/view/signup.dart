@@ -29,6 +29,7 @@ class _SignUpState extends State<SignUp> {
   var dbmanager = DatabaseManager();
   TextEditingController fullnameController = TextEditingController();
   TextEditingController EnrollmentIdController = TextEditingController();
+  TextEditingController DeptController = TextEditingController();
   TextEditingController EmailController = TextEditingController();
   TextEditingController PasswordController = TextEditingController();
   TextEditingController ConfirmPasswordController = TextEditingController();
@@ -114,6 +115,10 @@ class _SignUpState extends State<SignUp> {
 
                 reusableTextField("Full Name", Icons.person_outline, false,
                     fullnameController),
+                reusableTextField("Enrollment No", Icons.badge_outlined, false,
+                    EnrollmentIdController),
+                reusableTextField("Dept Name", Icons.add_business_outlined, false,
+                    DeptController),
                 reusableTextField(
                     "Email", Icons.email_outlined, false, EmailController),
                 reusableTextField(
@@ -121,75 +126,7 @@ class _SignUpState extends State<SignUp> {
                 reusableTextField(
                     "Confirm Password", Icons.lock_outline, true, ConfirmPasswordController),
                 SizedBox(height: 20,),
-                Padding(
-                  padding: EdgeInsets.only(left: 50),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.white70.withOpacity(0.3),
-                        ),
-                        child: Row(
-                          children: [
-                            Radio<userselect>(
-                              fillColor: MaterialStateColor.resolveWith((states) => Colors.white70),
-                              value: userselect.Student,
-                              groupValue: userRole,
-                              onChanged: (userselect? value) {
-                                setState(() {
-                                  userRole = value;
-                                  print(value);
-                                });
-                              },
-                            ),
-                            Text('Student',
-                              style: TextStyle(color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal
-                              ),
-                            ),
-                          ],
-                        ),
 
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Container(
-                          width: 150,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            color: Colors.white70.withOpacity(0.3),
-                          ),
-                          child: Row(
-                            children: [
-                              Radio<userselect>(
-                                fillColor: MaterialStateColor.resolveWith((states) => Colors.white70),
-                                value: userselect.Organiser,
-                                groupValue: userRole,
-                                onChanged: (userselect? value) {
-                                  setState(() {
-                                    userRole = value;
-                                    print(value);
-                                  });
-                                },
-                              ),
-                              const Text('Organiser',
-                                style: TextStyle(color: Colors.white,
-                                  fontSize: 15,
-                                ),
-                              )
-                            ],
-                          )
-                      ),
-
-                    ],
-                  ),
-                ),
                 signInSignUpButton(context, false, () async{
                   dbmanager.SignupWithEmailPassword(EmailController.text, PasswordController.text);
 

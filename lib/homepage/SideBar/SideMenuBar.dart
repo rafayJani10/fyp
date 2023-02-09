@@ -24,6 +24,9 @@ class _SideMenueBarState extends State<SideMenueBar> {
   final  dbmanager = DatabaseManager();
   var userName = "";
   var userImage = "";
+  var noImagePlaceholder = "";
+  var gender = "";
+  var userId = "";
 
   Future<dynamic> getUserData() async{
     var data =  await dbmanager.getData('userBioData');
@@ -31,6 +34,13 @@ class _SideMenueBarState extends State<SideMenueBar> {
     setState(() {
       userName = daaa['fullname'];
       userImage = daaa["picture"];
+      gender = daaa["gender"];
+      userId = daaa["id"];
+      if (gender == "mail"){
+        noImagePlaceholder = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/menph.jpeg?alt=media&token=599c5531-d4d5-4776-8a3c-3eaf45a54d2e";
+      }else{
+        noImagePlaceholder = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/womenph.jpeg?alt=media&token=e91ba2c5-8737-411d-8be2-42e0cd2d6e35";
+      }
     });
   }
 
@@ -58,7 +68,7 @@ class _SideMenueBarState extends State<SideMenueBar> {
                   CircleAvatar(
                     radius: 50,
                     child: ClipOval(
-                        child: Image.network(userImage,  fit: BoxFit.fill)
+                        child: userImage == "" ?Image.network(noImagePlaceholder,  fit: BoxFit.fill) :Image.network(userImage,  fit: BoxFit.fill)
                     ),
                   ),
                   Padding(

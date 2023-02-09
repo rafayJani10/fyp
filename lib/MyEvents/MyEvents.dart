@@ -4,11 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/databaseManager/databaseManager.dart';
+import 'package:lottie/lottie.dart';
 
 import '../homepage/SideBar/SideMenuBar.dart';
 
 class MyEvents extends StatefulWidget {
-  const MyEvents({Key? key}) : super(key: key);
+
+
+
+
 
   @override
   State<MyEvents> createState() => _MyEventsState();
@@ -25,19 +29,26 @@ class _MyEventsState extends State<MyEvents> {
   Future<dynamic> getUserData() async{
     var data =  await dbmanager.getData('userBioData');
     var daaa = json.decode(data);
-    setState(() {
-      print(daaa['prijects']);
-      var projectList = daaa['prijects'];
-      var projLength = projectList.length;
-      print(projLength);
-      for (var i = 0; i < projLength; i++) {
-        print(i);
-        myProjectId.add(projectList[i]);
-        print(myProjectId);
+    var userid = daaa['id'];
+    print(userid);
+    var collection = FirebaseFirestore.instance.collection('users');
+    var docSnapshot = await collection.doc(userid).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
 
-        //stream = FirebaseFirestore.instance.collection('events').doc(projectList[i]).snapshots();
-      }
-    });
+      var projectList = data?['prijects'];
+      setState(()  {
+        // print(userData.length);
+        var projLength = projectList.length;
+        print(projLength);
+        for (var i = 0; i < projLength; i++) {
+          print(i);
+          myProjectId.add(projectList[i]);
+          print(myProjectId);
+          //stream = FirebaseFirestore.instance.collection('events').doc(projectList[i]).snapshots();
+        }
+      });
+    }
   }
 
   @override
@@ -45,6 +56,7 @@ class _MyEventsState extends State<MyEvents> {
     // TODO: implement initState
     super.initState();
     getUserData();
+    print("init func called");
   }
 
   @override
@@ -63,7 +75,12 @@ class _MyEventsState extends State<MyEvents> {
                stream: FirebaseFirestore.instance.collection('events').doc(myProjectId[index]).snapshots(),
                builder: (context, snapshot){
                  if (snapshot.data == null ) {
-                   return Center(child: Text('NO DATA'));
+                   return Center(
+                       child:  Lottie.asset('assets/final.json',
+                       height: 100,
+                       repeat: true,
+                       fit: BoxFit.cover),
+                   );
                  }
                  return Container(
                    margin: EdgeInsets.all(15),
