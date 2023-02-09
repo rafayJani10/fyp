@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../UIcomponents/UIcomponents.dart';
 import '../databaseManager/databaseManager.dart';
+
 import '../homepage/SideBar/SideMenuBar.dart';
 
 
@@ -60,8 +61,7 @@ class _ProflePageState extends State<ProflePage> {
           .putFile(imageTemporary);
       var downloadUrl = await snapshot.ref.getDownloadURL();
       setState(() {
-        _image = downloadUrl as File?;
-        print(_image);
+        print(downloadUrl);
       });
     }
   }
