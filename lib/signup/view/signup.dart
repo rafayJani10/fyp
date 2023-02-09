@@ -133,7 +133,7 @@ class _SignUpState extends State<SignUp> {
                   setState(() {
                     if (userStatus == false){
                       timer = Timer.periodic(
-                        Duration(seconds: 3),
+                        Duration(seconds: 10),
                             (_) async {
                           var isVerified = await dbmanager.checkEmailVerified();
                           if(isVerified! == "f"){

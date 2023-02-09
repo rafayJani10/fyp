@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp/CreateEvents/CreateEvents.dart';
 import 'package:fyp/MyEvents/MyEvents.dart';
 import 'package:fyp/admin/adminhomepage.dart';
-import 'package:fyp/homepage/homepage.dart';
+//import 'package:fyp/homepage/homepage.dart';
 import 'package:fyp/login/view/LoginScreen.dart';
 import 'package:fyp/services/firebase_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,9 +25,6 @@ class _SideMenueBarState extends State<SideMenueBar> {
   final  dbmanager = DatabaseManager();
   var userName = "";
   var userImage = "";
-  var noImagePlaceholder = "";
-  var gender = "";
-  var userId = "";
 
   Future<dynamic> getUserData() async{
     var data =  await dbmanager.getData('userBioData');
@@ -35,13 +32,6 @@ class _SideMenueBarState extends State<SideMenueBar> {
     setState(() {
       userName = daaa['fullname'];
       userImage = daaa["picture"];
-      gender = daaa["gender"];
-      userId = daaa["id"];
-      if (gender == "mail"){
-        noImagePlaceholder = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/menph.jpeg?alt=media&token=599c5531-d4d5-4776-8a3c-3eaf45a54d2e";
-      }else{
-        noImagePlaceholder = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/womenph.jpeg?alt=media&token=e91ba2c5-8737-411d-8be2-42e0cd2d6e35";
-      }
     });
   }
 
@@ -69,12 +59,12 @@ class _SideMenueBarState extends State<SideMenueBar> {
                   CircleAvatar(
                     radius: 50,
                     child: ClipOval(
-                        child: userImage == "" ?Image.network(noImagePlaceholder,  fit: BoxFit.fill) :Image.network(userImage,  fit: BoxFit.fill)
+                        child: Image.network("https://user-images.githubusercontent.com/35910158/35493994-36e2c50e-04d9-11e8-8b38-890caea01850.png",  fit: BoxFit.fill)
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 10),
-                    child: Text(userName,
+                    child: Text("ADMIN",
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.white
@@ -94,7 +84,7 @@ class _SideMenueBarState extends State<SideMenueBar> {
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(
-                      builder: (context) => MyHomePage(title: "Home Page")
+                      builder: (context) => MyAdminHomePage(title: "title")
                   )
               );
 
@@ -102,10 +92,42 @@ class _SideMenueBarState extends State<SideMenueBar> {
             },
           ),
           ListTile(
-            title:   Text("Profile"
+            title:   Text("Approval Requests"
             ),
             leading: const Icon(
-                Icons.account_circle_outlined
+                Icons.add_task_outlined
+            ),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(
+                      builder: (context) => ProflePage()
+                  )
+              );
+
+              //Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            title:   Text("Tournaments"
+            ),
+            leading: const Icon(
+                Icons.sports_kabaddi_outlined
+            ),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(
+                      builder: (context) => ProflePage()
+                  )
+              );
+
+              //Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            title:   Text("Sponsered Events"
+            ),
+            leading: const Icon(
+                Icons.paid_outlined
             ),
             onTap: () {
               Navigator.push(context,
@@ -148,18 +170,19 @@ class _SideMenueBarState extends State<SideMenueBar> {
             },
           ),
           ListTile(
-
-            title: const Text('Admin Panel'),
+            title:   Text("Add Subordinate"
+            ),
             leading: const Icon(
-                Icons.add_circle_outline_outlined
+                Icons.group_add_outlined
             ),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(
-                      builder: (context) => MyAdminHomePage(title: '',)
+                      builder: (context) => ProflePage()
                   )
               );
 
+              //Navigator.pop(context);
             },
           ),
           ListTile(

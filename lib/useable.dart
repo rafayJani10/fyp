@@ -1,7 +1,10 @@
-
+import 'package:fyp/login/view/LoginScreen.dart';
 import 'package:flutter/material.dart';
 
-Container reusableTextField(String text, IconData icon, bool isPasswordType, TextEditingController controller) {
+Container reusableTextField(String text, IconData icon, bool isPasswordType, TextEditingController controller,
+    //bool _isObscure
+)
+{
 
    return Container(
       width: double.infinity,
@@ -15,13 +18,26 @@ Container reusableTextField(String text, IconData icon, bool isPasswordType, Tex
         enableSuggestions: !isPasswordType,
         autocorrect: !isPasswordType,
         cursorColor: Colors.white,
+
         style: TextStyle(color: Colors.white.withOpacity(0.9)),
         decoration: InputDecoration(
           focusColor: Colors.white,
-
+          // suffixIcon:
+          //
+          // IconButton(
+          //   icon: Icon(
+          //       _isObscure ? Icons.visibility : Icons.visibility_off
+          //   ),
+          //   onPressed: () {
+          //
+          //   },
+          //
+          //
+          // ),
           prefixIcon: Icon(
             icon,
             color: Colors.white70,
+
           ),
           labelText: text,
           labelStyle: TextStyle(color: Colors.white.withOpacity(0.9)),
@@ -33,6 +49,15 @@ Container reusableTextField(String text, IconData icon, bool isPasswordType, Tex
       ),
       );
 }
+
+class _togglePasswordView {
+  obscure() {
+    // TODO: implement obscure
+    throw UnimplementedError();
+  }
+}
+
+
 
 
 Container signInSignUpButton(
