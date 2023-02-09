@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../UIcomponents/UIcomponents.dart';
@@ -22,12 +23,17 @@ class _ProflePageState extends State<ProflePage> {
   File? _image;
   final  dbmanager = DatabaseManager();
   late final Map<String,dynamic> dataa;
+  final _firebaseStorage = FirebaseStorage.instance;
 
 
   TextEditingController userNameController = TextEditingController();
   TextEditingController genderController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController enrollmentController = TextEditingController();
+  TextEditingController departmentController = TextEditingController();
+  TextEditingController skillsetController = TextEditingController();
+
 
   Future<dynamic> getUserData() async{
     var data =  await dbmanager.getData('userBioData');
@@ -40,15 +46,27 @@ class _ProflePageState extends State<ProflePage> {
     });
   }
 
-  Future getImage() async{
+  Future getImage() async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if(image == null){return ;}
+    if (image == null) {
+      return;
+    }
 
     final imageTemporary = File(image.path);
-    setState(() {
-      _image = imageTemporary;
-    });
+    if (image != null) {
+      //Upload to Firebase
+      var snapshot = await _firebaseStorage.ref()
+          .child('profileImage/')
+          .putFile(imageTemporary);
+      var downloadUrl = await snapshot.ref.getDownloadURL();
+      setState(() {
+        _image = downloadUrl as File?;
+        print(_image);
+      });
+    }
   }
+
+
 
   Future updateData(userId,full_name,gender,agee,PhoneNo) async {
     var updateDataa = await dbmanager.updataUserData(userId,full_name,gender,agee,PhoneNo);
@@ -172,6 +190,34 @@ class _ProflePageState extends State<ProflePage> {
                       Padding(
                         padding: EdgeInsets.all(15),
                         child: TextField(
+                          controller: enrollmentController,
+                          decoration: InputDecoration(
+                            labelStyle: TextStyle(
+                                color: Colors.black
+                            ),
+                            border: OutlineInputBorder(),
+                            labelText: dataa["enrollmentNo"]  != "" ? dataa["enrollmentNo"] : "Enrollment No",
+                            hintText: "Enrollment No",
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(15),
+                        child: TextField(
+                          controller: departmentController,
+                          decoration: InputDecoration(
+                            labelStyle: TextStyle(
+                                color: Colors.black
+                            ),
+                            border: OutlineInputBorder(),
+                            labelText: dataa["deptname"]  != "" ? dataa["deptno"] : "Deptartment Name",
+                            hintText: "Enrollment No",
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(15),
+                        child: TextField(
                           controller: ageController,
                           decoration: InputDecoration(
                             labelStyle:   TextStyle(
@@ -192,7 +238,8 @@ class _ProflePageState extends State<ProflePage> {
                                 color: Colors.black
                             ),
                             border: OutlineInputBorder(),
-                            labelText: dataa['gender'] != "" ? dataa['gender'] :"gender",
+                            labelText: dataa['gender'] != "" ? dataa['gender'] :"Gender",
+                            hintText: "Male or Female",
 
                           ),
                         ),
@@ -206,11 +253,28 @@ class _ProflePageState extends State<ProflePage> {
                                 color: Colors.black
                             ),
                             border: OutlineInputBorder(),
-                            labelText: dataa["phoneNumber"]  != "" ? dataa["phoneNumber"] : "phone Number",
-                            hintText: "phone Number",
+                            labelText: dataa["phoneNumber"]  != "" ? dataa["phoneNumber"] : "Phone Number",
+                            hintText: "Mobile Number",
                           ),
                         ),
                       ),
+                      Padding(
+                        padding: EdgeInsets.all(15),
+                        child: TextField(
+
+                          controller: skillsetController,
+                          decoration: InputDecoration(
+
+                            labelStyle: TextStyle(
+                                color: Colors.black
+                            ),
+                            border: OutlineInputBorder(),
+                            labelText: dataa["skillset"]  != "" ? dataa["skillset"] : "Skill Set",
+                            hintText: "Game Name and Game Skill",
+                          ),
+                        ),
+                      ),
+
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           primary: Colors.teal[900],
@@ -256,3 +320,5 @@ class _ProflePageState extends State<ProflePage> {
     );
   }
 }
+
+

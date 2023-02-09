@@ -87,7 +87,7 @@ class DatabaseManager {
   }
 
   Future<void> createUserData(String fullname, String email, String password,
-      String confirmpass, String userrole) async {
+      String confirmpass, String enrollmentno, String deptName) async {
     await userData.doc(userid).set(
         {
           'id':userid,
@@ -95,11 +95,13 @@ class DatabaseManager {
           'email': email,
           'password': password,
           'confirmpassword': confirmpass,
-          'userRole': userrole,
-          'picture' :  "https://www.pngitem.com/pimgs/m/168-1686201_clip-art-headshot-person-placeholder-image-png-transparent.png",
+          'enrollmentNo': enrollmentno,
+          'deptname': deptName,
+          'picture' :  "",
           'phoneNumber': userNumber,
           'age':'',
           'gender':'',
+          'skillset':"",
           "projects": []
         }
     ).then((value) => print("data added ::::::::::::::"));

@@ -47,5 +47,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>we used to upload user image</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>use image for upload profile image in firebase</string>
 </dict>
 </plist>

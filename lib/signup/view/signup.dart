@@ -143,7 +143,7 @@ class _SignUpState extends State<SignUp> {
                             print("Email verified successfully :::::::::::::::::::::::::::::::::");
                             userStatus = true;
                             dbmanager.userid;
-                            dbmanager.createUserData(fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text, userRole.toString());
+                            dbmanager.createUserData(fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text, EnrollmentIdController.text, DeptController.text);
                             Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
                             timer!.cancel();
 
