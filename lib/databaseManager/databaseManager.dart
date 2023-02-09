@@ -148,6 +148,7 @@ class DatabaseManager {
           print("onError");
           //return false;
         });
+    print("object");
     return updateDataStatus;
   }
 
