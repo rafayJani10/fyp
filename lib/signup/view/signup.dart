@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/homepage/homepage.dart';
 import 'package:fyp/color_utils.dart';
+import 'package:fyp/login/view/LoginScreen.dart';
 // import 'package:fyp/signup/view/signup.dart';
 // import 'package:fyp/signup/view/signup.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
@@ -144,7 +145,7 @@ class _SignUpState extends State<SignUp> {
                             userStatus = true;
                             dbmanager.userid;
                             dbmanager.createUserData(fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text, EnrollmentIdController.text, DeptController.text);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  LoginScreen()));
                             timer!.cancel();
 
                           }

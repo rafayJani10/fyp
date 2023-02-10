@@ -147,8 +147,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 // ),
                 signInSignUpButton(context, true, () async{
                   print("object ::::::::::::::::::");
-                  emailController.text = "amnarehman3759@gmail.com";
-                  passwordController.text = "Amna3759";
+                  // emailController.text = "amnarehman3759@gmail.com";
+                  // passwordController.text = "Amna3759";
                   var loginCheck = await dbmanager.LoginAuth(emailController.text, passwordController.text);
                   print(loginCheck);
                   if (loginCheck ==  'Successfully login'){

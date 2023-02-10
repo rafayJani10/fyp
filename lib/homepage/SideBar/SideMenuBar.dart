@@ -148,21 +148,6 @@ class _SideMenueBarState extends State<SideMenueBar> {
             },
           ),
           ListTile(
-
-            title: const Text('Admin Panel'),
-            leading: const Icon(
-                Icons.add_circle_outline_outlined
-            ),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(
-                      builder: (context) => MyAdminHomePage(title: '',)
-                  )
-              );
-
-            },
-          ),
-          ListTile(
             title:  const Text('Sign Out'),
             leading: const Icon(
                 Icons.logout_outlined

@@ -140,31 +140,35 @@ class DatabaseManager {
 
         })
         .then((result){
-          print("new User true");
-          updateDataStatus = true;
-          //return true;
-        })
+      print("new User true");
+      updateDataStatus = true;
+      //return true;
+    })
         .catchError((onError){
-          print("onError");
-          //return false;
-        });
+      print("onError");
+      //return false;
+    });
     print("object");
     return updateDataStatus;
   }
 
-  Future<bool?> createEventData(EventAuthor,name,address,totalperso,picture,time,date,TjoinPerson,joinedPerson) async{
+  Future<bool?> createFriendlyEventData(EventAuthor,name,address,sports,picture,time,date,teamsATP,teambTP,JoindePersonTeamA,JoindePersonTeamB,teamA) async{
     var newEventStatus = false;
    await _firestore.collection("events").add(
         {
           'eventAuthore':EventAuthor,
           'name':name,
           'address':address,
-          'totalperso': totalperso,
+          'sports': sports,
           'picture':picture,
           'time':time,
           'date':date,
-          'TjoinPerson':TjoinPerson,
-          'joinedPerson': joinedPerson
+          'teamsATP':teamsATP,
+          'teambTP': teambTP,
+          'JoindePersonTeamA':JoindePersonTeamA,
+          'JoindePersonTeamB':JoindePersonTeamB,
+          'teamA':teamA,
+          'teamB':[]
 
         }).then((value) async{
           print("event created ::::::::::::::::");

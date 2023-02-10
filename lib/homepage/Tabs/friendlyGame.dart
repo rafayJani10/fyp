@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../UIcomponents/UIcomponents.dart';
 import '../../databaseManager/databaseManager.dart';
 import '../UserEventJoined/EventParticipantUser.dart';
+import '../friendlyGameDetails/friendlyGameDetails.dart';
 
 class FriendlyGame extends StatefulWidget {
   const FriendlyGame({Key? key}) : super(key: key);
@@ -18,20 +19,20 @@ class _FriendlyGameState extends State<FriendlyGame> {
   var dbmanager = DatabaseManager();
   var loginUserid = "";
 
-  Future<dynamic> getUserData() async{
-    var data =  await dbmanager.getData('userBioData');
-    var daaa = json.decode(data);
-    setState(() {
-      print("data ::::::::::::");
-      print(daaa['id']);
-      loginUserid = daaa['id'];
-    });
-  }
+  // Future<dynamic> getUserData() async{
+  //   var data =  await dbmanager.getData('userBioData');
+  //   var daaa = json.decode(data);
+  //   setState(() {
+  //     print("data ::::::::::::");
+  //     print(daaa['id']);
+  //     loginUserid = daaa['id'];
+  //   });
+  // }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getUserData();
+    //getUserData();
   }
 
   @override
@@ -46,11 +47,17 @@ class _FriendlyGameState extends State<FriendlyGame> {
             itemBuilder: (BuildContext context, int index) {
               return InkWell(
                 onTap: (){
-                  var tt = snapshot.data?.docs[index]['joinedPerson'];
-                  print(tt);
+                  var authorId = snapshot.data?.docs[index]['eventAuthore'];
+                  var eventIdd = snapshot.data?.docs[index].reference.id;
+                  var teamAJoindeList = snapshot.data?.docs[index]['teamA'];
+                  var teamBJoindeList = snapshot.data?.docs[index]['teamB'];
+                  print(authorId);
+                  print(eventIdd);
+                  print(teamAJoindeList);
+                  print(teamBJoindeList);
                   Navigator.push(context,
                       MaterialPageRoute(
-                          builder: (context) => EventParticipant(tt)
+                          builder: (context) =>  FriendlyEventDetails(AuthoreId: authorId, teamAlist: teamAJoindeList, teamBlist: teamBJoindeList, eventId: eventIdd!,)
                       )
                   );
                 },
@@ -89,7 +96,7 @@ class _FriendlyGameState extends State<FriendlyGame> {
                         ),
                       ),
                       Flexible(
-                          flex: 5,
+                          flex: 6,
                           child: Column(
                             children: [
                               Flexible(
@@ -103,7 +110,7 @@ class _FriendlyGameState extends State<FriendlyGame> {
                                         style: TextStyle(
                                             color: Colors.grey[800],
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 25)),
+                                            fontSize: 20)),
                                   )),
                               Flexible(
                                   flex: 2,
@@ -122,7 +129,7 @@ class _FriendlyGameState extends State<FriendlyGame> {
                                           Text(snapshot.data?.docs[index]['address'],
                                               style: TextStyle(
                                                   color: Colors.grey[800],
-                                                  fontSize: 18))
+                                                  fontSize: 15))
 
                                         ],
                                       )
@@ -138,32 +145,34 @@ class _FriendlyGameState extends State<FriendlyGame> {
                                           children: [
                                             Container(
                                               height: 50,
-                                              width: 45,
+                                              width: 25,
 //color: Colors.green,
                                               child: Column(
                                                 children:  <Widget>[
                                                   Icon(
                                                     Icons.calendar_month,
                                                     color: Colors.grey,
-                                                    size: 30.0,
+                                                    size: 20.0,
                                                   ),
                                                   Text(snapshot.data?.docs[index]['date'],
+                                                      maxLines: 2,
                                                       style: TextStyle(
                                                           fontSize: 9)),
                                                 ],
                                               ),
 
                                             ),
+                                            SizedBox(width: 10,),
                                             Container(
                                               height: 50,
-                                              width: 45,
+                                              width: 25,
 //color: Colors.green,
                                               child: Column(
                                                 children:  <Widget>[
                                                   Icon(
                                                     Icons.timer,
                                                     color: Colors.black,
-                                                    size: 30.0,
+                                                    size: 20.0,
                                                   ),
                                                   Text(snapshot.data?.docs[index]['time'],
                                                       style: TextStyle(
@@ -172,36 +181,76 @@ class _FriendlyGameState extends State<FriendlyGame> {
                                               ),
 
                                             ),
+                                            SizedBox(width: 10,),
                                             Container(
                                               height: 50,
-                                              width: 45,
+                                              width: 25,
 //color: Colors.green,
                                               child: Column(
                                                 children:  <Widget>[
                                                   Icon(
-                                                    Icons.person,
+                                                    Icons.group,
                                                     color: Colors.black,
-                                                    size: 30.0,
+                                                    size: 20.0,
                                                   ),
-                                                  Text(snapshot.data?.docs[index]['totalperso'],
+                                                  Text(snapshot.data?.docs[index]['teamsATP'],
                                                       style: TextStyle(
                                                           fontSize: 9)),
                                                 ],
                                               ),
 
                                             ),
+                                            SizedBox(width: 10,),
                                             Container(
                                               height: 50,
-                                              width: 45,
+                                              width: 25,
 //color: Colors.green,
                                               child: Column(
                                                 children:  <Widget>[
                                                   Icon(
                                                     Icons.person_add,
                                                     color: Colors.green,
-                                                    size: 30.0,
+                                                    size: 20.0,
                                                   ),
-                                                  Text((snapshot.data?.docs[index]['TjoinPerson']).toString(),
+                                                  Text((snapshot.data?.docs[index]['JoindePersonTeamA']).toString(),
+                                                      style: TextStyle(
+                                                          fontSize: 9)),
+                                                ],
+                                              ),
+
+                                            ),
+                                            SizedBox(width: 10,),
+                                            Container(
+                                              height: 50,
+                                              width: 25,
+//color: Colors.green,
+                                              child: Column(
+                                                children:  <Widget>[
+                                                  Icon(
+                                                    Icons.group,
+                                                    color: Colors.black,
+                                                    size: 20.0,
+                                                  ),
+                                                  Text(snapshot.data?.docs[index]['teambTP'],
+                                                      style: TextStyle(
+                                                          fontSize: 9)),
+                                                ],
+                                              ),
+
+                                            ),
+                                            SizedBox(width: 10,),
+                                            Container(
+                                              height: 50,
+                                              width: 25,
+//color: Colors.green,
+                                              child: Column(
+                                                children:  <Widget>[
+                                                  Icon(
+                                                    Icons.person_add,
+                                                    color: Colors.green,
+                                                    size: 20.0,
+                                                  ),
+                                                  Text((snapshot.data?.docs[index]['JoindePersonTeamB']).toString(),
                                                       style: TextStyle(
                                                           fontSize: 9)),
                                                 ],
@@ -215,75 +264,75 @@ class _FriendlyGameState extends State<FriendlyGame> {
                             ],
                           )
                       ),
-                      Flexible(
-                        flex: 1,
-                        child: SizedBox(
-                            height: 150,
-                            // width: 100,
-                            //color: Colors.red,
-                            child: InkWell(
-                              child: Container(
-                                  height: 150,
-                                  color: Colors.teal[900],
-                                  child: RotatedBox(
-                                      quarterTurns: 1,
-                                      child: Center(
-                                        child: const Text("Apply",
-                                            style: TextStyle(
-                                                letterSpacing: 5,
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold
-                                            )),
-                                      )
-                                  )
-                              ),
-                              onTap: () {
-                                print("button pressed : $index");
-                                print(snapshot.data?.docs[index].reference.id);
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text("Are You Sure"),
-                                      content: Text("are you sure to became the participant of this event ??"),
-                                      actions: <Widget>[
-                                        ElevatedButton(
-                                          child: Text("NO"),
-                                          style: ElevatedButton.styleFrom(
-                                              primary: Colors.red[900],
-                                              //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                                              textStyle: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              primary: Colors.teal[900],
-                                              //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                                              textStyle: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
-                                          child: Text("YES"),
-                                          onPressed: () async {
-                                            var selectedProjectId = snapshot.data?.docs[index].reference.id;
-                                            await FirebaseFirestore.instance.collection("events").doc(selectedProjectId)
-                                                .update({"joinedPerson" : FieldValue.arrayUnion([loginUserid])});
-                                            Navigator.of(context).pop();
-                                            showAlertDialog(context,"Done","You can joined the event successfully");
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                            )
-                        ),
-                      ),
+                      // Flexible(
+                      //   flex: 1,
+                      //   child: SizedBox(
+                      //       height: 150,
+                      //       // width: 100,
+                      //       //color: Colors.red,
+                      //       child: InkWell(
+                      //         child: Container(
+                      //             height: 150,
+                      //             color: Colors.teal[900],
+                      //             child: RotatedBox(
+                      //                 quarterTurns: 1,
+                      //                 child: Center(
+                      //                   child: const Text("Apply",
+                      //                       style: TextStyle(
+                      //                           letterSpacing: 5,
+                      //                           color: Colors.white,
+                      //                           fontSize: 20,
+                      //                           fontWeight: FontWeight.bold
+                      //                       )),
+                      //                 )
+                      //             )
+                      //         ),
+                      //         onTap: () {
+                      //           print("button pressed : $index");
+                      //           print(snapshot.data?.docs[index].reference.id);
+                      //           showDialog(
+                      //             context: context,
+                      //             builder: (BuildContext context) {
+                      //               return AlertDialog(
+                      //                 title: Text("Are You Sure"),
+                      //                 content: Text("are you sure to became the participant of this event ??"),
+                      //                 actions: <Widget>[
+                      //                   ElevatedButton(
+                      //                     child: Text("NO"),
+                      //                     style: ElevatedButton.styleFrom(
+                      //                         primary: Colors.red[900],
+                      //                         //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                      //                         textStyle: TextStyle(
+                      //                             fontSize: 15,
+                      //                             fontWeight: FontWeight.bold)),
+                      //                     onPressed: () {
+                      //                       Navigator.of(context).pop();
+                      //                     },
+                      //                   ),
+                      //                   ElevatedButton(
+                      //                     style: ElevatedButton.styleFrom(
+                      //                         primary: Colors.teal[900],
+                      //                         //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                      //                         textStyle: TextStyle(
+                      //                             fontSize: 15,
+                      //                             fontWeight: FontWeight.bold)),
+                      //                     child: Text("YES"),
+                      //                     onPressed: () async {
+                      //                       var selectedProjectId = snapshot.data?.docs[index].reference.id;
+                      //                       await FirebaseFirestore.instance.collection("events").doc(selectedProjectId)
+                      //                           .update({"joinedPerson" : FieldValue.arrayUnion([loginUserid])});
+                      //                       Navigator.of(context).pop();
+                      //                       showAlertDialog(context,"Done","You can joined the event successfully");
+                      //                     },
+                      //                   ),
+                      //                 ],
+                      //               );
+                      //             },
+                      //           );
+                      //         },
+                      //       )
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
