@@ -2,59 +2,34 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/MyEventList/tabs/myFriendlygames.dart';
+import 'package:fyp/MyEventList/tabs/myTournaments.dart';
 import 'package:fyp/databaseManager/databaseManager.dart';
 import 'package:fyp/homepage/Tabs/friendlyGame.dart';
 import 'package:fyp/homepage/Tabs/tournamentEvent.dart';
 import 'package:fyp/homepage/UserEventJoined/EventParticipantUser.dart';
 import '../CreateEvents/tab/tournamentEvent.dart';
 import '../UIcomponents/UIcomponents.dart';
-import 'SideBar//SideMenuBar.dart';
+//import 'SideBar//SideMenuBar.dart';
 //import 'package:';
 //import 'package:auto_layout/auto_layout.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-class MyApp extends StatelessWidget {
 
-  const MyApp({super.key});
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class MyEventList extends StatefulWidget {
+  const MyEventList({super.key,  required this.title});
   final String title;
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyEventList> createState() => _MyEventList();
 }
 
-class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
+class _MyEventList extends State<MyEventList> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final List<Tab> myTabs =  <Tab>[
     new Tab(text: 'a'),
     new Tab(text: 'b'),
   ];
-
-  // var dbmanager = DatabaseManager();
-  // var loginUserid = "";
-
-  // Future<dynamic> getUserData() async{
-  //   var data =  await dbmanager.getData('userBioData');
-  //   var daaa = json.decode(data);
-  //   setState(() {
-  //     print("data ::::::::::::");
-  //     print(daaa['id']);
-  //     loginUserid = daaa['id'];
-  //   });
-  // }
+  
 
   @override
   void initState() {
@@ -74,18 +49,18 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: SideMenueBar(),
+        //drawer: SideMenueBar(),
         appBar: AppBar(
-          title: const Text("Event List"),
+          title: const Text("My Events"),
           backgroundColor: Colors.teal[900],
           bottom: TabBar(
             controller: _tabController,
             tabs: [
               Tab(
                 child: Text('Frinedly Games',
-                style: TextStyle(
-                  color: Colors.white
-                ),
+                  style: TextStyle(
+                      color: Colors.white
+                  ),
                 ),
               ),
               Tab(
@@ -101,8 +76,8 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         body: TabBarView(
           controller: _tabController,
           children: [
-            FriendlyGame(),
-            tournamentEventList()
+            MyFriendlyGame(),
+            MytournamentEventList()
           ],
         )
     );

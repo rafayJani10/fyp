@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/admin/adminhomepage.dart';
 import 'package:fyp/color_utils.dart';
 import 'package:fyp/databaseManager/databaseManager.dart';
 // import 'SecondScreen.dart';
@@ -149,13 +150,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   print("object ::::::::::::::::::");
                   // emailController.text = "amnarehman3759@gmail.com";
                   // passwordController.text = "Amna3759";
-                  var loginCheck = await dbmanager.LoginAuth(emailController.text, passwordController.text);
-                  print(loginCheck);
-                  if (loginCheck ==  'Successfully login'){
+                  if(emailController.text == "admin"){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyAdminHomePage(title: "Admin")));
+                  }else{
+                    var loginCheck = await dbmanager.LoginAuth(emailController.text, passwordController.text);
                     print(loginCheck);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
-                  }else if (loginCheck == "Poor Internet Connection"){
-                    showAlertDialog(context,"Verification Failed", loginCheck!);
+                    if (loginCheck ==  'Successfully login'){
+                      print(loginCheck);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
+                    }else if (loginCheck == "Poor Internet Connection"){
+                      showAlertDialog(context,"Verification Failed", loginCheck!);
+                    }
                   }
                 }),
 

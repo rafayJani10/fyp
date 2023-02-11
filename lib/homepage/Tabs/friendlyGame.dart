@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 
 import '../../UIcomponents/UIcomponents.dart';
 import '../../databaseManager/databaseManager.dart';
+import '../EventsDetailsScreen/friendlyGameDetails.dart';
 import '../UserEventJoined/EventParticipantUser.dart';
-import '../friendlyGameDetails/friendlyGameDetails.dart';
+
 
 class FriendlyGame extends StatefulWidget {
   const FriendlyGame({Key? key}) : super(key: key);

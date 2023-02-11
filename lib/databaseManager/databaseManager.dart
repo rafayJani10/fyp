@@ -102,7 +102,8 @@ class DatabaseManager {
           'age':'',
           'gender':'',
           'skillset':"",
-          "projects": []
+          "projects": [],
+          "TourProjects": []
         }
     ).then((value) => print("data added ::::::::::::::"));
   }
@@ -173,7 +174,7 @@ class DatabaseManager {
         }).then((value) async{
           print("event created ::::::::::::::::");
           await _firestore.collection("users").doc(EventAuthor)
-              .update({"prijects": FieldValue.arrayUnion([value.id])});
+              .update({"projects": FieldValue.arrayUnion([value.id])});
           newEventStatus = true;
 
 
@@ -186,6 +187,42 @@ class DatabaseManager {
 
     });
     return newEventStatus;
+  }
+
+  Future<bool?> createTournamentEvent(EventAuthor,name,address,sports,picture,time,date,totalPlayer,totalTeams) async{
+    var newEventStatus = false;
+    await _firestore.collection("TourEvents").add(
+        {
+          'eventAuthore':EventAuthor,
+          'name':name,
+          'address':address,
+          'sports': sports,
+          'picture':picture,
+          'time':time,
+          'date':date,
+          "totalPlayer":totalPlayer,
+          "totalTeams":totalTeams,
+          "joinUserinteam":0,
+          "joinedUserList":[],
+          "approval":false
+
+        }).then((value) async{
+      print("event created ::::::::::::::::");
+      await _firestore.collection("users").doc(EventAuthor)
+          .update({"TourProjects": FieldValue.arrayUnion([value.id])});
+      newEventStatus = true;
+
+
+
+    }).onError((error, stackTrace) {
+      print("event not created ::::::::::");
+      print(error.toString());
+      newEventStatus = false;
+
+
+    });
+    return newEventStatus;
+
   }
 
 

@@ -17,7 +17,7 @@ class _tournamentEventState extends State<tournamentEvent> {
   var dbmanager = DatabaseManager();
   var date = "Pick a Date";
   var time = "Pick  Time";
-  var userList = [];
+ // var userList = [];
   var EventAuthor = "";
   var selectedLocation = "Table Tennis Area";
   var selectedsports = "Table Tennis";
@@ -26,9 +26,8 @@ class _tournamentEventState extends State<tournamentEvent> {
   var selectteamss = "4";
   List<DropdownMenuItem<String>>? totalPersonDropDownList = [];
 
-  TextEditingController eventNameController = TextEditingController();
-  TextEditingController totalPersonTeamA = TextEditingController();
-  TextEditingController totalPersonTeamB = TextEditingController();
+  TextEditingController tornamentNameController = TextEditingController();
+
 
 
   List<DropdownMenuItem<String>> get locationList{
@@ -100,7 +99,7 @@ class _tournamentEventState extends State<tournamentEvent> {
               padding: EdgeInsets.all(8.0),
               child:  TextField(
                 obscureText: false,
-                controller: eventNameController,
+                controller: tornamentNameController,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintStyle: TextStyle(
@@ -239,45 +238,6 @@ class _tournamentEventState extends State<tournamentEvent> {
 
               )
           ),
-
-          // Padding(
-          //     padding: EdgeInsets.all(8.0),
-          //     child:  TextField(
-          //      // enabled: false,
-          //       controller: totalPersonTeamA,
-          //       obscureText: false,
-          //       decoration: InputDecoration(
-          //           border: OutlineInputBorder(),
-          //           hintStyle: TextStyle(
-          //               color: Colors.black
-          //           ),
-          //           labelStyle:  TextStyle(
-          //               color: Colors.black
-          //           ),
-          //           labelText: 'Team A total Person',
-          //           hintText: "Enter Team A total Personn"
-          //       ),
-          //     )
-          // ),
-          // Padding(
-          //     padding: EdgeInsets.all(8.0),
-          //     child:  TextField(
-          //       controller: totalPersonTeamB,
-          //       obscureText: false,
-          //       decoration: InputDecoration(
-          //           border: OutlineInputBorder(),
-          //           hintStyle: TextStyle(
-          //               color: Colors.black
-          //           ),
-          //           labelStyle:  TextStyle(
-          //               color: Colors.black
-          //           ),
-          //           labelText: 'Team B total Person',
-          //           hintText: "Enter Team B total Personn"
-          //       ),
-          //     )
-          // ),
-
           Padding(
               padding: EdgeInsets.all(8.0),
               child:  Container(
@@ -481,7 +441,8 @@ class _tournamentEventState extends State<tournamentEvent> {
               setState(() {
                 teamAlist.add(EventAuthor);
               });
-              var eventCreate = await dbmanager.createFriendlyEventData(EventAuthor,eventNameController.text,selectedLocation,selectedsports,sportsImage, time, date, selectedTp, selectedTp,1,0,teamAlist);
+             // var eventCreate = await dbmanager.createFriendlyEventData(EventAuthor,tornamentNameController.text,selectedLocation,selectedsports,sportsImage, time, date,);
+              var eventCreate = await dbmanager.createTournamentEvent(EventAuthor, tornamentNameController.text, selectedLocation, selectedsports, sportsImage, time, date, selectedTp, selectteamss);
               if(eventCreate == true){
                 showAlertDialog(context,"Done","Event created successfully");
               }else{

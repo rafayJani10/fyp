@@ -130,31 +130,36 @@ class _SignUpState extends State<SignUp> {
 
                 signInSignUpButton(context, false, () async{
                   dbmanager.SignupWithEmailPassword(EmailController.text, PasswordController.text);
+                  if(fullnameController.text == "" || EnrollmentIdController.text == "" || DeptController.text == "" || DeptController.text  == "" || EmailController.text == "" || PasswordController.text == ""){
+                    showAlertDialog(context,"Error","go and fill your all info");
+                  }else{
+                    showAlertDialog(context,"Verification","verification code sended to your email address");
 
-                  setState(() {
-                    if (userStatus == false){
-                      timer = Timer.periodic(
-                        Duration(seconds: 10),
-                            (_) async {
-                          var isVerified = await dbmanager.checkEmailVerified();
-                          if(isVerified! == "f"){
-                            print("email not verified");
-                            showAlertDialog(context,"Verification Failed","Invalid Email or Paasowrd");
-                          }else{
-                            print("Email verified successfully :::::::::::::::::::::::::::::::::");
-                            userStatus = true;
-                            dbmanager.userid;
-                            dbmanager.createUserData(fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text, EnrollmentIdController.text, DeptController.text);
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  LoginScreen()));
-                            timer!.cancel();
+                    setState(() {
+                      if (userStatus == false){
+                        timer = Timer.periodic(
+                          Duration(seconds: 10),
+                              (_) async {
+                            var isVerified = await dbmanager.checkEmailVerified();
+                            if(isVerified! == "f"){
+                              print("email not verified");
+                            }else{
+                              print("Email verified successfully :::::::::::::::::::::::::::::::::");
+                              userStatus = true;
+                              dbmanager.userid;
+                              dbmanager.createUserData(fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text, EnrollmentIdController.text, DeptController.text);
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  LoginScreen()));
+                              timer!.cancel();
 
-                          }
-                        },
-                      );
-                    }else{
-                      print('suceesfully added darat:::::::::::');
-                    }
-                  });
+                            }
+                          },
+                        );
+                      }else{
+                        print('suceesfully added darat:::::::::::');
+                      }
+                    });
+                  }
+
                 }),
 
                 Padding(

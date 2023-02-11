@@ -6,9 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/CreateEvents/CreateEvents.dart';
-import 'package:fyp/MyEvents/MyEvents.dart';
-import 'package:fyp/admin/adminhomepage.dart';
 import 'package:fyp/homepage/homepage.dart';
+import '../../MyEventList/MyEventList.dart';
+
 import 'package:fyp/login/view/LoginScreen.dart';
 import 'package:fyp/services/firebase_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
