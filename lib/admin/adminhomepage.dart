@@ -89,6 +89,7 @@ class _MyHomePageState extends State<MyAdminHomePage> with SingleTickerProviderS
               ),
               Tab(
                 child: Text('Tournament',
+
                   style: TextStyle(
                       color: Colors.white
                   ),
