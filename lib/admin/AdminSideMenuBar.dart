@@ -11,6 +11,8 @@ import 'package:fyp/services/firebase_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '/ProfilePage/ProfilePage.dart';
 import '/databaseManager/databaseManager.dart';
+import 'AdminCreateEvent.dart';
+import 'AdminProfilePAge.dart';
 import 'approvals.dart';
 
 class AdminSideMenueBar extends StatefulWidget {
@@ -101,22 +103,22 @@ class _AdminSideMenueBarState extends State<AdminSideMenueBar> {
               //Navigator.pop(context);
             },
           ),
-          ListTile(
-            title:   Text("Profile"
-            ),
-            leading: const Icon(
-                Icons.account_circle_outlined
-            ),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(
-                      builder: (context) => ProflePage()
-                  )
-              );
-
-              //Navigator.pop(context);
-            },
-          ),
+          // ListTile(
+          //   title:   Text("Profile"
+          //   ),
+          //   leading: const Icon(
+          //       Icons.account_circle_outlined
+          //   ),
+          //   onTap: () {
+          //     Navigator.push(context,
+          //         MaterialPageRoute(
+          //             builder: (context) => AdminProflePage()
+          //         )
+          //     );
+          //
+          //     //Navigator.pop(context);
+          //   },
+          // ),
           ListTile(
 //            tileColor: Colors.blue ,
 
@@ -141,7 +143,7 @@ class _AdminSideMenueBarState extends State<AdminSideMenueBar> {
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(
-                      builder: (context) => createEvents()
+                      builder: (context) => AdmincreateEvents()
                   )
               );
 

@@ -8,19 +8,19 @@ import '../../../databaseManager/databaseManager.dart';
 
 
 
-class TeamATab extends StatefulWidget {
+class AdminTeamATab extends StatefulWidget {
 
   final String AuthoreId ;
   final List teamAlist;
   final List teamBlist;
   final String eventId;
-  TeamATab({super.key, required this.AuthoreId,required this.teamAlist,required this.teamBlist,required this.eventId});
+  AdminTeamATab({super.key, required this.AuthoreId,required this.teamAlist,required this.teamBlist,required this.eventId});
 
   @override
-  State<TeamATab> createState() => _TeamATabState();
+  State<AdminTeamATab> createState() => _AdminTeamATabState();
 }
 
-class _TeamATabState extends State<TeamATab> {
+class _AdminTeamATabState extends State<AdminTeamATab> {
 
   var dbmanager = DatabaseManager();
   var useriddd = "";
@@ -170,6 +170,9 @@ class _TeamATabState extends State<TeamATab> {
                                     Padding(
                                       padding: EdgeInsets.only(top: 10,left: 10),
                                       child: Text(name,
+                                        softWrap: false,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 20,
@@ -188,12 +191,17 @@ class _TeamATabState extends State<TeamATab> {
                                             ),
                                             SizedBox(width: 4,),
                                             Text(email,
+                                              overflow: TextOverflow.clip,
 
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 12,
+                                                fontSize: 11,
+
 //fontWeight: FontWeight.bold
                                               ),
+                                              softWrap: false,
+                                              maxLines: 1,
+                                              // overflow: TextOverflow.fade,
                                             ),
                                           ],
                                         )
@@ -303,6 +311,9 @@ class _TeamATabState extends State<TeamATab> {
                                               Padding(
                                                 padding: EdgeInsets.only(top: 10,left: 10),
                                                 child: Text(snapshot.data?['fullname'],
+                                                  softWrap: false,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 20,
@@ -319,19 +330,17 @@ class _TeamATabState extends State<TeamATab> {
                                                         size: 20,
                                                         color: Colors.grey,
                                                       ),
-                                                      SizedBox(width: 2,),
+                                                      SizedBox(width: 4,),
                                                       Text(snapshot.data?['email'],
 
                                                         style: TextStyle(
                                                           color: Colors.black,
-
                                                           fontSize: 12,
-
 //fontWeight: FontWeight.bold
                                                         ),
-                                                        // softWrap: false,
-                                                        //
-                                                        // overflow: TextOverflow.ellipsis,
+                                                        softWrap: false,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
                                                       ),
                                                     ],
                                                   )

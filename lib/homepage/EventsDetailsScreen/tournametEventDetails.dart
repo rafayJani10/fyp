@@ -34,6 +34,7 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
 
   var dbmanager = DatabaseManager();
   var LoginUserId = "";
+  var tournamentUserList = [];
 
   Future getLoginUserData()async{
     var data =  await dbmanager.getData('userBioData');
@@ -44,7 +45,27 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
     });
 
   }
+  Future getTeamJoinUserLists() async{
+    var collection = FirebaseFirestore.instance.collection('TourEvents');
+    var docSnapshot = await collection.doc(widget.eventID).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      var tourListUser = data?['joinedUserList'];
+      setState(()  {
+        // print(userData.length);
+        var projLength = tourListUser.length;
+        print(projLength);
+        for (var i = 0; i < projLength; i++) {
+          print(i);
+          tournamentUserList.add(tourListUser[i]);
+          print("sdmasdmgadsjgdasjsad");
+          print(tournamentUserList);
+          //stream = FirebaseFirestore.instance.collection('events').doc(projectList[i]).snapshots();
+        }
+      });
+    }
 
+  }
   Future joimSelectedEvent() async{
     var data =  await dbmanager.getData('userBioData');
     var daaa = json.decode(data);
@@ -55,6 +76,7 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
         {"joinedUserList": FieldValue.arrayUnion([LoginUserId])}
     ).then((value) {
       showAlertDialog(context,"Successfully Join","you successfully join the teams");
+      getTeamJoinUserLists();
     });
   }
 
@@ -63,6 +85,7 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
     // TODO: implement initState
     super.initState();
     getLoginUserData();
+    getTeamJoinUserLists();
   }
 
   @override
@@ -74,10 +97,10 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
         backgroundColor: Colors.teal[900],
       ),
       body: ListView.builder(
-          itemCount: widget.listJoinedUser.length,//myProjectId.length,
+          itemCount: tournamentUserList.length,//myProjectId.length,
           itemBuilder: (BuildContext context, int index){
             return StreamBuilder(
-              stream: FirebaseFirestore.instance.collection('users').doc(widget.listJoinedUser[index]).snapshots(),
+              stream: FirebaseFirestore.instance.collection('users').doc(tournamentUserList[index]).snapshots(),
               builder: (context, snapshot){
                 if (snapshot.data == null ) {
                   return Center(child: Text('NO DATA'));

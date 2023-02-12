@@ -1,132 +1,81 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/CreateEvents/CreateEvents.dart';
+import '../../MyEventList/MyEventList.dart';
 
-import '../../../UIcomponents/UIcomponents.dart';
-import '../../../databaseManager/databaseManager.dart';
+import 'package:fyp/homepage/homepage.dart';
+import 'package:fyp/login/view/LoginScreen.dart';
+import 'package:fyp/services/firebase_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../UIcomponents/UIcomponents.dart';
 
+import '/ProfilePage/ProfilePage.dart';
+import '/databaseManager/databaseManager.dart';
 
+class AdmintournamentEventDetail extends StatefulWidget {
+  final String? authoreId;
+  final String? eventID;
+  final List listJoinedUser ;
 
-class TeamBTab extends StatefulWidget {
-
-  final String AuthoreId ;
-  final List teamAlist;
-  final List teamBlist;
-  final String eventId;
-  TeamBTab({super.key, required this.AuthoreId,required this.teamAlist,required this.teamBlist,required this.eventId});
+  AdmintournamentEventDetail({required this.authoreId,required this.eventID, required this.listJoinedUser});
 
   @override
-  State<TeamBTab> createState() => _TeamBTabState();
+  State<AdmintournamentEventDetail> createState() => _AdmintournamentEventDetailState();
 }
 
-class _TeamBTabState extends State<TeamBTab> {
+class _AdmintournamentEventDetailState extends State<AdmintournamentEventDetail> {
 
   var dbmanager = DatabaseManager();
-  var useriddd = "";
-  var pic = "";
-  var name = "";
-  var email = "";
-  var gender = "";
-  var phoneNo = "";
-  var TeamB_joinUser = [];
-  var joinPersoTeamA = 0;
-  var joinedUserStatus = false;
-
-
-  Future getAuthoreData() async{
-    var collection = FirebaseFirestore.instance.collection('users');
-    //print(widget.AuthoreId);
-    var docSnapshot = await collection.doc(widget.AuthoreId).get();
-    if (docSnapshot.exists) {
-      Map<String, dynamic>? data = docSnapshot.data();
-
-      //print(data?['fullname']);
-
-      setState(()  {
-        pic = data?['picture'];
-        name = data?['fullname'];
-        email = data?['email'];
-        gender = data?['gender'];
-        phoneNo = data?['phoneNumber'];
-      });
-    }
-  }
+  var LoginUserId = "";
 
   Future getLoginUserData()async{
     var data =  await dbmanager.getData('userBioData');
     var daaa = json.decode(data);
     var userid = daaa['id'];
     setState(() {
-      useriddd = userid;
+      LoginUserId = userid;
     });
 
   }
 
-  Future getTeamJoinUserList() async{
-    var collection = FirebaseFirestore.instance.collection('events');
-    var docSnapshot = await collection.doc(widget.eventId).get();
-    if (docSnapshot.exists) {
-      Map<String, dynamic>? data = docSnapshot.data();
-      var teamAlist = data?['teamB'];
-      setState(()  {
-        // print(userData.length);
-        var projLength = teamAlist.length;
-        var joinedUserStatus = data?['JoindePersonTeamA'];
-        print(projLength);
-        for (var i = 0; i < projLength; i++) {
-          print(i);
-          if(teamAlist[i] == widget.AuthoreId){
-            print("already be a part of team");
-            setState(() {
-              joinedUserStatus = true;
-            });
-          }else{
-            TeamB_joinUser.add(teamAlist[i]);
+  Future joimSelectedEvent() async{
+    var data =  await dbmanager.getData('userBioData');
+    var daaa = json.decode(data);
+    var userid = daaa['id'];
 
-          }
-          print("sdmasdmgadsjgdasjsad");
-          print(TeamB_joinUser);
-          //stream = FirebaseFirestore.instance.collection('events').doc(projectList[i]).snapshots();
-        }
-      });
-    }
-
-  }
-
-  Future joindeTeam()async{
-    await FirebaseFirestore.instance.collection('events').doc(widget.eventId).update(
-        {
-          'teamB': FieldValue.arrayUnion([useriddd]),
-          'JoindePersonTeamB': FieldValue.increment(1)
-        }).then((value) {
-      showAlertDialog(context,"Success","Successfully join the group");
-      setState(() {
-        TeamB_joinUser.add(useriddd);
-      });
-
+    await FirebaseFirestore.instance.collection("TourEvents").doc(widget.eventID)
+        .update(
+        {"joinedUserList": FieldValue.arrayUnion([LoginUserId])}
+    ).then((value) {
+      showAlertDialog(context,"Successfully Join","you successfully join the teams");
     });
-
-
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getAuthoreData();
     getLoginUserData();
-    getTeamJoinUserList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //drawer: SideMenueBar(),
+      appBar: AppBar(
+        title: const Text("Event List"),
+        backgroundColor: Colors.teal[900],
+      ),
       body: ListView.builder(
-          itemCount: TeamB_joinUser.length,//myProjectId.length,
+          itemCount: widget.listJoinedUser.length,//myProjectId.length,
           itemBuilder: (BuildContext context, int index){
             return StreamBuilder(
-              stream: FirebaseFirestore.instance.collection('users').doc(TeamB_joinUser[index]).snapshots(),
+              stream: FirebaseFirestore.instance.collection('users').doc(widget.listJoinedUser[index]).snapshots(),
               builder: (context, snapshot){
                 if (snapshot.data == null ) {
                   return Center(child: Text('NO DATA'));
@@ -172,7 +121,7 @@ class _TeamBTabState extends State<TeamBTab> {
                                       padding: EdgeInsets.only(top: 10,left: 10),
                                       child: Text(snapshot.data?['fullname'],
                                         softWrap: false,
-                                        maxLines: 1,
+                                        maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             color: Colors.black,
@@ -193,9 +142,10 @@ class _TeamBTabState extends State<TeamBTab> {
                                             SizedBox(width: 4,),
                                             Text(snapshot.data?['email'],
 
+
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 12,
+                                                fontSize: 11,
 //fontWeight: FontWeight.bold
                                               ),
                                             ),
@@ -256,66 +206,24 @@ class _TeamBTabState extends State<TeamBTab> {
             );
           }
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          getLoginUserData();
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () {
+      //
+      //     if(LoginUserId != ""  && !widget.listJoinedUser.contains(LoginUserId)){
+      //       joimSelectedEvent();
+      //
+      //     }else{
+      //       showAlertDialog(context,"Error","you already in the tournaments");
+      //     }
+      //
+      //   },
+      //   label:  Text('Join Team',
+      //     style: TextStyle(color: Colors.white),),
+      //   icon:  Icon(Icons.add,color: Colors.white,),
+      //
+      //   backgroundColor: Colors.teal[900],
+      // ),
 
-          print(widget.teamAlist);
-
-          if(TeamB_joinUser.isEmpty){
-            print("team b is empty");
-            if(widget.teamAlist.contains(useriddd)){
-              print("user in team a");
-              showAlertDialog(context,"Error","User Already in Team A");
-            }
-            else{
-              joindeTeam();
-            }
-
-          }else{
-            print("team b list is not epmty");
-            for (int i = 0; i < TeamB_joinUser.length; i++) {
-              if (TeamB_joinUser[i] == useriddd){
-                print("user in team b");
-                showAlertDialog(context,"Error","User Already in Team B");
-              }else{
-                print("user not in team b");
-                if(widget.teamAlist.contains(useriddd)){
-                  showAlertDialog(context,"Error","User Already in Team A");
-                }
-                else{
-                  print("user going to add");
-                  joindeTeam();
-                }
-              }
-            }
-          }
-
-
-
-          // if(useriddd != widget.AuthoreId){
-          //   if(TeamB_joinUser.isEmpty){
-          //     joindeTeam();
-          //   }else{
-          //     for (int i = 0; i < TeamB_joinUser.length; i++) {
-          //       if(TeamB_joinUser[i] == useriddd){
-          //         showAlertDialog(context,"Error","You are already joined");
-          //       }else{
-          //         joindeTeam();
-          //       }
-          //     }
-          //   }
-          //
-          // }else{
-          //   showAlertDialog(context,"Error","You are already joinedddd");
-          // }
-        },
-        label:  Text('Joined Team',
-          style: TextStyle(color: Colors.white),),
-        icon:  Icon(Icons.add,color: Colors.white,),
-
-        backgroundColor: Colors.teal[900],
-      ),
     );
   }
 }

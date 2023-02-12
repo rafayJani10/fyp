@@ -170,6 +170,9 @@ class _TeamATabState extends State<TeamATab> {
                                     Padding(
                                       padding: EdgeInsets.only(top: 10,left: 10),
                                       child: Text(name,
+                                        softWrap: false,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 20,
@@ -188,12 +191,17 @@ class _TeamATabState extends State<TeamATab> {
                                             ),
                                             SizedBox(width: 4,),
                                             Text(email,
+                                              overflow: TextOverflow.clip,
 
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 12,
+                                                fontSize: 11,
+
 //fontWeight: FontWeight.bold
                                               ),
+                                              softWrap: false,
+                                              maxLines: 1,
+                                             // overflow: TextOverflow.fade,
                                             ),
                                           ],
                                         )
@@ -303,6 +311,9 @@ class _TeamATabState extends State<TeamATab> {
                                               Padding(
                                                 padding: EdgeInsets.only(top: 10,left: 10),
                                                 child: Text(snapshot.data?['fullname'],
+                                                  softWrap: false,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 20,
@@ -324,9 +335,12 @@ class _TeamATabState extends State<TeamATab> {
 
                                                         style: TextStyle(
                                                           color: Colors.black,
-                                                          fontSize: 16,
+                                                          fontSize: 12,
 //fontWeight: FontWeight.bold
                                                         ),
+                                                        softWrap: false,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
                                                       ),
                                                     ],
                                                   )
@@ -393,19 +407,14 @@ class _TeamATabState extends State<TeamATab> {
         onPressed: () {
           getLoginUserData();
           if(useriddd != widget.AuthoreId){
-            if(TeamA_joinUser.isEmpty){
-              //TeamA_joinUser.add(useriddd);
-              joindeTeam();
-            }else{
-              for (int i = 0; i < TeamA_joinUser.length; i++) {
-                if(TeamA_joinUser[i] == useriddd){
-                  showAlertDialog(context,"Error","You are already joined");
-                }else{
-                  joindeTeam();
-                }
-              }
+            if(TeamA_joinUser.contains(useriddd)){
+              showAlertDialog(context,"Error","You are already join in A");
             }
-
+            else if (widget.teamBlist.contains(useriddd)){
+              showAlertDialog(context,"Error","You are already join in TeamB");
+            }else{
+              joindeTeam();
+            }
           }else{
             showAlertDialog(context,"Error","You are already joinedddd");
           }

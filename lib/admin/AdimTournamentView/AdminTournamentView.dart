@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../UIcomponents/UIcomponents.dart';
 import '../../databaseManager/databaseManager.dart';
 import '../../homepage/EventsDetailsScreen/tournametEventDetails.dart';
+import 'AdminTournamentViewDetail.dart';
 // import '../EventsDetailsScreen/tournametEventDetails.dart';
 // import '../UserEventJoined/EventParticipantUser.dart';
 
@@ -45,7 +46,7 @@ class _adminTournametVieweState extends State<adminTournametViewe> {
 
                     Navigator.push(context,
                         MaterialPageRoute(
-                            builder: (context) => tournamentEventDetail(authoreId: authorId, eventID: eventIdd, listJoinedUser: joinedUserList,)
+                            builder: (context) => AdmintournamentEventDetail(authoreId: authorId, eventID: eventIdd, listJoinedUser: joinedUserList,)
                         )
                     );
                   },
@@ -131,46 +132,54 @@ class _adminTournametVieweState extends State<adminTournametViewe> {
                                               left: 10.0, top: 15),
                                           child: Row(
                                             children: [
-                                              Container(
-                                                height: 50,
-                                                width: 25,
+                                             Tooltip(
+                                               message: "Tournament Date",
+                                               child:  Container(
+                                                 height: 50,
+                                                 width: 25,
 //color: Colors.green,
-                                                child: Column(
-                                                  children:  <Widget>[
-                                                    Icon(
-                                                      Icons.calendar_month,
-                                                      color: Colors.grey,
-                                                      size: 20.0,
-                                                    ),
-                                                    Text(snapshot.data?.docs[index]['date'],
-                                                        maxLines: 2,
-                                                        style: TextStyle(
-                                                            fontSize: 9)),
-                                                  ],
-                                                ),
+                                                 child: Column(
+                                                   children:  <Widget>[
+                                                     Icon(
+                                                       Icons.calendar_month,
+                                                       color: Colors.grey,
+                                                       size: 20.0,
+                                                     ),
+                                                     Text(snapshot.data?.docs[index]['date'],
+                                                         maxLines: 2,
+                                                         style: TextStyle(
+                                                             fontSize: 8)),
+                                                   ],
+                                                 ),
 
+                                               ),
+                                             ),
+                                              SizedBox(width: 5,),
+                                              Tooltip(
+                                                message: "Tournament Time",
+                                                child :Container(
+                                                  height: 50,
+                                                  width: 25,
+//color: Colors.green,
+                                                  child: Column(
+                                                    children:  <Widget>[
+                                                      Icon(
+                                                        Icons.timer,
+                                                        color: Colors.black,
+                                                        size: 20.0,
+                                                      ),
+                                                      Text(snapshot.data?.docs[index]['time'],
+                                                          style: TextStyle(
+                                                              fontSize: 8)),
+                                                    ],
+                                                  ),
+
+                                                ),
                                               ),
                                               SizedBox(width: 5,),
-                                              Container(
-                                                height: 50,
-                                                width: 25,
-//color: Colors.green,
-                                                child: Column(
-                                                  children:  <Widget>[
-                                                    Icon(
-                                                      Icons.timer,
-                                                      color: Colors.black,
-                                                      size: 20.0,
-                                                    ),
-                                                    Text(snapshot.data?.docs[index]['time'],
-                                                        style: TextStyle(
-                                                            fontSize: 9)),
-                                                  ],
-                                                ),
-
-                                              ),
-                                              SizedBox(width: 5,),
-                                              Container(
+                                            Tooltip(
+                                              message: "Total Teams",
+                                              child:   Container(
                                                 height: 50,
                                                 width: 25,
 //color: Colors.green,
@@ -188,8 +197,11 @@ class _adminTournametVieweState extends State<adminTournametViewe> {
                                                 ),
 
                                               ),
+                                            ),
                                               SizedBox(width: 5,),
-                                              Container(
+                                            Tooltip(
+                                              message: "Number Of Teams",
+                                              child:   Container(
                                                 height: 50,
                                                 width: 25,
 //color: Colors.green,
@@ -207,6 +219,7 @@ class _adminTournametVieweState extends State<adminTournametViewe> {
                                                 ),
 
                                               ),
+                                            ),
                                               SizedBox(width: 5,),
                                               Tooltip(
                                                 message: "Winning Price",
@@ -232,24 +245,30 @@ class _adminTournametVieweState extends State<adminTournametViewe> {
                                                 ),
                                               ),
                                               SizedBox(width: 5,),
-                                              Container(
-                                                height: 50,
-                                                width: 25,
-//color: Colors.green,
-                                                child: Column(
-                                                  children:  <Widget>[
-                                                    Icon(
-                                                      Icons.attach_money,
-                                                      color: Colors.green,
-                                                      size: 20.0,
-                                                    ),
-                                                    Text("1000",
-                                                        style: TextStyle(
-                                                            fontSize: 9)),
-                                                  ],
-                                                ),
+                                              Tooltip(
+                                                message: "Tournament Per Team Fee",
+                                                child:  Container(
+                                                  height: 50,
+                                                  width: 25,
 
+
+//color: Colors.green,
+                                                  child: Column(
+                                                    children:  <Widget>[
+                                                      Icon(
+                                                        Icons.attach_money,
+                                                        color: Colors.yellow[800],
+                                                        size: 20.0,
+                                                      ),
+                                                      Text("1000",
+                                                          style: TextStyle(
+                                                              fontSize: 9)),
+                                                    ],
+                                                  ),
+
+                                                ),
                                               ),
+
                                             ],
                                           )
                                       ),

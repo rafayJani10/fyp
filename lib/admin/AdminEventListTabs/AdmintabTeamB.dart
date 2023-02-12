@@ -8,19 +8,19 @@ import '../../../databaseManager/databaseManager.dart';
 
 
 
-class TeamBTab extends StatefulWidget {
+class AdminTeamBTab extends StatefulWidget {
 
   final String AuthoreId ;
   final List teamAlist;
   final List teamBlist;
   final String eventId;
-  TeamBTab({super.key, required this.AuthoreId,required this.teamAlist,required this.teamBlist,required this.eventId});
+  AdminTeamBTab({super.key, required this.AuthoreId,required this.teamAlist,required this.teamBlist,required this.eventId});
 
   @override
-  State<TeamBTab> createState() => _TeamBTabState();
+  State<AdminTeamBTab> createState() => _AdminTeamBTabState();
 }
 
-class _TeamBTabState extends State<TeamBTab> {
+class _AdminTeamBTabState extends State<AdminTeamBTab> {
 
   var dbmanager = DatabaseManager();
   var useriddd = "";
@@ -171,6 +171,9 @@ class _TeamBTabState extends State<TeamBTab> {
                                     Padding(
                                       padding: EdgeInsets.only(top: 10,left: 10),
                                       child: Text(snapshot.data?['fullname'],
+                                        softWrap: false,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 20,

@@ -130,8 +130,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 reusableTextField(
                     "Password", Icons.lock_outline, true, passwordController
                 //, true
-                ),
+                // ),
+                // TextField(n
 
+                //   controller: passwordController,
+                //   obscureText: ,
+
+
+                ),
                 const SizedBox(
                   height: 30,
                 ),
@@ -150,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   print("object ::::::::::::::::::");
                   // emailController.text = "amnarehman3759@gmail.com";
                   // passwordController.text = "Amna3759";
-                  if(emailController.text == "admin"){
+                  if(emailController.text == "busportsadmin@bukc.com" && passwordController.text == "@Admin"){
                     Navigator.push(context, MaterialPageRoute(builder: (context) => MyAdminHomePage(title: "Admin")));
                   }else{
                     var loginCheck = await dbmanager.LoginAuth(emailController.text, passwordController.text);

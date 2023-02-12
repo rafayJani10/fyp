@@ -1,7 +1,6 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,16 +10,16 @@ import '../databaseManager/databaseManager.dart';
 import '../homepage/SideBar/SideMenuBar.dart';
 
 
-class ProflePage extends StatefulWidget {
-  ProflePage({Key? key}) : super(key: key);
+class AdminProflePage extends StatefulWidget {
+  AdminProflePage({Key? key}) : super(key: key);
 
   @override
-  State<ProflePage> createState() => _ProflePageState();
+  State<AdminProflePage> createState() => _AdminProflePageState();
 }
 
 
 
-class _ProflePageState extends State<ProflePage> {
+class _AdminProflePageState extends State<AdminProflePage> {
 
   File? _image;
   final  dbmanager = DatabaseManager();
@@ -29,14 +28,7 @@ class _ProflePageState extends State<ProflePage> {
   var imageurlfromfirestore = "";
   late File _imageFile;
 
-  var full_nameu ;
-  var genderu = "";
-  var ageeu = "";
-  var PhoneNou = "";
-  var pictureu = "";
-  var enrollmentu = "";
-  var departmentu = "";
-  var skillsetu = "" ;
+
 
   TextEditingController userNameController = TextEditingController();
   TextEditingController genderController = TextEditingController();
@@ -50,34 +42,14 @@ class _ProflePageState extends State<ProflePage> {
   Future<dynamic> getUserData() async{
     var data =  await dbmanager.getData('userBioData');
     var daaa = json.decode(data);
-    var useridd = "";
     setState(() {
       dataa = daaa;
       print("lllllllllllllllllll");
       print(daaa);
-      useridd = dataa['id'];
       print(dataa['id']);
     });
-    getuserrDataup(useridd);
   }
-  Future getuserrDataup(String id) async{
-    var collection = FirebaseFirestore.instance.collection('users');
-    var docSnapshot = await collection.doc(id).get();
-    if (docSnapshot.exists) {
-      Map<String, dynamic>? data = docSnapshot.data();
-      setState(()  {
-        print(data!['fullname']);
-        full_nameu = data?['fullname'] ?? "Full name";
-        genderu = data!['gender'] ?? "Gender";
-        ageeu = data!['age'] ?? "Age";
-        PhoneNou = data!['phoneNumber'] ?? "Phone Number";
-        pictureu = data!['picture'];
-         enrollmentu = data!['enrollmentNo'] ?? "Enrollment No";
-         departmentu = data!['deptname'] ?? "Department Name";
-         skillsetu = data!['skillset'] ?? "Skill Set";
-      });
-    }
-  }
+
   Future getImage() async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image == null) {
@@ -122,8 +94,6 @@ class _ProflePageState extends State<ProflePage> {
     // TODO: implement initState
     super.initState();
     getUserData();
-   // getuserrDataup();
-
   }
 
   @override
@@ -154,7 +124,7 @@ class _ProflePageState extends State<ProflePage> {
                               child: ClipOval(
                                 child: _image != null
                                     ? Image.file(_image! ,width: 130,height: 130, fit: BoxFit.fill)
-                                    : Image.network(pictureu, fit: BoxFit.fill),
+                                    : Image.network(dataa['picture'], fit: BoxFit.fill),
                               ),
                             ),
                           ),
@@ -204,7 +174,7 @@ class _ProflePageState extends State<ProflePage> {
                               ),
                               border: OutlineInputBorder(),
                               labelText: dataa['email'] ?? "email",
-                             // hintText: "userName",
+                              // hintText: "userName",
                             ),
                           ),
                         ),
@@ -217,7 +187,7 @@ class _ProflePageState extends State<ProflePage> {
                                   color: Colors.black
                               ),
                               border: OutlineInputBorder(),
-                              labelText: full_nameu ,
+                              labelText: dataa['fullname'] != "" ?dataa['fullname'] : "Full Name",
                               hintText: "Full Name",
                               hintStyle: TextStyle(color: Colors.black12),
                               fillColor: Colors.white54,
@@ -226,99 +196,99 @@ class _ProflePageState extends State<ProflePage> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: enrollmentController,
-                            decoration: InputDecoration(
-                              labelStyle: TextStyle(
-                                  color: Colors.black
-                              ),
-                              border: OutlineInputBorder(),
-                              labelText: enrollmentu,
-                              hintText: "Enrollment No",
-                              hintStyle: TextStyle(color: Colors.black12),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: departmentController,
-                            decoration: InputDecoration(
-                              labelStyle: TextStyle(
-                                  color: Colors.black
-                              ),
-                              border: OutlineInputBorder(),
-                              labelText: departmentu,
-                              hintText: "Department Name",
-                              hintStyle: TextStyle(color: Colors.black12),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: ageController,
-                            decoration: InputDecoration(
-                              labelStyle:   TextStyle(
-                                  color: Colors.black
-                              ),
-                              border: OutlineInputBorder(),
-                              labelText: ageeu,
-                              hintText: "Age",
-                              hintStyle: TextStyle(color: Colors.black12),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: genderController,
-                            decoration: InputDecoration(
-                              labelStyle:   TextStyle(
-                                  color: Colors.black
-                              ),
-                              border: OutlineInputBorder(),
-                              labelText: genderu,
-                              hintText: "Male or Female",
-                              hintStyle: TextStyle(color: Colors.black12),
-
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: phoneNumberController,
-                            decoration: InputDecoration(
-                              labelStyle: TextStyle(
-                                  color: Colors.black
-                              ),
-                              border: OutlineInputBorder(),
-                              labelText: PhoneNou,
-                              hintText: "Mobile Number",
-                              hintStyle: TextStyle(color: Colors.black12),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-
-                            controller: skillsetController,
-                            decoration: InputDecoration(
-
-                              labelStyle: TextStyle(
-                                  color: Colors.black
-                              ),
-                              border: OutlineInputBorder(),
-                              labelText: skillsetu,
-                              hintText: "Game Name and Game Skill",
-                              hintStyle: TextStyle(color: Colors.black12),
-                            ),
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: EdgeInsets.all(15),
+                        //   child: TextField(
+                        //     controller: enrollmentController,
+                        //     decoration: InputDecoration(
+                        //       labelStyle: TextStyle(
+                        //           color: Colors.black
+                        //       ),
+                        //       border: OutlineInputBorder(),
+                        //       labelText: dataa["enrollmentNo"]  != "" ? dataa["enrollmentNo"] : "Enrollment No",
+                        //       hintText: "Enrollment No",
+                        //       hintStyle: TextStyle(color: Colors.black12),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: EdgeInsets.all(15),
+                        //   child: TextField(
+                        //     controller: departmentController,
+                        //     decoration: InputDecoration(
+                        //       labelStyle: TextStyle(
+                        //           color: Colors.black
+                        //       ),
+                        //       border: OutlineInputBorder(),
+                        //       labelText: dataa["deptname"]  != "" ? dataa["deptname"] : "Deptartment Name",
+                        //       hintText: "Department Name",
+                        //       hintStyle: TextStyle(color: Colors.black12),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: EdgeInsets.all(15),
+                        //   child: TextField(
+                        //     controller: ageController,
+                        //     decoration: InputDecoration(
+                        //       labelStyle:   TextStyle(
+                        //           color: Colors.black
+                        //       ),
+                        //       border: OutlineInputBorder(),
+                        //       labelText: dataa['age']  != "" ? dataa['age'] :'Age',
+                        //       hintText: "Age",
+                        //       hintStyle: TextStyle(color: Colors.black12),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: EdgeInsets.all(15),
+                        //   child: TextField(
+                        //     controller: genderController,
+                        //     decoration: InputDecoration(
+                        //       labelStyle:   TextStyle(
+                        //           color: Colors.black
+                        //       ),
+                        //       border: OutlineInputBorder(),
+                        //       labelText: dataa['gender'] != "" ? dataa['gender'] :"Gender",
+                        //       hintText: "Male or Female",
+                        //       hintStyle: TextStyle(color: Colors.black12),
+                        //
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: EdgeInsets.all(15),
+                        //   child: TextField(
+                        //     controller: phoneNumberController,
+                        //     decoration: InputDecoration(
+                        //       labelStyle: TextStyle(
+                        //           color: Colors.black
+                        //       ),
+                        //       border: OutlineInputBorder(),
+                        //       labelText: dataa["phoneNumber"]  != "" ? dataa["phoneNumber"] : "Phone Number",
+                        //       hintText: "Mobile Number",
+                        //       hintStyle: TextStyle(color: Colors.black12),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: EdgeInsets.all(15),
+                        //   child: TextField(
+                        //
+                        //     controller: skillsetController,
+                        //     decoration: InputDecoration(
+                        //
+                        //       labelStyle: TextStyle(
+                        //           color: Colors.black
+                        //       ),
+                        //       border: OutlineInputBorder(),
+                        //       labelText: dataa["skillset"]  != "" ? dataa["skillset"] : "Skill Set",
+                        //       hintText: "Game Name and Game Skill",
+                        //       hintStyle: TextStyle(color: Colors.black12),
+                        //     ),
+                        //   ),
+                        // ),
 
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -331,11 +301,11 @@ class _ProflePageState extends State<ProflePage> {
                             minimumSize: Size(200, 50), //////// HERE
                           ),
                           onPressed: () {
-                            var full_name = userNameController.text == "" ? full_nameu: userNameController.text;
+                            var full_name = userNameController.text == "" ? dataa['fullname']: userNameController.text;
                             var gender = genderController.text == "" ?dataa['gender'] : genderController.text;
                             var agee = ageController.text == "" ? dataa['age'] : ageController.text;
                             var PhoneNo = phoneNumberController.text == "" ? dataa['phoneNumber'] : phoneNumberController.text;
-                            var picture = imageurlfromfirestore == "" ?pictureu: imageurlfromfirestore;
+                            var picture = imageurlfromfirestore;
                             var enrollment = enrollmentController.text == "" ? dataa['enrollmentNo'] : enrollmentController.text;
                             var department = departmentController.text == "" ? dataa['deptname'] : departmentController.text;
                             var skillset = skillsetController.text == "" ? dataa['skillset'] :  skillsetController.text;
@@ -345,8 +315,6 @@ class _ProflePageState extends State<ProflePage> {
                             print(agee);
                             print(PhoneNo);
                             updateData(dataa['id'],full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset);
-                            getuserrDataup(dataa['id']);
-
 
                             // var updateData = await dbmanager.updataUserData(dataa['id'],full_name,gender,agee,PhoneNo);
                             // if (updateData == true){

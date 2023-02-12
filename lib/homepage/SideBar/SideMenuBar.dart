@@ -158,7 +158,7 @@ class _SideMenueBarState extends State<SideMenueBar> {
               await FirebaseServices().signOut();
               FirebaseAuth.instance.signOut().then((value) {
                 print("Signed Out");
-                Navigator.push(context,
+                Navigator.pushReplacement(context,
                     MaterialPageRoute(
                         builder: (context) => const LoginScreen()));
               });

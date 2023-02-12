@@ -108,6 +108,9 @@ class _FriendlyGameState extends State<FriendlyGame> {
                                     //color: Colors.yellow,
                                     height: 50,
                                     child: Text(snapshot.data?.docs[index]['name'],
+                                        softWrap: false,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             color: Colors.grey[800],
                                             fontWeight: FontWeight.bold,
@@ -144,120 +147,140 @@ class _FriendlyGameState extends State<FriendlyGame> {
                                             left: 10.0, top: 15),
                                         child: Row(
                                           children: [
-                                            Container(
-                                              height: 50,
-                                              width: 25,
+                                            Tooltip(
+                                              message: "Event Date",
+                                              child:  Container(
+                                                height: 50,
+                                                width: 25,
 //color: Colors.green,
-                                              child: Column(
-                                                children:  <Widget>[
-                                                  Icon(
-                                                    Icons.calendar_month,
-                                                    color: Colors.grey,
-                                                    size: 20.0,
-                                                  ),
-                                                  Text(snapshot.data?.docs[index]['date'],
-                                                      maxLines: 2,
-                                                      style: TextStyle(
-                                                          fontSize: 9)),
-                                                ],
-                                              ),
+                                                child: Column(
+                                                  children:  <Widget>[
+                                                    Icon(
+                                                      Icons.calendar_month,
+                                                      color: Colors.grey,
+                                                      size: 20.0,
+                                                    ),
+                                                    Text(snapshot.data?.docs[index]['date'],
+                                                        maxLines: 2,
+                                                        style: TextStyle(
+                                                            fontSize: 9)),
+                                                  ],
+                                                ),
 
+                                              ) ,
                                             ),
                                             SizedBox(width: 10,),
-                                            Container(
-                                              height: 50,
-                                              width: 25,
+                                            Tooltip(
+                                              message: "Event Time",
+                                              child: Container(
+                                                height: 50,
+                                                width: 25,
 //color: Colors.green,
-                                              child: Column(
-                                                children:  <Widget>[
-                                                  Icon(
-                                                    Icons.timer,
-                                                    color: Colors.black,
-                                                    size: 20.0,
-                                                  ),
-                                                  Text(snapshot.data?.docs[index]['time'],
-                                                      style: TextStyle(
-                                                          fontSize: 9)),
-                                                ],
-                                              ),
+                                                child: Column(
+                                                  children:  <Widget>[
+                                                    Icon(
+                                                      Icons.timer,
+                                                      color: Colors.black,
+                                                      size: 20.0,
+                                                    ),
+                                                    Text(snapshot.data?.docs[index]['time'],
+                                                        style: TextStyle(
+                                                            fontSize: 9)),
+                                                  ],
+                                                ),
 
+                                              ),
                                             ),
                                             SizedBox(width: 10,),
-                                            Container(
-                                              height: 50,
-                                              width: 25,
+                                            Tooltip(
+                                              message: "Team A Total Players",
+                                              child: Container(
+                                                height: 50,
+                                                width: 25,
 //color: Colors.green,
-                                              child: Column(
-                                                children:  <Widget>[
-                                                  Icon(
-                                                    Icons.group,
-                                                    color: Colors.black,
-                                                    size: 20.0,
-                                                  ),
-                                                  Text(snapshot.data?.docs[index]['teamsATP'],
-                                                      style: TextStyle(
-                                                          fontSize: 9)),
-                                                ],
-                                              ),
+                                                child: Column(
+                                                  children:  <Widget>[
+                                                    Icon(
+                                                      Icons.group,
+                                                      color: Colors.black,
+                                                      size: 20.0,
+                                                    ),
+                                                    Text(snapshot.data?.docs[index]['teamsATP'],
+                                                        style: TextStyle(
+                                                            fontSize: 9)),
+                                                  ],
+                                                ),
 
+                                              ),
                                             ),
                                             SizedBox(width: 10,),
-                                            Container(
-                                              height: 50,
-                                              width: 25,
+                                            Tooltip(
+                                              message: "Team A Joined Players",
+                                              child:  Container(
+                                                height: 50,
+                                                width: 25,
 //color: Colors.green,
-                                              child: Column(
-                                                children:  <Widget>[
-                                                  Icon(
-                                                    Icons.person_add,
-                                                    color: Colors.green,
-                                                    size: 20.0,
-                                                  ),
-                                                  Text((snapshot.data?.docs[index]['JoindePersonTeamA']).toString(),
-                                                      style: TextStyle(
-                                                          fontSize: 9)),
-                                                ],
-                                              ),
+                                                child: Column(
+                                                  children:  <Widget>[
+                                                    Icon(
+                                                      Icons.person_add,
+                                                      color: Colors.green,
+                                                      size: 20.0,
+                                                    ),
+                                                    Text((snapshot.data?.docs[index]['JoindePersonTeamA']).toString(),
+                                                        style: TextStyle(
+                                                            fontSize: 9)),
+                                                  ],
+                                                ),
 
+                                              ),
                                             ),
                                             SizedBox(width: 10,),
-                                            Container(
-                                              height: 50,
-                                              width: 25,
+                                            Tooltip(
+                                              message: "Team B Total Players",
+                                              child: Container(
+                                                height: 50,
+                                                width: 25,
 //color: Colors.green,
-                                              child: Column(
-                                                children:  <Widget>[
-                                                  Icon(
-                                                    Icons.group,
-                                                    color: Colors.black,
-                                                    size: 20.0,
-                                                  ),
-                                                  Text(snapshot.data?.docs[index]['teambTP'],
-                                                      style: TextStyle(
-                                                          fontSize: 9)),
-                                                ],
-                                              ),
+                                                child: Column(
+                                                  children:  <Widget>[
+                                                    Icon(
+                                                      Icons.group,
+                                                      color: Colors.black,
+                                                      size: 20.0,
+                                                    ),
+                                                    Text(snapshot.data?.docs[index]['teambTP'],
+                                                        style: TextStyle(
+                                                            fontSize: 9)),
+                                                  ],
+                                                ),
 
+                                              ),
                                             ),
                                             SizedBox(width: 10,),
-                                            Container(
-                                              height: 50,
-                                              width: 25,
+                                            Tooltip(
+                                              message: "Team B Joined Players",
+                                              child: Container(
+                                                height: 50,
+                                                width: 25,
 //color: Colors.green,
-                                              child: Column(
-                                                children:  <Widget>[
-                                                  Icon(
-                                                    Icons.person_add,
-                                                    color: Colors.green,
-                                                    size: 20.0,
-                                                  ),
-                                                  Text((snapshot.data?.docs[index]['JoindePersonTeamB']).toString(),
-                                                      style: TextStyle(
-                                                          fontSize: 9)),
-                                                ],
-                                              ),
+                                                child: Column(
+                                                  children:  <Widget>[
+                                                    Icon(
+                                                      Icons.person_add,
+                                                      color: Colors.green,
+                                                      size: 20.0,
+                                                    ),
+                                                    Text((snapshot.data?.docs[index]['JoindePersonTeamB']).toString(),
+                                                        style: TextStyle(
+                                                            fontSize: 9)),
+                                                  ],
+                                                ),
 
+                                              ),
                                             ),
+
+
                                           ],
                                         )
                                     ),
