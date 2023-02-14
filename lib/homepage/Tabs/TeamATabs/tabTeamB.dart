@@ -100,7 +100,7 @@ class _TeamBTabState extends State<TeamBTab> {
           'teamB': FieldValue.arrayUnion([useriddd]),
           'JoindePersonTeamB': FieldValue.increment(1)
         }).then((value) {
-      showAlertDialog(context,"Success","Successfully join the group");
+      showAlertDialog(context,"Success","Successfully join the team");
       setState(() {
         TeamB_joinUser.add(useriddd);
       });
@@ -133,7 +133,7 @@ class _TeamBTabState extends State<TeamBTab> {
                 }
                 return Center(
                     child: Container(
-                      margin: EdgeInsets.all(15),
+                      margin: EdgeInsets.all(10),
                       height: 150,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -207,12 +207,33 @@ class _TeamBTabState extends State<TeamBTab> {
                                         child: Row(
                                           children: [
                                             Icon(
-                                              Icons.male,
+                                              Icons.add_business_outlined,
                                               size: 20,
                                               color: Colors.grey,
                                             ),
                                             SizedBox(width: 4,),
-                                            Text(snapshot.data?['gender'],
+                                            Text(snapshot.data?['deptname'],
+
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16,
+//fontWeight: FontWeight.bold
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                    ),
+                                    Padding(
+                                        padding: EdgeInsets.only(top: 3,left: 10),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.equalizer,
+                                              size: 20,
+                                              color: Colors.grey,
+                                            ),
+                                            SizedBox(width: 4,),
+                                            Text(snapshot.data?['skillset'],
 
                                               style: TextStyle(
                                                 color: Colors.black,
@@ -266,7 +287,7 @@ class _TeamBTabState extends State<TeamBTab> {
             print("team b is empty");
             if(widget.teamAlist.contains(useriddd)){
               print("user in team a");
-              showAlertDialog(context,"Error","User Already in Team A");
+              showAlertDialog(context,"Error","You Already in Team A");
             }
             else{
               joindeTeam();
@@ -277,11 +298,11 @@ class _TeamBTabState extends State<TeamBTab> {
             for (int i = 0; i < TeamB_joinUser.length; i++) {
               if (TeamB_joinUser[i] == useriddd){
                 print("user in team b");
-                showAlertDialog(context,"Error","User Already in Team B");
+                showAlertDialog(context,"Error","You Already in Team B");
               }else{
                 print("user not in team b");
                 if(widget.teamAlist.contains(useriddd)){
-                  showAlertDialog(context,"Error","User Already in Team A");
+                  showAlertDialog(context,"Error","You Already in Team A");
                 }
                 else{
                   print("user going to add");
@@ -310,7 +331,7 @@ class _TeamBTabState extends State<TeamBTab> {
           //   showAlertDialog(context,"Error","You are already joinedddd");
           // }
         },
-        label:  Text('Joined Team',
+        label:  Text('Join Team',
           style: TextStyle(color: Colors.white),),
         icon:  Icon(Icons.add,color: Colors.white,),
 

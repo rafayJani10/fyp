@@ -23,7 +23,7 @@ class _AdminApprovalListState extends State<AdminApprovalList> {
         {
           'approval': true
         }).then((value) {
-      showAlertDialog(context,'Success',"you approve this event");
+      showAlertDialog(context,'Success',"You approved this event.");
     }).onError((error, stackTrace) {
       showAlertDialog(context,'Success',error.toString());
     });

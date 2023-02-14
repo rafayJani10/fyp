@@ -146,7 +146,7 @@ class _MyTeamBTabState extends State<MyTeamBTab> {
                 }
                 return Center(
                     child: Container(
-                      margin: EdgeInsets.all(15),
+                      margin: EdgeInsets.all(10),
                       height: 150,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -186,9 +186,12 @@ class _MyTeamBTabState extends State<MyTeamBTab> {
                                         Padding(
                                           padding: EdgeInsets.only(top: 10,left: 10),
                                           child: Text(snapshot.data?['fullname'],
+                                            softWrap: false,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 13,
+                                                fontSize: 20,
                                                 fontWeight: FontWeight.bold
                                             ),
                                           ),
@@ -207,6 +210,27 @@ class _MyTeamBTabState extends State<MyTeamBTab> {
 
                                                   style: TextStyle(
                                                     color: Colors.black,
+                                                    fontSize: 11,
+//fontWeight: FontWeight.bold
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(top: 3,left: 10),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.add_business_outlined,
+                                                  size: 20,
+                                                  color: Colors.grey,
+                                                ),
+                                                SizedBox(width: 4,),
+                                                Text(snapshot.data?['deptname'],
+
+                                                  style: TextStyle(
+                                                    color: Colors.black,
                                                     fontSize: 16,
 //fontWeight: FontWeight.bold
                                                   ),
@@ -219,12 +243,12 @@ class _MyTeamBTabState extends State<MyTeamBTab> {
                                             child: Row(
                                               children: [
                                                 Icon(
-                                                  Icons.male,
+                                                  Icons.equalizer,
                                                   size: 20,
                                                   color: Colors.grey,
                                                 ),
                                                 SizedBox(width: 4,),
-                                                Text(snapshot.data?['gender'],
+                                                Text(snapshot.data?['skillset'],
 
                                                   style: TextStyle(
                                                     color: Colors.black,
@@ -256,27 +280,7 @@ class _MyTeamBTabState extends State<MyTeamBTab> {
                                               ],
                                             )
                                         ),
-                                        Padding(
-                                            padding: EdgeInsets.only(top: 3,left: 10),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.add_business_outlined,
-                                                  size: 20,
-                                                  color: Colors.grey,
-                                                ),
-                                                SizedBox(width: 4,),
-                                                Text(snapshot.data?['deptname'],
 
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16,
-//fontWeight: FontWeight.bold
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                        ),
                                       ],
                                     ),
                                   ),

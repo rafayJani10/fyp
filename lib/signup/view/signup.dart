@@ -131,9 +131,9 @@ class _SignUpState extends State<SignUp> {
                 signInSignUpButton(context, false, () async{
                   dbmanager.SignupWithEmailPassword(EmailController.text, PasswordController.text);
                   if(fullnameController.text == "" || EnrollmentIdController.text == "" || DeptController.text == "" || DeptController.text  == "" || EmailController.text == "" || PasswordController.text == ""){
-                    showAlertDialog(context,"Error","go and fill your all info");
+                    showAlertDialog(context,"Error","incomplete info");
                   }else{
-                    showAlertDialog(context,"Verification","verification code sended to your email address");
+                    showAlertDialog(context,"Verification","verification email has been sent");
 
                     setState(() {
                       if (userStatus == false){

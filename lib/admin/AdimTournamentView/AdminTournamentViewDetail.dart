@@ -157,12 +157,33 @@ class _AdmintournamentEventDetailState extends State<AdmintournamentEventDetail>
                                         child: Row(
                                           children: [
                                             Icon(
-                                              Icons.male,
+                                              Icons.add_business_outlined,
                                               size: 20,
                                               color: Colors.grey,
                                             ),
                                             SizedBox(width: 4,),
-                                            Text(snapshot.data?['gender'],
+                                            Text(snapshot.data?['deptname'],
+
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16,
+//fontWeight: FontWeight.bold
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                    ),
+                                    Padding(
+                                        padding: EdgeInsets.only(top: 3,left: 10),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.equalizer,
+                                              size: 20,
+                                              color: Colors.grey,
+                                            ),
+                                            SizedBox(width: 4,),
+                                            Text(snapshot.data?['skillset'],
 
                                               style: TextStyle(
                                                 color: Colors.black,

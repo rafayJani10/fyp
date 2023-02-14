@@ -27,8 +27,9 @@ class _AdminTeamATabState extends State<AdminTeamATab> {
   var pic = "";
   var name = "";
   var email = "";
-  var gender = "";
+  var deptname = "";
   var phoneNo = "";
+  var skillset = "";
   var TeamA_joinUser = [];
   var joinPersoTeamA = 0;
   var joinedUserStatus = false;
@@ -47,7 +48,8 @@ class _AdminTeamATabState extends State<AdminTeamATab> {
         pic = data?['picture'];
         name = data?['fullname'];
         email = data?['email'];
-        gender = data?['gender'];
+        deptname = data?['deptname'];
+        skillset = data?['skillset'];
         phoneNo = data?['phoneNumber'];
       });
     }
@@ -132,7 +134,7 @@ class _AdminTeamATabState extends State<AdminTeamATab> {
                 //color: Colors.green,
                 child:  Center(
                     child: Container(
-                      margin: EdgeInsets.all(15),
+                      margin: EdgeInsets.all(10),
                       height: 150,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -211,12 +213,33 @@ class _AdminTeamATabState extends State<AdminTeamATab> {
                                         child: Row(
                                           children: [
                                             Icon(
-                                              Icons.male,
+                                              Icons.add_business_outlined,
                                               size: 20,
                                               color: Colors.grey,
                                             ),
                                             SizedBox(width: 4,),
-                                            Text(gender,
+                                            Text(deptname,
+
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16,
+//fontWeight: FontWeight.bold
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                    ),
+                                    Padding(
+                                        padding: EdgeInsets.only(top: 3,left: 10),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.equalizer,
+                                              size: 20,
+                                              color: Colors.grey,
+                                            ),
+                                            SizedBox(width: 4,),
+                                            Text(skillset,
 
                                               style: TextStyle(
                                                 color: Colors.black,
@@ -273,7 +296,7 @@ class _AdminTeamATabState extends State<AdminTeamATab> {
                           }
                           return Center(
                               child: Container(
-                                margin: EdgeInsets.all(15),
+                                margin: EdgeInsets.all(10),
                                 height: 150,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -350,12 +373,33 @@ class _AdminTeamATabState extends State<AdminTeamATab> {
                                                   child: Row(
                                                     children: [
                                                       Icon(
-                                                        Icons.male,
+                                                        Icons.add_business_outlined,
                                                         size: 20,
                                                         color: Colors.grey,
                                                       ),
                                                       SizedBox(width: 4,),
-                                                      Text(snapshot.data?['gender'],
+                                                      Text(snapshot.data?['deptname'],
+
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16,
+//fontWeight: FontWeight.bold
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                              ),
+                                              Padding(
+                                                  padding: EdgeInsets.only(top: 3,left: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.equalizer,
+                                                        size: 20,
+                                                        color: Colors.grey,
+                                                      ),
+                                                      SizedBox(width: 4,),
+                                                      Text(snapshot.data?['skillset'],
 
                                                         style: TextStyle(
                                                           color: Colors.black,

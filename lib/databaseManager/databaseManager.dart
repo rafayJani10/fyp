@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class Model {
   final String fullname;
   final String email;
@@ -117,7 +118,7 @@ class DatabaseManager {
       var emails = data['email'];
       var password = data['password'];
       print(emails);
-      if(emails == emailcheck) {
+      if(emails == emailcheck && password == passwordcheck) {
         /// user Data save in shared prefernce
         saveData('userBioData', data);
         return 'Successfully login';

@@ -134,6 +134,9 @@ class _MyTournamentEventDetailState extends State<MyTournamentEventDetail> {
                                         Padding(
                                           padding: EdgeInsets.only(top: 10,left: 10),
                                           child: Text(snapshot.data?['fullname'],
+                                            softWrap: false,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 20,
@@ -155,7 +158,7 @@ class _MyTournamentEventDetailState extends State<MyTournamentEventDetail> {
 
                                                   style: TextStyle(
                                                     color: Colors.black,
-                                                    fontSize: 16,
+                                                    fontSize: 11,
 //fontWeight: FontWeight.bold
                                                   ),
                                                 ),
@@ -167,16 +170,43 @@ class _MyTournamentEventDetailState extends State<MyTournamentEventDetail> {
                                             child: Row(
                                               children: [
                                                 Icon(
-                                                  Icons.male,
+                                                  Icons.add_business_outlined,
                                                   size: 20,
                                                   color: Colors.grey,
                                                 ),
                                                 SizedBox(width: 4,),
-                                                Text(snapshot.data?['gender'],
+                                                Text(snapshot.data?['deptname'],
 
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 16,
+//fontWeight: FontWeight.bold
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(top: 3,left: 10),
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Icon(
+                                                  Icons.equalizer,
+                                                  size: 20,
+                                                  color: Colors.grey,
+                                                ),
+                                                SizedBox(width: 4,),
+
+                                                Text(snapshot.data?['skillset'],
+
+                                                  softWrap: false,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
 //fontWeight: FontWeight.bold
                                                   ),
                                                 ),

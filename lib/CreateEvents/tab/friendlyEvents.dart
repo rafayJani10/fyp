@@ -26,6 +26,8 @@ class _friendlyEventState extends State<friendlyEvent> {
   var teamAlist = [];
   var selectedTp = "2";
   var tteams = "2";
+
+
  // var tabletennisTP = "2";
  // var badmintonTP = "2";
  // var  footbalTP = "6";
@@ -137,7 +139,16 @@ class _friendlyEventState extends State<friendlyEvent> {
       print(EventAuthor);
     });
   }
+  clearTextInput(){
+  setState(() {
+    eventNameController.clear();
+    time = "Pick Time";
+    date = "Pick a Date";
 
+  });
+
+
+  }
 
 
   @override
@@ -186,47 +197,6 @@ class _friendlyEventState extends State<friendlyEvent> {
                             //color: Colors.teal,
                             child: Center(
                               child: Text(
-                                  "Select Sports Area"
-                              ),
-                            )
-                        )),
-                    // SizedBox(width: 10,),
-                    Flexible(
-                        flex: 1,
-                        child: Container(
-                            height: 60,
-                            //color: Colors.blue,
-                            child:  Center(
-                              child:  DropdownButton(
-                                value: selectedLocation,
-                                items: locationList,
-                                onChanged: (String? value) {
-                                  setState(() {
-                                    selectedLocation = value!;
-                                  });
-                                },
-                              ),
-                            )
-                        ))
-                  ],
-                ),
-              )
-          ),
-          Padding(
-              padding: EdgeInsets.all(8.0),
-              child:  Container(
-                width: double.infinity,
-                height: 60,
-                //color: Colors.red,
-                child: Row(
-                  children: [
-                    Flexible(
-                        flex: 1,
-                        child: Container(
-                            height: 60,
-                            //color: Colors.teal,
-                            child: Center(
-                              child: Text(
                                   "Select Sports"
                               ),
                             )
@@ -254,6 +224,48 @@ class _friendlyEventState extends State<friendlyEvent> {
                 ),
               )
           ),
+          Padding(
+              padding: EdgeInsets.all(8.0),
+              child:  Container(
+                width: double.infinity,
+                height: 60,
+                //color: Colors.red,
+                child: Row(
+                  children: [
+                    Flexible(
+                        flex: 1,
+                        child: Container(
+                            height: 60,
+                            //color: Colors.teal,
+                            child: Center(
+                              child: Text(
+                                  "Select Sports Area"
+                              ),
+                            )
+                        )),
+                    // SizedBox(width: 10,),
+                    Flexible(
+                        flex: 1,
+                        child: Container(
+                            height: 60,
+                            //color: Colors.blue,
+                            child:  Center(
+                              child:  DropdownButton(
+                                value: selectedLocation,
+                                items: locationList,
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    selectedLocation = value!;
+                                  });
+                                },
+                              ),
+                            )
+                        ))
+                  ],
+                ),
+              )
+          ),
+
 
           Padding(
               padding: EdgeInsets.all(8.0),
@@ -515,6 +527,7 @@ class _friendlyEventState extends State<friendlyEvent> {
             ),
             onPressed: () async{
               var sportsImage = "";
+
               if (selectedsports == "Table Tennis"){
                 setState(() {
                   sportsImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/360_F_303275863_EWavqozgkXmiSNoz3zKXoQKcZcGJoGyt.jpeg?alt=media&token=6de2de47-246e-43ac-81d6-4bde71ea869b";
@@ -539,12 +552,22 @@ class _friendlyEventState extends State<friendlyEvent> {
               setState(() {
                 teamAlist.add(EventAuthor);
               });
-              var eventCreate = await dbmanager.createFriendlyEventData(EventAuthor,eventNameController.text,selectedLocation,selectedsports,sportsImage, time, date, selectedTp, selectedTp,1,0,teamAlist);
-              if(eventCreate == true){
-                showAlertDialog(context,"Done","Event created successfully");
-              }else{
-                showAlertDialog(context,"Error","Event Not created");
-              }
+              var eventCreate = await dbmanager.createFriendlyEventData(EventAuthor,eventNameController.text,selectedLocation,
+                  selectedsports,sportsImage, time, date, selectedTp, selectedTp,1,0,teamAlist);
+             if (eventNameController.text == "" && time == "Pick Time" && date == "Pick a Date")
+               {
+                 showAlertDialog(context,"Error","Kindly add all event info");
+                              }
+             else {
+               if(eventCreate == true){
+                 showAlertDialog(context,"Done","Event created successfully");
+                 clearTextInput();
+               }else{
+                 showAlertDialog(context,"Error","Event Not created");
+                 clearTextInput();
+               }
+             }
+
             },
             child: Text('Create Event'),
           ),

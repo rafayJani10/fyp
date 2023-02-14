@@ -31,6 +31,8 @@ class _MyTeamATabState extends State<MyTeamATab> {
   var phoneNo = "";
   var TeamA_joinUser = [];
   var joinPersoTeamA = 0;
+  var department  = "";
+  var skillset = "";
   var joinedUserStatus = false;
 
 
@@ -49,6 +51,8 @@ class _MyTeamATabState extends State<MyTeamATab> {
         email = data?['email'];
         gender = data?['gender'];
         phoneNo = data?['phoneNumber'];
+        department = data?['deptname'];
+        skillset = data?['skillset'];
       });
     }
   }
@@ -145,7 +149,7 @@ class _MyTeamATabState extends State<MyTeamATab> {
                 //color: Colors.green,
                 child:  Center(
                     child: Container(
-                      margin: EdgeInsets.all(15),
+                      margin: EdgeInsets.all(10),
                       height: 150,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -183,6 +187,9 @@ class _MyTeamATabState extends State<MyTeamATab> {
                                     Padding(
                                       padding: EdgeInsets.only(top: 10,left: 10),
                                       child: Text(name,
+                                        softWrap: false,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 20,
@@ -204,7 +211,7 @@ class _MyTeamATabState extends State<MyTeamATab> {
 
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 12,
+                                                fontSize: 15,
 //fontWeight: FontWeight.bold
                                               ),
                                             ),
@@ -216,16 +223,38 @@ class _MyTeamATabState extends State<MyTeamATab> {
                                         child: Row(
                                           children: [
                                             Icon(
-                                              Icons.male,
+                                              Icons.add_business_outlined,
                                               size: 20,
                                               color: Colors.grey,
                                             ),
                                             SizedBox(width: 4,),
-                                            Text(gender,
+                                            Text(department,
 
                                               style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 16,
+//fontWeight: FontWeight.bold
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                    ),
+                                    Padding(
+                                        padding: EdgeInsets.only(top: 3,left: 10),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.equalizer,
+                                              size: 20,
+                                              color: Colors.grey,
+                                            ),
+                                            SizedBox(width: 4,),
+                                            Text(skillset,
+
+
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 12,
 //fontWeight: FontWeight.bold
                                               ),
                                             ),
@@ -252,7 +281,8 @@ class _MyTeamATabState extends State<MyTeamATab> {
                                             ),
                                           ],
                                         )
-                                    )
+                                    ),
+
                                   ],
                                 ),
                               ))
@@ -278,7 +308,7 @@ class _MyTeamATabState extends State<MyTeamATab> {
                           }
                           return Center(
                               child: Container(
-                                margin: EdgeInsets.all(15),
+                                margin: EdgeInsets.all(10),
                                 height: 150,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -316,7 +346,7 @@ class _MyTeamATabState extends State<MyTeamATab> {
                                               child: Column(
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.only(top: 10,left: 10),
+                                                    padding: EdgeInsets.only(top: 10,left: 0),
                                                     child: Text(snapshot.data?['fullname'],
                                                       style: TextStyle(
                                                           color: Colors.black,
@@ -338,7 +368,7 @@ class _MyTeamATabState extends State<MyTeamATab> {
                                                           Text(snapshot.data?['email'],
                                                             style: TextStyle(
                                                               color: Colors.black,
-                                                              fontSize: 10,
+                                                              fontSize: 11,
 //fontWeight: FontWeight.bold
                                                             ),
                                                           ),
@@ -350,12 +380,33 @@ class _MyTeamATabState extends State<MyTeamATab> {
                                                       child: Row(
                                                         children: [
                                                           Icon(
-                                                            Icons.male,
+                                                            Icons.add_business_outlined,
                                                             size: 20,
                                                             color: Colors.grey,
                                                           ),
                                                           SizedBox(width: 4,),
-                                                          Text(snapshot.data?['gender'],
+                                                          Text(snapshot.data?['deptname'],
+
+                                                            style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize: 16,
+//fontWeight: FontWeight.bold
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )
+                                                  ),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(top: 3,left: 10),
+                                                      child: Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.equalizer,
+                                                            size: 20,
+                                                            color: Colors.grey,
+                                                          ),
+                                                          SizedBox(width: 4,),
+                                                          Text(snapshot.data?['skillset'],
 
                                                             style: TextStyle(
                                                               color: Colors.black,
@@ -387,27 +438,7 @@ class _MyTeamATabState extends State<MyTeamATab> {
                                                         ],
                                                       )
                                                   ),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(top: 3,left: 10),
-                                                      child: Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons.add_business_outlined,
-                                                            size: 20,
-                                                            color: Colors.grey,
-                                                          ),
-                                                          SizedBox(width: 4,),
-                                                          Text(snapshot.data?['deptname'],
 
-                                                            style: TextStyle(
-                                                              color: Colors.black,
-                                                              fontSize: 16,
-//fontWeight: FontWeight.bold
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )
-                                                  ),
                                                 ],
                                               ),
                                             ),

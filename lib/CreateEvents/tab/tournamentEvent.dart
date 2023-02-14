@@ -81,6 +81,16 @@ class _tournamentEventState extends State<tournamentEvent> {
       print(EventAuthor);
     });
   }
+  clearTextInput(){
+    setState(() {
+      tornamentNameController.clear();
+      time = "Pick Time";
+      date = "Pick a Date";
+
+    });
+
+
+  }
 
   @override
   void initState() {
@@ -103,54 +113,14 @@ class _tournamentEventState extends State<tournamentEvent> {
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintStyle: TextStyle(
-                        color: Colors.black
+                        color: Colors.black12
                     ),
                     labelStyle:  TextStyle(
                         color: Colors.black
                     ),
                     labelText: 'Tournament Name',
-                    hintText: "Enter Tournament  Name"
-                ),
-              )
-          ),
-          Padding(
-              padding: EdgeInsets.all(8.0),
-              child:  Container(
-                width: double.infinity,
-                height: 60,
-                //color: Colors.red,
-                child: Row(
-                  children: [
-                    Flexible(
-                        flex: 1,
-                        child: Container(
-                            height: 60,
-                            //color: Colors.teal,
-                            child: Center(
-                              child: Text(
-                                "Select Sports Area"
-                              ),
-                            )
-                        )),
-                    // SizedBox(width: 10,),
-                    Flexible(
-                        flex: 1,
-                        child: Container(
-                          height: 60,
-                          //color: Colors.blue,
-                          child:  Center(
-                            child:  DropdownButton(
-                              value: selectedLocation,
-                              items: locationList,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  selectedLocation = value!;
-                                });
-                              },
-                            ),
-                          )
-                        ))
-                  ],
+                    hintText: "Enter Tournament  Name",
+
                 ),
               )
           ),
@@ -196,6 +166,48 @@ class _tournamentEventState extends State<tournamentEvent> {
                 ),
               )
           ),
+          Padding(
+              padding: EdgeInsets.all(8.0),
+              child:  Container(
+                width: double.infinity,
+                height: 60,
+                //color: Colors.red,
+                child: Row(
+                  children: [
+                    Flexible(
+                        flex: 1,
+                        child: Container(
+                            height: 60,
+                            //color: Colors.teal,
+                            child: Center(
+                              child: Text(
+                                "Select Sports Area"
+                              ),
+                            )
+                        )),
+                    // SizedBox(width: 10,),
+                    Flexible(
+                        flex: 1,
+                        child: Container(
+                          height: 60,
+                          //color: Colors.blue,
+                          child:  Center(
+                            child:  DropdownButton(
+                              value: selectedLocation,
+                              items: locationList,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  selectedLocation = value!;
+                                });
+                              },
+                            ),
+                          )
+                        ))
+                  ],
+                ),
+              )
+          ),
+
           Padding(
               padding: EdgeInsets.all(8.0),
               child:  Container(
@@ -445,8 +457,10 @@ class _tournamentEventState extends State<tournamentEvent> {
               var eventCreate = await dbmanager.createTournamentEvent(EventAuthor, tornamentNameController.text, selectedLocation, selectedsports, sportsImage, time, date, selectedTp, selectteamss);
               if(eventCreate == true){
                 showAlertDialog(context,"Done","Event created successfully");
+                clearTextInput();
               }else{
                 showAlertDialog(context,"Error","Event Not created");
+                clearTextInput();
               }
             },
             child: Text('Create Event'),

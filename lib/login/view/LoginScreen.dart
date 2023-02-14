@@ -165,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       print(loginCheck);
                       Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
                     }else if (loginCheck == "Poor Internet Connection"){
-                      showAlertDialog(context,"Verification Failed", loginCheck!);
+                      showAlertDialog(context,"Verification Failed", "Your email or password is incorrect. Please try again.");
                     }
                   }
                 }),

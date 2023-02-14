@@ -75,7 +75,7 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
         .update(
         {"joinedUserList": FieldValue.arrayUnion([LoginUserId])}
     ).then((value) {
-      showAlertDialog(context,"Successfully Join","you successfully join the teams");
+      showAlertDialog(context,"Successfully Join","Your team successfully join the tournaments");
       getTeamJoinUserLists();
     });
   }
@@ -107,7 +107,7 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
                 }
                 return Center(
                     child: Container(
-                      margin: EdgeInsets.all(15),
+                      margin: EdgeInsets.all(8),
                       height: 150,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -143,11 +143,11 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
                                 child: Column(
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.only(top: 10,left: 10),
+                                      padding: EdgeInsets.only(top: 8,left: 8),
                                       child: Text(snapshot.data?['fullname'],
                                         style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: 20,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.bold
                                         ),
                                       ),
@@ -164,9 +164,10 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
                                             SizedBox(width: 4,),
                                             Text(snapshot.data?['email'],
 
+
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 16,
+                                                fontSize: 11,
 //fontWeight: FontWeight.bold
                                               ),
                                             ),
@@ -178,16 +179,37 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
                                         child: Row(
                                           children: [
                                             Icon(
-                                              Icons.male,
+                                              Icons.add_business_outlined,
                                               size: 20,
                                               color: Colors.grey,
                                             ),
                                             SizedBox(width: 4,),
-                                            Text(snapshot.data?['gender'],
+                                            Text(snapshot.data?['deptname'],
 
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 16,
+                                                fontSize: 12,
+//fontWeight: FontWeight.bold
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                    ),
+                                    Padding(
+                                        padding: EdgeInsets.only(top: 3,left: 10),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.equalizer,
+                                              size: 20,
+                                              color: Colors.grey,
+                                            ),
+                                            SizedBox(width: 4,),
+                                            Text(snapshot.data?['skillset'],
+
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 12,
 //fontWeight: FontWeight.bold
                                               ),
                                             ),
@@ -208,7 +230,7 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
 
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 16,
+                                                fontSize: 12,
 //fontWeight: FontWeight.bold
                                               ),
                                             ),
@@ -234,11 +256,11 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
             joimSelectedEvent();
 
           }else{
-            showAlertDialog(context,"Error","you already in the tournaments");
+            showAlertDialog(context,"Error","You already in tournament.");
           }
 
         },
-        label:  Text('Join Team',
+        label:  Text('Add Your Team',
           style: TextStyle(color: Colors.white),),
         icon:  Icon(Icons.add,color: Colors.white,),
 

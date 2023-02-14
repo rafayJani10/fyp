@@ -134,12 +134,14 @@ class _MyFriendlyGameState extends State<MyFriendlyGame> {
                                         width: double.infinity,
                                         padding: EdgeInsets.only(left: 10, top: 15),
                                         //color: Colors.yellow,
-                                        height: 50,
+                                        height: 70,
                                         child: Text(snapshot.data?['name'],
+                                            maxLines: 1,
                                             style: TextStyle(
                                                 color: Colors.grey[800],
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 25)),
+
+                                                fontSize: 22)),
                                       )),
                                   Flexible(
                                       flex: 2,
@@ -158,11 +160,12 @@ class _MyFriendlyGameState extends State<MyFriendlyGame> {
                                               Text(snapshot.data?['address'],
                                                   style: TextStyle(
                                                       color: Colors.grey[800],
-                                                      fontSize: 12))
+                                                      fontSize: 14))
 
                                             ],
                                           )
                                       )),
+
                                   Flexible(
                                       flex: 3,
                                       child: Container(
@@ -174,76 +177,119 @@ class _MyFriendlyGameState extends State<MyFriendlyGame> {
                                               children: [
                                                 Container(
                                                   height: 50,
-                                                  width: 45,
+                                                  width: 25,
 //color: Colors.green,
                                                   child: Column(
                                                     children:  <Widget>[
                                                       Icon(
                                                         Icons.calendar_month,
                                                         color: Colors.grey,
-                                                        size: 30.0,
+                                                        size: 20.0,
                                                       ),
                                                       Text(snapshot.data?['date'],
-                                                          style: TextStyle(
-                                                              fontSize: 7)),
-                                                    ],
-                                                  ),
-
-                                                ),
-                                                Container(
-                                                  height: 50,
-                                                  width: 45,
-//color: Colors.green,
-                                                  child: Column(
-                                                    children:  <Widget>[
-                                                      Icon(
-                                                        Icons.timer,
-                                                        color: Colors.black,
-                                                        size: 30.0,
-                                                      ),
-                                                      Text(snapshot.data?['time'],
+                                                          maxLines: 2,
                                                           style: TextStyle(
                                                               fontSize: 9)),
                                                     ],
                                                   ),
 
                                                 ),
-//                                               Container(
-//                                                 height: 50,
-//                                                 width: 45,
-// //color: Colors.green,
-//                                                 child: Column(
-//                                                   children:  <Widget>[
-//                                                     Icon(
-//                                                       Icons.person,
-//                                                       color: Colors.black,
-//                                                       size: 30.0,
-//                                                     ),
-//                                                     Text(snapshot.data?['totalperso'],
-//                                                         style: TextStyle(
-//                                                             fontSize: 9)),
-//                                                   ],
-//                                                 ),
-//
-//                                               ),
-//                                               Container(
-//                                                 height: 50,
-//                                                 width: 45,
-// //color: Colors.green,
-//                                                 child: Column(
-//                                                   children:  <Widget>[
-//                                                     Icon(
-//                                                       Icons.person_add,
-//                                                       color: Colors.green,
-//                                                       size: 30.0,
-//                                                     ),
-//                                                     Text((snapshot.data?['TjoinPerson']).toString(),
-//                                                         style: TextStyle(
-//                                                             fontSize: 9)),
-//                                                   ],
-//                                                 ),
-//
-//                                               ),
+                                                SizedBox(width: 5,),
+                                                Container(
+                                                  height: 50,
+                                                  width: 25,
+//color: Colors.green,
+                                                  child: Column(
+                                                    children:  <Widget>[
+                                                      Icon(
+                                                        Icons.timer,
+                                                        color: Colors.black,
+                                                        size: 20.0,
+                                                      ),
+                                                      Text(snapshot.data?['time'],
+                                                          style: TextStyle(
+                                                              fontSize: 8)),
+                                                    ],
+                                                  ),
+
+                                                ),
+                                                SizedBox(width: 5,),
+                                              Container(
+                                                height: 50,
+                                                width: 25,
+//color: Colors.green,
+                                                child: Column(
+                                                  children:  <Widget>[
+                                                    Icon(
+                                                      Icons.person,
+                                                      color: Colors.black,
+                                                      size: 20.0,
+                                                    ),
+                                                    Text(snapshot.data?['teamsATP'],
+                                                        style: TextStyle(
+                                                            fontSize: 9)),
+                                                  ],
+                                                ),
+
+                                              ),
+                                                SizedBox(width: 5,),
+                                                Container(
+                                                  height: 50,
+                                                  width: 25,
+//color: Colors.green,
+                                                  child: Column(
+                                                    children:  <Widget>[
+                                                      Icon(
+                                                        Icons.person,
+                                                        color: Colors.black,
+                                                        size: 20.0,
+                                                      ),
+                                                      Text(snapshot.data?['teambTP'],
+                                                          style: TextStyle(
+                                                              fontSize: 9)),
+                                                    ],
+                                                  ),
+
+                                                ),
+                                                SizedBox(width: 5,),
+                                              Container(
+                                                height: 50,
+                                                width: 25,
+//color: Colors.green,
+                                                child: Column(
+                                                  children:  <Widget>[
+                                                    Icon(
+                                                      Icons.person_add,
+                                                      color: Colors.green,
+                                                      size: 20.0,
+                                                    ),
+                                                    Text((snapshot.data?['JoindePersonTeamA']).toString(),
+                                                        style: TextStyle(
+                                                            fontSize: 9)),
+                                                  ],
+                                                ),
+
+                                              ),
+                                                SizedBox(width: 5,),
+
+                                                Container(
+                                                  height: 50,
+                                                  width: 25,
+//color: Colors.green,
+                                                  child: Column(
+                                                    children:  <Widget>[
+                                                      Icon(
+                                                        Icons.person_add,
+                                                        color: Colors.green,
+                                                        size: 20.0,
+                                                      ),
+                                                      Text((snapshot.data?['JoindePersonTeamB']).toString(),
+                                                          style: TextStyle(
+                                                              fontSize: 9)),
+                                                    ],
+                                                  ),
+
+                                                ),
                                               ],
                                             )
                                         ),
