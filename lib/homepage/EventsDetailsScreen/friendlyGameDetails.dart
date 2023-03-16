@@ -83,7 +83,6 @@ class _FriendlyEventDetailsState extends State<FriendlyEventDetails> with Single
           children: [
             TeamATab(AuthoreId: widget.AuthoreId, teamAlist: widget.teamAlist, teamBlist: widget.teamBlist, eventId: widget.eventId),
             TeamBTab(AuthoreId: widget.AuthoreId, teamAlist: widget.teamAlist, teamBlist: widget.teamBlist, eventId: widget.eventId),
-
           ],
         ),
     );

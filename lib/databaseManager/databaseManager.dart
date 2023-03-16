@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -109,22 +110,32 @@ class DatabaseManager {
     ).then((value) => print("data added ::::::::::::::"));
   }
 
-  Future<String?> LoginAuth(emailcheck, passwordcheck) async {
+  Future<Object> LoginAuth(emailcheck, passwordcheck) async {
 
     var collection = FirebaseFirestore.instance.collection('users');
     var querySnapshot = await collection.get();
+    var loginUserRole = -1;
     for (var queryDocumentSnapshot in querySnapshot.docs)  {
       Map<String, dynamic> data = queryDocumentSnapshot.data();
       var emails = data['email'];
       var password = data['password'];
+      print(emailcheck);
       print(emails);
+      print(password);
+      print(password);
+
       if(emails == emailcheck && password == passwordcheck) {
         /// user Data save in shared prefernce
         saveData('userBioData', data);
-        return 'Successfully login';
+        loginUserRole = data['roles'];
+        return loginUserRole;
+      }
+      else{
+        loginUserRole = -1;
+        return loginUserRole;
       }
     }
-    return "Poor Internet Connection";
+    return -2;
   }
 
   Future<bool?> updataUserData(useridd,username,gender,age,phoneNumber,picture,enrollment,department,skillset) async {

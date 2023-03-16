@@ -23,12 +23,13 @@ class SideMenueBar extends StatefulWidget {
 
 class _SideMenueBarState extends State<SideMenueBar> {
 
-  final  dbmanager = DatabaseManager();
+  final dbmanager = DatabaseManager();
   var userName = "";
   var userImage = "";
   var noImagePlaceholder = "";
   var gender = "";
   var userId = "";
+
 
   Future<dynamic> getUserData() async{
     var data =  await dbmanager.getData('userBioData');
@@ -55,10 +56,10 @@ class _SideMenueBarState extends State<SideMenueBar> {
 
   @override
   Widget build(BuildContext context) {
+    var LoginUserRole = 1;
     //getUserData();
     return Drawer(
       child: ListView(
-        // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
@@ -86,22 +87,22 @@ class _SideMenueBarState extends State<SideMenueBar> {
               )
 
           ),
-          ListTile(
-            title:   Text("Home"
-            ),
-            leading: const Icon(
-                Icons.home_filled
-            ),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(
-                      builder: (context) => MyHomePage(title: "Home Page")
-                  )
-              );
+           ListTile(
+             title:   Text("Home"
+             ),
+             leading: const Icon(
+                 Icons.home_filled
+             ),
+             onTap: () {
+               Navigator.push(context,
+                   MaterialPageRoute(
+                       builder: (context) => MyHomePage(title: "Home Page")
+                   )
+               );
 
-              //Navigator.pop(context);
-            },
-          ),
+               //Navigator.pop(context);
+             },
+           ),
           ListTile(
             title:   Text("Profile"
             ),

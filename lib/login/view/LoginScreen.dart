@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/admin/adminhomepage.dart';
@@ -154,20 +156,31 @@ class _LoginScreenState extends State<LoginScreen> {
                 // ),
                 signInSignUpButton(context, true, () async{
                   print("object ::::::::::::::::::");
-                  // emailController.text = "amnarehman3759@gmail.com";
-                  // passwordController.text = "Amna3759";
-                  if(emailController.text == "busportsadmin@bukc.com" && passwordController.text == "@Admin"){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyAdminHomePage(title: "Admin")));
+                  emailController.text = "amnarehman3759@gmail.com";
+                  passwordController.text = "Amna3759";
+                  var loginCheck = await dbmanager.LoginAuth(emailController.text, passwordController.text);
+                  print("login user status:::::::::::::::::::::::");
+                  print(loginCheck);
+                  num status = loginCheck as num;
+                  if(status >= 0){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
                   }else{
-                    var loginCheck = await dbmanager.LoginAuth(emailController.text, passwordController.text);
-                    print(loginCheck);
-                    if (loginCheck ==  'Successfully login'){
-                      print(loginCheck);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
-                    }else if (loginCheck == "Poor Internet Connection"){
-                      showAlertDialog(context,"Verification Failed", "Your email or password is incorrect. Please try again.");
-                    }
+                    print(status);
                   }
+
+                  // if(emailController.text == "busportsadmin@bukc.com" && passwordController.text == "@Admin"){
+                  //   Navigator.push(context, MaterialPageRoute(builder: (context) => MyAdminHomePage(title: "Admin")));
+                  // }
+                  // else{
+                  //   var loginCheck = await dbmanager.LoginAuth(emailController.text, passwordController.text);
+                  //   print(loginCheck);
+                  //   if (loginCheck ==  'Successfully login'){
+                  //     print(loginCheck);
+                  //     Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
+                  //   }else if (loginCheck == "Poor Internet Connection"){
+                  //     showAlertDialog(context,"Verification Failed", "Your email or password is incorrect. Please try again.");
+                  //   }
+                  // }
                 }),
 
                 signUpOption(),

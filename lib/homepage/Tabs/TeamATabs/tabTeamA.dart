@@ -1,11 +1,8 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import '../../../UIcomponents/UIcomponents.dart';
 import '../../../databaseManager/databaseManager.dart';
-
 
 
 class TeamATab extends StatefulWidget {
@@ -19,7 +16,6 @@ class TeamATab extends StatefulWidget {
   @override
   State<TeamATab> createState() => _TeamATabState();
 }
-
 class _TeamATabState extends State<TeamATab> {
 
   var dbmanager = DatabaseManager();
@@ -30,6 +26,7 @@ class _TeamATabState extends State<TeamATab> {
   var department = "";
   var phoneNo = "";
   var skillset = "" ;
+  var teamtp = "";
   var TeamA_joinUser = [];
   var joinPersoTeamA = 0;
   var joinedUserStatus = false;
@@ -54,7 +51,6 @@ class _TeamATabState extends State<TeamATab> {
       });
     }
   }
-
   Future getLoginUserData()async{
     var data =  await dbmanager.getData('userBioData');
     var daaa = json.decode(data);
@@ -64,7 +60,6 @@ class _TeamATabState extends State<TeamATab> {
     });
 
   }
-
   Future getTeamJoinUserList() async{
     var collection = FirebaseFirestore.instance.collection('events');
     var docSnapshot = await collection.doc(widget.eventId).get();
@@ -75,6 +70,7 @@ class _TeamATabState extends State<TeamATab> {
         // print(userData.length);
         var projLength = teamAlist.length;
         var joinedUserStatus = data?['JoindePersonTeamA'];
+        teamtp = data?['teambTP'];
         print(projLength);
         for (var i = 0; i < projLength; i++) {
           print(i);
@@ -95,22 +91,44 @@ class _TeamATabState extends State<TeamATab> {
     }
 
   }
-
   Future joindeTeam()async{
-    //var joinedUserLength = TeamA_joinUser.length;
+    var joinedUserLength = TeamA_joinUser.length;
+    print(":::::::::WEE:E:::::::::;");
+    print(joinedUserLength);
     await FirebaseFirestore.instance.collection('events').doc(widget.eventId).update(
         {
           'teamA': FieldValue.arrayUnion([useriddd]),
-          'JoindePersonTeamA': FieldValue.increment(1)
+          'JoindePersonTeamA': joinedUserLength.toString()
         }).then((value) {
-      showAlertDialog(context,"Success","Successfully join the group");
       setState(() {
         TeamA_joinUser.add(useriddd);
+        print(TeamA_joinUser.length + 1);
+        FirebaseFirestore.instance.collection('events').doc(widget.eventId).update(
+            {
+              'JoindePersonTeamA': (TeamA_joinUser.length + 1).toString()
+            }).then((value) {
+          showAlertDialog(context,"Success","Successfully join the group");
+        });
       });
 
       });
 
 
+  }
+  Future deleteTeam() async{
+    var collection = FirebaseFirestore.instance.collection('events');
+    collection
+        .doc(widget.eventId)
+        .update(
+        {
+          'teamA': FieldValue.arrayRemove([useriddd]),
+        }
+    ).then((value){
+
+      showAlertDialog(context,"Successfull","you deleted from this toyrnament");
+      TeamA_joinUser = [];
+      getTeamJoinUserList();
+    });
   }
 
   @override
@@ -131,7 +149,6 @@ class _TeamATabState extends State<TeamATab> {
               flex: 1,
               child: Container(
                 width: double.infinity,
-                //color: Colors.green,
                 child:  Center(
                     child: Container(
                       margin: EdgeInsets.all(10),
@@ -197,7 +214,7 @@ class _TeamATabState extends State<TeamATab> {
 
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 11,
+                                                fontSize: 12,
 
 //fontWeight: FontWeight.bold
                                               ),
@@ -222,7 +239,7 @@ class _TeamATabState extends State<TeamATab> {
 
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 16,
+                                                fontSize: 12,
 //fontWeight: FontWeight.bold
                                               ),
                                             ),
@@ -243,7 +260,7 @@ class _TeamATabState extends State<TeamATab> {
 
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 14,
+                                                fontSize: 12,
 //fontWeight: FontWeight.bold
                                               ),
                                             ),
@@ -264,7 +281,7 @@ class _TeamATabState extends State<TeamATab> {
 
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 16,
+                                                fontSize: 12,
 //fontWeight: FontWeight.bold
                                               ),
                                             ),
@@ -281,10 +298,9 @@ class _TeamATabState extends State<TeamATab> {
                 ),
               )),
           Flexible(
-              flex: 3,
+              flex: 2,
               child: Container(
                 width: double.infinity,
-                //color: Colors.red,
                 child: ListView.builder(
                     itemCount: TeamA_joinUser.length,//myProjectId.length,
                     itemBuilder: (BuildContext context, int index){
@@ -327,113 +343,167 @@ class _TeamATabState extends State<TeamATab> {
                                         )),
                                     Flexible(
                                         flex: 2,
-                                        child: Container(
-                                          height: 150,
-// color: Colors.orange,
-                                          child: Column(
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(top: 10,left: 10),
-                                                child: Text(snapshot.data?['fullname'],
-                                                  softWrap: false,
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.bold
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              height: 150,
+                                              child: Column(
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(top: 10,left: 10),
+                                                    child: Text(snapshot.data?['fullname'],
+                                                      softWrap: false,
+                                                      maxLines: 1,
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 20,
+                                                          fontWeight: FontWeight.bold
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                  padding: EdgeInsets.only(top: 10,left: 10),
-                                                  child: Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.email,
-                                                        size: 20,
-                                                        color: Colors.grey,
-                                                      ),
-                                                      SizedBox(width: 4,),
-                                                      Text(snapshot.data?['email'],
+                                                  Padding(
+                                                      padding: EdgeInsets.only(top: 10,left: 10),
+                                                      child: Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.email,
+                                                            size: 20,
+                                                            color: Colors.grey,
+                                                          ),
+                                                          SizedBox(width: 4,),
+                                                          Text(snapshot.data?['email'],
 
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 12,
+                                                            style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize: 12,
 //fontWeight: FontWeight.bold
-                                                        ),
-                                                        softWrap: false,
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                    ],
-                                                  )
-                                              ),
-                                              Padding(
-                                                  padding: EdgeInsets.only(top: 3,left: 10),
-                                                  child: Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.add_business_outlined,
-                                                        size: 20,
-                                                        color: Colors.grey,
-                                                      ),
-                                                      SizedBox(width: 4,),
-                                                      Text(snapshot.data?['deptname'],
+                                                            ),
+                                                            //softWrap: false,
+                                                            // maxLines: 1,
+                                                            // overflow: TextOverflow.ellipsis,
+                                                          ),
+                                                        ],
+                                                      )
+                                                  ),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(top: 3,left: 10),
+                                                      child: Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.add_business_outlined,
+                                                            size: 20,
+                                                            color: Colors.grey,
+                                                          ),
+                                                          SizedBox(width: 4,),
+                                                          Text(snapshot.data?['deptname'],
 
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16,
+                                                            style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize: 12,
 //fontWeight: FontWeight.bold
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )
-                                              ),
-                                              Padding(
-                                                  padding: EdgeInsets.only(top: 3,left: 10),
-                                                  child: Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.equalizer,
-                                                        size: 20,
-                                                        color: Colors.grey,
-                                                      ),
-                                                      SizedBox(width: 4,),
-                                                      Text(snapshot.data?['skillset'],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )
+                                                  ),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(top: 3,left: 10),
+                                                      child: Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.equalizer,
+                                                            size: 20,
+                                                            color: Colors.grey,
+                                                          ),
+                                                          SizedBox(width: 4,),
+                                                          Text(snapshot.data?['skillset'],
 
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 14,
+                                                            style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize: 12,
 //fontWeight: FontWeight.bold
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )
-                                              ),
-                                              Padding(
-                                                  padding: EdgeInsets.only(top: 3,left: 10),
-                                                  child: Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.phone_android_sharp,
-                                                        size: 20,
-                                                        color: Colors.grey,
-                                                      ),
-                                                      SizedBox(width: 4,),
-                                                      Text(snapshot.data?['phoneNumber'],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )
+                                                  ),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(top: 3,left: 10),
+                                                      child: Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.phone_android_sharp,
+                                                            size: 20,
+                                                            color: Colors.grey,
+                                                          ),
+                                                          SizedBox(width: 4,),
+                                                          Text(snapshot.data?['phoneNumber'],
 
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16,
+                                                            style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize: 12,
 //fontWeight: FontWeight.bold
-                                                        ),
-                                                      ),
-                                                    ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )
                                                   )
-                                              )
-                                            ],
-                                          ),
+                                                ],
+                                              ),
+                                            ),
+                                            if(snapshot.data?['id'] == useriddd)
+                                             Align(
+                                               alignment: Alignment.bottomRight,
+                                               child: InkWell(
+                                                 onTap: (){
+                                                   showDialog(
+                                                     context: context,
+                                                     builder: (BuildContext context) {
+                                                       return AlertDialog(
+                                                         title: Text("Want to quit???"),
+                                                         actions: <Widget>[
+                                                           ElevatedButton(
+                                                             style: ElevatedButton.styleFrom(
+                                                                 primary: Colors.red
+                                                               //onPrimary: Colors.black,
+                                                             ),
+                                                             child: Text("No"),
+                                                             onPressed: () {
+                                                               Navigator.of(context).pop();
+                                                             },
+                                                           ),
+                                                           ElevatedButton(
+                                                             style: ElevatedButton.styleFrom(
+                                                               primary: Colors.teal[900],
+                                                               //onPrimary: Colors.black,
+                                                             ),
+                                                             child: Text("Yes"),
+                                                             onPressed: () {
+                                                               setState(() {
+                                                                 deleteTeam();
+                                                               });
+                                                               Navigator.of(context).pop();
+                                                             },
+                                                           ),
+                                                         ],
+                                                       );
+                                                     },
+                                                   );
+
+
+                                                 },
+                                                 child:  Container(
+                                                   height: 50,
+                                                   width: 50,
+                                                   // color: Colors.green,
+                                                   child: Icon(Icons.delete,
+                                                     color: Colors.red,
+                                                   ),
+                                                 ),
+                                               )
+                                             )
+                                          ],
                                         ))
                                   ],
                                 ),
@@ -451,23 +521,56 @@ class _TeamATabState extends State<TeamATab> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           getLoginUserData();
-          if(useriddd != widget.AuthoreId){
-            if(TeamA_joinUser.contains(useriddd)){
-              showAlertDialog(context,"Error","You are already join in Team A");
-            }
-            else if (widget.teamBlist.contains(useriddd)){
-              showAlertDialog(context,"Error","You are already join in Team B");
+          if (joinPersoTeamA != teamtp){
+            if(useriddd != widget.AuthoreId){
+              if(TeamA_joinUser.contains(useriddd)){
+                showAlertDialog(context,"Error","You are already join in Team A");
+              }
+              else if (widget.teamBlist.contains(useriddd)){
+                showAlertDialog(context,"Error","You are already join in Team B");
+              }else{
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Want To Join??"),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.red
+                            //onPrimary: Colors.black,
+                          ),
+                          child: Text("No"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.teal[900]
+                            //onPrimary: Colors.black,
+                          ),
+                          child: Text("Yes"),
+                          onPressed: () {
+                            joindeTeam();
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
             }else{
-              joindeTeam();
+              showAlertDialog(context,"Error","You are already joined");
             }
           }else{
-            showAlertDialog(context,"Error","You are already joined");
+            showAlertDialog(context,"Housfull","Sorry member are on its capacity ?");
           }
         },
         label:  Text('Join Team',
           style: TextStyle(color: Colors.white),),
         icon:  Icon(Icons.add,color: Colors.white,),
-
         backgroundColor: Colors.teal[900],
       ),
     );

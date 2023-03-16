@@ -1,18 +1,12 @@
-import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:fyp/databaseManager/databaseManager.dart';
 import 'package:fyp/homepage/Tabs/friendlyGame.dart';
 import 'package:fyp/homepage/Tabs/tournamentEvent.dart';
-import 'package:fyp/homepage/UserEventJoined/EventParticipantUser.dart';
-import '../CreateEvents/tab/tournamentEvent.dart';
-import '../UIcomponents/UIcomponents.dart';
 import 'SideBar//SideMenuBar.dart';
-//import 'package:';
-//import 'package:auto_layout/auto_layout.dart';
 
 void main() {
+  Platform.environment['LANG'] = 'en_US.UTF-8';
   runApp(const MyApp());
 }
 class MyApp extends StatelessWidget {
@@ -42,19 +36,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     new Tab(text: 'a'),
     new Tab(text: 'b'),
   ];
-
-  // var dbmanager = DatabaseManager();
-  // var loginUserid = "";
-
-  // Future<dynamic> getUserData() async{
-  //   var data =  await dbmanager.getData('userBioData');
-  //   var daaa = json.decode(data);
-  //   setState(() {
-  //     print("data ::::::::::::");
-  //     print(daaa['id']);
-  //     loginUserid = daaa['id'];
-  //   });
-  // }
 
   @override
   void initState() {

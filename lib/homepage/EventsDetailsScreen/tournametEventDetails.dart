@@ -34,6 +34,7 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
 
   var dbmanager = DatabaseManager();
   var LoginUserId = "";
+  var eventIdd = "";
   var tournamentUserList = [];
 
   Future getLoginUserData()async{
@@ -52,15 +53,12 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
       Map<String, dynamic>? data = docSnapshot.data();
       var tourListUser = data?['joinedUserList'];
       setState(()  {
-        // print(userData.length);
         var projLength = tourListUser.length;
-        print(projLength);
         for (var i = 0; i < projLength; i++) {
           print(i);
           tournamentUserList.add(tourListUser[i]);
           print("sdmasdmgadsjgdasjsad");
           print(tournamentUserList);
-          //stream = FirebaseFirestore.instance.collection('events').doc(projectList[i]).snapshots();
         }
       });
     }
@@ -75,10 +73,28 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
         .update(
         {"joinedUserList": FieldValue.arrayUnion([LoginUserId])}
     ).then((value) {
+      tournamentUserList = [];
       showAlertDialog(context,"Successfully Join","Your team successfully join the tournaments");
       getTeamJoinUserLists();
     });
   }
+  Future wantDeleteYourself() async{
+    var collection = FirebaseFirestore.instance.collection('TourEvents');
+    collection
+        .doc(widget.eventID)
+        .update(
+        {
+          'joinedUserList': FieldValue.arrayRemove([LoginUserId]),
+        }
+    ).then((value){
+
+      showAlertDialog(context,"Successfull","you deleted from this toyrnament");
+      tournamentUserList = [];
+      getTeamJoinUserLists();
+    });
+
+  }
+
 
   @override
   void initState() {
@@ -130,140 +146,224 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
                                   child: CircleAvatar(
                                     radius: 50,
                                     child: ClipOval(
-                                        child: snapshot.data?['picture'] != "" ?Image.network(snapshot.data?['picture'],  fit: BoxFit.fill) :Image.network("https://img.freepik.com/premium-vector/anonymous-user-circle-icon-vector-illustration-flat-style-with-long-shadow_520826-1931.jpg?w=2000",  fit: BoxFit.fill)
+                                        child: snapshot.data?['picture'] != "" ?Image.network(snapshot.data?['picture'],  fit: BoxFit.fill) :Image.network("https://img.freepik.com/premium-vector/anonymous-user-circle-icon-vector-illustration-flat-style-with-long-shadow_520826-1931.jpg?w=2000",  fit: BoxFit.fitHeight)
                                     ),
                                   ),
                                 ),
                               )),
                           Flexible(
                               flex: 2,
-                              child: Container(
-                                height: 150,
-// color: Colors.orange,
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 8,left: 8),
-                                      child: Text(snapshot.data?['fullname'],
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height: 150,
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 8,left: 8),
+                                          child: Text(snapshot.data?['fullname'],
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                    Padding(
-                                        padding: EdgeInsets.only(top: 10,left: 10),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.email,
-                                              size: 20,
-                                              color: Colors.grey,
-                                            ),
-                                            SizedBox(width: 4,),
-                                            Text(snapshot.data?['email'],
+                                        Padding(
+                                            padding: EdgeInsets.only(top: 10,left: 10),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.email,
+                                                  size: 20,
+                                                  color: Colors.grey,
+                                                ),
+                                                SizedBox(width: 4,),
+                                                Text(snapshot.data?['email'],
 
 
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 11,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 11,
 //fontWeight: FontWeight.bold
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                    ),
-                                    Padding(
-                                        padding: EdgeInsets.only(top: 3,left: 10),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.add_business_outlined,
-                                              size: 20,
-                                              color: Colors.grey,
-                                            ),
-                                            SizedBox(width: 4,),
-                                            Text(snapshot.data?['deptname'],
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(top: 3,left: 10),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.add_business_outlined,
+                                                  size: 20,
+                                                  color: Colors.grey,
+                                                ),
+                                                SizedBox(width: 4,),
+                                                Text(snapshot.data?['deptname'],
 
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 12,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12,
 //fontWeight: FontWeight.bold
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                    ),
-                                    Padding(
-                                        padding: EdgeInsets.only(top: 3,left: 10),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.equalizer,
-                                              size: 20,
-                                              color: Colors.grey,
-                                            ),
-                                            SizedBox(width: 4,),
-                                            Text(snapshot.data?['skillset'],
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(top: 3,left: 10),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.equalizer,
+                                                  size: 20,
+                                                  color: Colors.grey,
+                                                ),
+                                                SizedBox(width: 4,),
+                                                Text(snapshot.data?['skillset'],
 
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 12,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12,
 //fontWeight: FontWeight.bold
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                    ),
-                                    Padding(
-                                        padding: EdgeInsets.only(top: 3,left: 10),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.phone_android_sharp,
-                                              size: 20,
-                                              color: Colors.grey,
-                                            ),
-                                            SizedBox(width: 4,),
-                                            Text(snapshot.data?['phoneNumber'],
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(top: 3,left: 10),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.phone_android_sharp,
+                                                  size: 20,
+                                                  color: Colors.grey,
+                                                ),
+                                                SizedBox(width: 4,),
+                                                Text(snapshot.data?['phoneNumber'],
 
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 12,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12,
 //fontWeight: FontWeight.bold
-                                              ),
-                                            ),
-                                          ],
+                                                  ),
+                                                ),
+                                              ],
+                                            )
                                         )
-                                    )
-                                  ],
-                                ),
+                                      ],
+                                    ),
+                                  ),
+                                  if(snapshot.data?['id'] == LoginUserId)
+                                      InkWell(
+                                        onTap: (){
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text("Want to quit???"),
+                                                actions: <Widget>[
+                                                  ElevatedButton(
+                                                    style: ElevatedButton.styleFrom(
+                                                      primary: Colors.red
+                                                      //onPrimary: Colors.black,
+                                                    ),
+                                                    child: Text("No"),
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                  ),
+                                                  ElevatedButton(
+                                                    style: ElevatedButton.styleFrom(
+                                                      primary: Colors.teal[900],
+                                                      //onPrimary: Colors.black,
+                                                    ),
+                                                    child: Text("Yes"),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        wantDeleteYourself();
+                                                      });
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+
+                                        },
+                                        child: Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: Container(
+                                            height: 50,
+                                            width: 50,
+                                           // color: Colors.orange,
+                                            child: Icon(Icons.delete,
+                                            color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+
+                                ],
                               ))
                         ],
                       ),
-
                     )
                 );
               },
             );
           }
       ),
+
+
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-
           if(LoginUserId != ""  && !widget.listJoinedUser.contains(LoginUserId)){
-            joimSelectedEvent();
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Want to join ???"),
+                  actions: <Widget>[
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.red
+                        //onPrimary: Colors.black,
+                      ),
+                      child: Text("No"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.teal[900],
+                        //onPrimary: Colors.black,
+                      ),
+                      child: Text("Yes"),
+                      onPressed: () {
+                        setState(() {
+                          joimSelectedEvent();
+                        });
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
 
           }else{
             showAlertDialog(context,"Error","You already in tournament.");
           }
-
         },
         label:  Text('Add Your Team',
           style: TextStyle(color: Colors.white),),
         icon:  Icon(Icons.add,color: Colors.white,),
-
         backgroundColor: Colors.teal[900],
       ),
 

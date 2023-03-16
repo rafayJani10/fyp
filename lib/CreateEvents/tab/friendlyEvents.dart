@@ -265,8 +265,6 @@ class _friendlyEventState extends State<friendlyEvent> {
                 ),
               )
           ),
-
-
           Padding(
               padding: EdgeInsets.all(8.0),
               child:  Container(
@@ -351,44 +349,6 @@ class _friendlyEventState extends State<friendlyEvent> {
 
               )
           ),
-
-          // Padding(
-          //     padding: EdgeInsets.all(8.0),
-          //     child:  TextField(
-          //      // enabled: false,
-          //       controller: totalPersonTeamA,
-          //       obscureText: false,
-          //       decoration: InputDecoration(
-          //           border: OutlineInputBorder(),
-          //           hintStyle: TextStyle(
-          //               color: Colors.black
-          //           ),
-          //           labelStyle:  TextStyle(
-          //               color: Colors.black
-          //           ),
-          //           labelText: 'Team A total Person',
-          //           hintText: "Enter Team A total Personn"
-          //       ),
-          //     )
-          // ),
-          // Padding(
-          //     padding: EdgeInsets.all(8.0),
-          //     child:  TextField(
-          //       controller: totalPersonTeamB,
-          //       obscureText: false,
-          //       decoration: InputDecoration(
-          //           border: OutlineInputBorder(),
-          //           hintStyle: TextStyle(
-          //               color: Colors.black
-          //           ),
-          //           labelStyle:  TextStyle(
-          //               color: Colors.black
-          //           ),
-          //           labelText: 'Team B total Person',
-          //           hintText: "Enter Team B total Personn"
-          //       ),
-          //     )
-          // ),
           Padding(
               padding: EdgeInsets.all(8.0),
               child:  Container(
@@ -527,7 +487,6 @@ class _friendlyEventState extends State<friendlyEvent> {
             ),
             onPressed: () async{
               var sportsImage = "";
-
               if (selectedsports == "Table Tennis"){
                 setState(() {
                   sportsImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/360_F_303275863_EWavqozgkXmiSNoz3zKXoQKcZcGJoGyt.jpeg?alt=media&token=6de2de47-246e-43ac-81d6-4bde71ea869b";
@@ -552,13 +511,14 @@ class _friendlyEventState extends State<friendlyEvent> {
               setState(() {
                 teamAlist.add(EventAuthor);
               });
-              var eventCreate = await dbmanager.createFriendlyEventData(EventAuthor,eventNameController.text,selectedLocation,
-                  selectedsports,sportsImage, time, date, selectedTp, selectedTp,1,0,teamAlist);
-             if (eventNameController.text == "" && time == "Pick Time" && date == "Pick a Date")
+
+             if (eventNameController.text == "Event Name" || time == "Pick Time" || date == "Pick a Date")
                {
                  showAlertDialog(context,"Error","Kindly add all event info");
-                              }
+               }
              else {
+               var eventCreate = await dbmanager.createFriendlyEventData(EventAuthor,eventNameController.text,selectedLocation,
+                   selectedsports,sportsImage, time, date, selectedTp, selectedTp,1,0,teamAlist);
                if(eventCreate == true){
                  showAlertDialog(context,"Done","Event created successfully");
                  clearTextInput();
@@ -566,9 +526,7 @@ class _friendlyEventState extends State<friendlyEvent> {
                  showAlertDialog(context,"Error","Event Not created");
                  clearTextInput();
                }
-             }
-
-            },
+             }},
             child: Text('Create Event'),
           ),
         ],

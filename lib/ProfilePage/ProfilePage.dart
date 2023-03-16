@@ -110,7 +110,6 @@ class _ProflePageState extends State<ProflePage> {
       print("dataa updated");
       showAlertDialog(context,"Done","Data Updated Successfully");
       dbmanager.saveData('userBioData', dataa);
-      // getUserData();
     }else{
       print("data not updated");
       showAlertDialog(context,"Error","Data Not Updated ");
