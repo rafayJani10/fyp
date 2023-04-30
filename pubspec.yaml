@@ -48,6 +48,10 @@ dependencies:
   lottie: ^2.2.0
   firebase_storage: ^11.0.11
   permission_handler: ^10.2.0
+  badges: ^3.0.3
+  http:
+  firebase_messaging: ^14.4.1
+  flutter_local_notifications: ^14.0.0+1
 
 dev_dependencies:
   flutter_test:

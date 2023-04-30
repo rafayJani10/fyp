@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../../UIcomponents/UIcomponents.dart';
 import '../../databaseManager/databaseManager.dart';
 import '../../homepage/EventsDetailsScreen/friendlyGameDetails.dart';
@@ -83,7 +82,6 @@ class _MyFriendlyGameState extends State<MyFriendlyGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //drawer: SideMenueBar(),
         body: ListView.builder(
             itemCount: myProjectId.length,
             itemBuilder: (BuildContext context, int index){
@@ -92,7 +90,10 @@ class _MyFriendlyGameState extends State<MyFriendlyGame> {
                 builder: (context, snapshot){
                   if (snapshot.data == null ) {
                     return Center(
-                      child:  Text("no data"),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 5,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                      ),
                     );
                   }
                   return Stack(
@@ -230,7 +231,7 @@ class _MyFriendlyGameState extends State<MyFriendlyGame> {
                                                             color: Colors.black,
                                                             size: 20.0,
                                                           ),
-                                                          Text(snapshot.data?['time'],
+                                                          Text(snapshot.data?['time'][0],
                                                               style: TextStyle(
                                                                   fontSize: 8)),
                                                         ],

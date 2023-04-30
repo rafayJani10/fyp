@@ -214,8 +214,7 @@ class DatabaseManager {
           'date':date,
           "totalPlayer":totalPlayer,
           "totalTeams":totalTeams,
-          "joinUserinteam":0,
-          "joinedUserList":[],
+          "joinedTeamList":[],
           "approval":false
 
         }).then((value) async{
@@ -237,6 +236,27 @@ class DatabaseManager {
 
   }
 
+  Future<bool?> joinedTournamentTeams(teamName, tplayers, creatorName, eventID) async {
+    var jtstatus = false;
+    await _firestore.collection("JoinedTeams").add(
+      {
+        'teamName' : teamName,
+        'Tplayers' : tplayers,
+        'creatorName' : creatorName,
+        'joinedPlayerInTeam' : []
+      }
+    ).then((value) async {
+      // print("joined team id : ${value.id}");
+      // print("event id :${eventID}");
+      await _firestore.collection("TourEvents").doc(eventID).update(
+        {
+          "joinedTeamList" : FieldValue.arrayUnion([value.id])
+        }
+      );
+      jtstatus = true;
+    });
+    return jtstatus;
+  }
 
   /// Login user data save in shared prefernce
   saveData(String key, Map<String, dynamic> value) async {
@@ -244,7 +264,6 @@ class DatabaseManager {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(key, jsonEncode(value));
   }
-
   Future<dynamic> getData(String key) async {
     final prefs = await SharedPreferences.getInstance();
     print("isnide get function ::::::::::::::::::::::::::::::");

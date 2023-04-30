@@ -252,7 +252,7 @@ class _FriendlyGameState extends State<FriendlyGame> {
                                                                 color: Colors.black,
                                                                 size: 20.0,
                                                               ),
-                                                              Text(snapshot.data?.docs[index]['time'],
+                                                              Text(snapshot.data?.docs[index]['time'][0],
                                                                   style: TextStyle(
                                                                       fontSize: 9)),
                                                             ],

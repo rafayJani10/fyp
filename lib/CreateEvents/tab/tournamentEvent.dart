@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/databaseManager/databaseManager.dart';
@@ -24,8 +25,9 @@ class _tournamentEventState extends State<tournamentEvent> {
   var teamAlist = [];
   var selectedTp = "2";
   var selectteamss = "4";
+  var timeSlotsList = ['9-10 am','10-11 am','11-12 am','12-1 pm','3-4 pm','4-5 pm'];
+  var userSelectedTime = [];
   List<DropdownMenuItem<String>>? totalPersonDropDownList = [];
-
   TextEditingController tornamentNameController = TextEditingController();
 
 
@@ -39,7 +41,6 @@ class _tournamentEventState extends State<tournamentEvent> {
     ];
     return menuItems;
   }
-
   List<DropdownMenuItem<String>> get sportsList{
     List<DropdownMenuItem<String>> menuItems = [
       DropdownMenuItem(child: Text("Table Tennis"),value: "Table Tennis"),
@@ -81,10 +82,38 @@ class _tournamentEventState extends State<tournamentEvent> {
       print(EventAuthor);
     });
   }
+  Future CheckTheTimeSlots() async{
+    final collectionReference = FirebaseFirestore.instance.collection('TourEvents');
+    final querySnapshot = await collectionReference
+        .where('date', isEqualTo: date)
+        .where('sports', isEqualTo: selectedsports)
+        .get();
+
+    if (querySnapshot.size > 0) {
+      for (final document in querySnapshot.docs) {
+        final timeList = List<String>.from(document.get('time') as List<dynamic>);
+        print(timeList);
+        for (var i in timeList){
+          if (timeSlotsList.contains(i)){
+            print('existing time is $i');
+            setState(() {
+              timeSlotsList.remove(i);
+            });
+          }
+        }
+      }
+    } else {
+      // No documents found with matching date and game
+      print('no date and sports match on same day');
+      setState(() {
+        timeSlotsList = ['9-10 am','10-11 am','11-12 am','12-1 pm','3-4 pm','4-5 pm'];
+      });
+    }
+  }
   clearTextInput(){
     setState(() {
       tornamentNameController.clear();
-      time = "Pick Time";
+      timeSlotsList = ['9-10 am','10-11 am','11-12 am','12-1 pm','3-4 pm','4-5 pm'];
       date = "Pick a Date";
 
     });
@@ -207,7 +236,6 @@ class _tournamentEventState extends State<tournamentEvent> {
                 ),
               )
           ),
-
           Padding(
               padding: EdgeInsets.all(8.0),
               child:  Container(
@@ -336,6 +364,8 @@ class _tournamentEventState extends State<tournamentEvent> {
                                       setState(() {
                                         date = formattDate;
                                       });
+
+                                      CheckTheTimeSlots();
                                     }
                                   },
                                   child: Container(
@@ -379,19 +409,18 @@ class _tournamentEventState extends State<tournamentEvent> {
                             Flexible(
                                 flex: 1,
                                 child: InkWell(
-                                  onTap: () async{
-                                    TimeOfDay? pickedtime = await showTimePicker(
+                                  onTap: () {
+                                    showDialog(
                                       context: context,
-                                      initialTime: TimeOfDay.now(),
-                                      initialEntryMode: TimePickerEntryMode.dial,
+                                      builder: (BuildContext context) {
+                                        return TimeSlotsDialog(timeSlotsList,userSelectedTime,
+                                                (value, index) {
+                                              // setState(() {
+                                              //   timeSlotModelList[index]['isBooked'] = value;
+                                              // });
+                                            });
+                                      },
                                     );
-                                    if(pickedtime != null){
-                                      print("${pickedtime.hour}:${pickedtime.minute}");
-                                      var formatTime = "${pickedtime.hour}:${pickedtime.minute}";
-                                      setState(() {
-                                        time = formatTime;
-                                      });
-                                    }
                                   },
 
                                   child: Container(
@@ -454,7 +483,7 @@ class _tournamentEventState extends State<tournamentEvent> {
                 teamAlist.add(EventAuthor);
               });
              // var eventCreate = await dbmanager.createFriendlyEventData(EventAuthor,tornamentNameController.text,selectedLocation,selectedsports,sportsImage, time, date,);
-              var eventCreate = await dbmanager.createTournamentEvent(EventAuthor, tornamentNameController.text, selectedLocation, selectedsports, sportsImage, time, date, selectedTp, selectteamss);
+              var eventCreate = await dbmanager.createTournamentEvent(EventAuthor, tornamentNameController.text, selectedLocation, selectedsports, sportsImage, userSelectedTime, date, selectedTp, selectteamss);
               if(eventCreate == true){
                 showAlertDialog(context,"Done","Event created successfully");
                 clearTextInput();
@@ -467,6 +496,153 @@ class _tournamentEventState extends State<tournamentEvent> {
           ),
         ],
       ),
+    );
+  }
+}
+
+
+
+typedef OnTimeSlotSelected = void Function(bool value, int index);
+
+
+class TimeSlotsDialog extends StatefulWidget {
+
+  final timeSlotsList;
+  final userSelectedTime;
+
+  const TimeSlotsDialog(this.timeSlotsList, this.userSelectedTime, Null Function(dynamic value, dynamic index) param2, {super.key});
+
+  @override
+  State<TimeSlotsDialog> createState() => _TimeSlotsDialogState();
+}
+
+class _TimeSlotsDialogState extends State<TimeSlotsDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Select Time Slots'),
+      content: Container(
+          height: 230, // set fixed height
+          child: Column(
+            children: [
+
+              if (widget.timeSlotsList != [])...[
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: List.generate(
+                    widget.timeSlotsList.length,
+                        (index) {
+                      return Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                widget.userSelectedTime.add(widget.timeSlotsList[index]);
+                                widget.timeSlotsList.remove(widget.timeSlotsList[index]);
+                              });
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(widget.timeSlotsList[index],
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 30,
+                          )
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  color: Colors.black,
+                  width: 200,
+                  height: 1,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: List.generate(
+                    widget.userSelectedTime.length,
+                        (index) {
+                      return Column(
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              setState(() {
+                                widget.timeSlotsList.add(widget.userSelectedTime[index]);
+                                widget.userSelectedTime.remove(widget.userSelectedTime[index]);
+                              });
+                            },
+                            child:  Container(
+                              height: 40,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.teal,
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(widget.userSelectedTime[index],
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 30,
+                          )
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ]
+              else
+                Text("No time Slots available"),
+
+            ],
+          )
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            // var abovelcassRef = _friendlyEventState();
+            // setState(() {
+            //   abovelcassRef.timeSlotsList =  ['9-10 am','10-11 am','11-12 am','12-1 pm','3-4 pm','4-5 pm'];
+            // });
+          },
+          child: Text('Done'),
+        ),
+      ],
     );
   }
 }
