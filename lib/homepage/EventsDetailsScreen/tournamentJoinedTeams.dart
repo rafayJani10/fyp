@@ -132,8 +132,11 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                             print("ssssss done done");
                             teamName_textController.clear();
                             tplayer_textController.clear();
-                            joinedTeamList = [];
-                            getJoinedTeamList();
+                            setState(() {
+                              joinedTeamList = [];
+                              getJoinedTeamList();
+                            });
+
                             Navigator.pop(context);
                             showAlertDialog(context, "Done", "you are successfukky joined the team ");
                           }
@@ -193,8 +196,6 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                         context,
                         MaterialPageRoute(builder: (context) =>  tournamentEventDetail(authoreId: widget.authoreId,teamID: snapshot.data?.id)),
                       );
-
-
                     },
                     child: Container(
                         height: 100,
@@ -303,6 +304,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
       ),
      floatingActionButton: FloatingActionButton.extended(
        onPressed: () {
+
          showDialog(
            context: context,
            builder: (BuildContext context) {

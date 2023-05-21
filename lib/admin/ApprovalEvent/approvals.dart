@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../../UIcomponents/UIcomponents.dart';
-import '../../databaseManager/databaseManager.dart';
-import '../homepage/EventsDetailsScreen/tournametEventDetails.dart';
+import '../../../UIcomponents/UIcomponents.dart';
+import '../../../databaseManager/databaseManager.dart';
+import '../../homepage/EventsDetailsScreen/tournametEventDetails.dart';
+import 'approvalEventForm.dart';
 
 
 
@@ -17,17 +18,7 @@ class AdminApprovalList extends StatefulWidget {
 class _AdminApprovalListState extends State<AdminApprovalList> {
   var dbmanager = DatabaseManager();
   var loginUserid = "";
-  
-  Future approveEvent (String eventid) async{
-    await FirebaseFirestore.instance.collection("TourEvents").doc(eventid).update(
-        {
-          'approval': true
-        }).then((value) {
-      showAlertDialog(context,'Success',"You approved this event.");
-    }).onError((error, stackTrace) {
-      showAlertDialog(context,'Success',error.toString());
-    });
-  }
+
   
   @override
   Widget build(BuildContext context) {
@@ -49,9 +40,9 @@ class _AdminApprovalListState extends State<AdminApprovalList> {
                   return InkWell(
                     onTap: (){
                       print("");
-                      var eventid = snapshot.data?.docs[index].reference.id;
-                      print(eventid);
-                      approveEvent(eventid!);
+                      Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (context) =>  Approval_form(eventID: snapshot.data?.docs[index].id)));
                     },
                     child:  Container(
                       margin: EdgeInsets.all(15),
@@ -166,7 +157,8 @@ class _AdminApprovalListState extends State<AdminApprovalList> {
                                                         color: Colors.black,
                                                         size: 20.0,
                                                       ),
-                                                      Text(snapshot.data?.docs[index]['time'],
+                                                      Text((snapshot.data?.docs[index]['time'][0]).toString() ?? "kk",
+
                                                           style: TextStyle(
                                                               fontSize: 9)),
                                                     ],
@@ -204,7 +196,7 @@ class _AdminApprovalListState extends State<AdminApprovalList> {
                                                         color: Colors.green,
                                                         size: 20.0,
                                                       ),
-                                                      Text((snapshot.data?.docs[index]['joinedUserList'].length).toString(),
+                                                      Text("0",
                                                           style: TextStyle(
                                                               fontSize: 9)),
                                                     ],
@@ -217,9 +209,6 @@ class _AdminApprovalListState extends State<AdminApprovalList> {
                                                   child:  Container(
                                                     height: 50,
                                                     width: 25,
-
-
-//color: Colors.green,
                                                     child: Column(
                                                       children:  <Widget>[
                                                         Icon(
@@ -227,7 +216,7 @@ class _AdminApprovalListState extends State<AdminApprovalList> {
                                                           color: Colors.yellow[800],
                                                           size: 20.0,
                                                         ),
-                                                        Text("2000",
+                                                        Text(snapshot.data?.docs[index]['total_winning'] ,
                                                             style: TextStyle(
                                                                 fontSize: 9)),
                                                       ],
@@ -247,7 +236,7 @@ class _AdminApprovalListState extends State<AdminApprovalList> {
                                                         color: Colors.green,
                                                         size: 20.0,
                                                       ),
-                                                      Text("1000",
+                                                      Text(snapshot.data?.docs[index]['perhead'],
                                                           style: TextStyle(
                                                               fontSize: 9)),
                                                     ],
@@ -261,76 +250,6 @@ class _AdminApprovalListState extends State<AdminApprovalList> {
                                 ],
                               )
                           ),
-
-                          // Flexible(
-                          //   flex: 1,
-                          //   child: SizedBox(
-                          //       height: 150,
-                          //       // width: 100,
-                          //       //color: Colors.red,
-                          //       child: InkWell(
-                          //         child: Container(
-                          //             height: 150,
-                          //             color: Colors.teal[900],
-                          //             child: RotatedBox(
-                          //                 quarterTurns: 1,
-                          //                 child: Center(
-                          //                   child: const Text("Apply",
-                          //                       style: TextStyle(
-                          //                           letterSpacing: 5,
-                          //                           color: Colors.white,
-                          //                           fontSize: 20,
-                          //                           fontWeight: FontWeight.bold
-                          //                       )),
-                          //                 )
-                          //             )
-                          //         ),
-                          //         onTap: () {
-                          //           print("button pressed : $index");
-                          //           print(snapshot.data?.docs[index].reference.id);
-                          //           showDialog(
-                          //             context: context,
-                          //             builder: (BuildContext context) {
-                          //               return AlertDialog(
-                          //                 title: Text("Are You Sure"),
-                          //                 content: Text("are you sure to became the participant of this event ??"),
-                          //                 actions: <Widget>[
-                          //                   ElevatedButton(
-                          //                     child: Text("NO"),
-                          //                     style: ElevatedButton.styleFrom(
-                          //                         primary: Colors.red[900],
-                          //                         //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                          //                         textStyle: TextStyle(
-                          //                             fontSize: 15,
-                          //                             fontWeight: FontWeight.bold)),
-                          //                     onPressed: () {
-                          //                       Navigator.of(context).pop();
-                          //                     },
-                          //                   ),
-                          //                   ElevatedButton(
-                          //                     style: ElevatedButton.styleFrom(
-                          //                         primary: Colors.teal[900],
-                          //                         //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                          //                         textStyle: TextStyle(
-                          //                             fontSize: 15,
-                          //                             fontWeight: FontWeight.bold)),
-                          //                     child: Text("YES"),
-                          //                     onPressed: () async {
-                          //                       var selectedProjectId = snapshot.data?.docs[index].reference.id;
-                          //                       await FirebaseFirestore.instance.collection("events").doc(selectedProjectId)
-                          //                           .update({"joinedPerson" : FieldValue.arrayUnion([loginUserid])});
-                          //                       Navigator.of(context).pop();
-                          //                       showAlertDialog(context,"Done","You can joined the event successfully");
-                          //                     },
-                          //                   ),
-                          //                 ],
-                          //               );
-                          //             },
-                          //           );
-                          //         },
-                          //       )
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),

@@ -1,10 +1,14 @@
 
+import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/databaseManager/databaseManager.dart';
 import 'package:fyp/homepage/Tabs/friendlyGame.dart';
 import 'package:fyp/homepage/Tabs/tournamentEvent.dart';
 import '../Notifications/notificationScreen.dart';
+import '../services/NavigationServices.dart';
+import '../services/NotificationServices.dart';
 import 'SideBar//SideMenuBar.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -12,21 +16,22 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
 }
 
+Future<void> backgroundMessageHandler(RemoteMessage message) async {
+  // Handle background message
+  print('Handling a background message: ${message.messageId}');
+
+  // Navigate to a specific screen when the user taps on the notification
+  // In this example, we're navigating to the home screen
+  NavigationService navigationService = NavigationService();
+  navigationService.navigateTo('/home');
+}
+
+
 Future<void> main() async {
   await Firebase.initializeApp();
 
-  // Set up Firebase Cloud Messaging
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
 
-  // Request permission to receive notifications
-  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-
-  print("User granted permission: ${settings.authorizationStatus}");
-  Platform.environment['LANG'] = 'en_US.UTF-8';
   runApp(const MyApp());
 }
 class MyApp extends StatelessWidget {
@@ -53,6 +58,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
   int _cartBadgeAmount = 3;
   late bool _showCartBadge;
+  var dbmanager = DatabaseManager();
+  var notificationServices = NotificationServices();
+  var login_user_id = "";
   late TabController _tabController;
   final List<Tab> myTabs =  <Tab>[
     new Tab(text: 'a'),
@@ -60,11 +68,14 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   ];
 
 
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _tabController = new TabController(length: 2, vsync: this);
+
     //getUserData();
   }
 

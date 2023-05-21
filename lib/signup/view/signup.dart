@@ -5,14 +5,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/homepage/homepage.dart';
-import 'package:fyp/color_utils.dart';
+import 'package:fyp/UIcomponents/color_utils.dart';
 import 'package:fyp/login/view/LoginScreen.dart';
 // import 'package:fyp/signup/view/signup.dart';
 // import 'package:fyp/signup/view/signup.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../UIcomponents/UIcomponents.dart';
 import '../../databaseManager/databaseManager.dart';
+import '../../services/NotificationServices.dart';
 import '../../useable.dart';
+
 
 
 enum userselect {Student , Organiser}
@@ -28,6 +30,7 @@ State<SignUp> createState() => _SignUpState();
 class _SignUpState extends State<SignUp> {
 
   var dbmanager = DatabaseManager();
+  var networkServices = NotificationServices();
   TextEditingController fullnameController = TextEditingController();
   TextEditingController EnrollmentIdController = TextEditingController();
   TextEditingController DeptController = TextEditingController();
@@ -129,12 +132,13 @@ class _SignUpState extends State<SignUp> {
                 SizedBox(height: 20,),
 
                 signInSignUpButton(context, false, () async{
+                  var deviceToken = await networkServices.getDeviceToken();
+                  print(deviceToken);
                   dbmanager.SignupWithEmailPassword(EmailController.text, PasswordController.text);
                   if(fullnameController.text == "" || EnrollmentIdController.text == "" || DeptController.text == "" || DeptController.text  == "" || EmailController.text == "" || PasswordController.text == ""){
                     showAlertDialog(context,"Error","incomplete info");
                   }else{
                     showAlertDialog(context,"Verification","verification email has been sent");
-
                     setState(() {
                       if (userStatus == false){
                         timer = Timer.periodic(
@@ -147,10 +151,9 @@ class _SignUpState extends State<SignUp> {
                               print("Email verified successfully :::::::::::::::::::::::::::::::::");
                               userStatus = true;
                               dbmanager.userid;
-                              dbmanager.createUserData(fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text, EnrollmentIdController.text, DeptController.text);
+                              dbmanager.createUserData(fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text, EnrollmentIdController.text, DeptController.text, deviceToken!);
                               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  LoginScreen()));
                               timer!.cancel();
-
                             }
                           },
                         );

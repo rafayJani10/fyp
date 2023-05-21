@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../UIcomponents/UIcomponents.dart';
 import '../../databaseManager/databaseManager.dart';
+import '../../services/NotificationServices.dart';
 import '../EventsDetailsScreen/tournamentJoinedTeams.dart';
 import '../EventsDetailsScreen/tournametEventDetails.dart';
 import '../UserEventJoined/EventParticipantUser.dart';
@@ -35,6 +36,13 @@ class _tournamentEventListState extends State<tournamentEventList> {
         .where('sports', isLessThan: '${stringg}z')
         .snapshots();
     yield* _search;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    NotificationServices().getDeviceToken();
   }
 
 
@@ -297,7 +305,7 @@ class _tournamentEventListState extends State<tournamentEventList> {
                                                               color: Colors.yellow[800],
                                                               size: 20.0,
                                                             ),
-                                                            Text("2000",
+                                                            Text(snapshot.data?.docs[index]['total_winning'] ?? "0",
                                                                 style: TextStyle(
                                                                     fontSize: 9)),
                                                           ],
@@ -317,7 +325,7 @@ class _tournamentEventListState extends State<tournamentEventList> {
                                                             color: Colors.green,
                                                             size: 20.0,
                                                           ),
-                                                          Text("1000",
+                                                          Text(snapshot.data?.docs[index]['perhead'] ?? "0",
                                                               style: TextStyle(
                                                                   fontSize: 9)),
                                                         ],

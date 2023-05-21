@@ -59,11 +59,8 @@ class _createEventsState extends State<createEvents> with SingleTickerProviderSt
       body: TabBarView(
         controller: _tabController,
         children: [
-
           friendlyEvent(),
           tournamentEvent()
-
-
         ],
       )
     );

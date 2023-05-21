@@ -19,7 +19,7 @@ class MytournamentEventList extends StatefulWidget {
 
 class _MytournamentEventListState extends State<MytournamentEventList> {
   var dbmanager = DatabaseManager();
-  var loginUserid = "";
+  //var loginUserid = "";
 
   var myTournamentId = [];
 
@@ -27,12 +27,12 @@ class _MytournamentEventListState extends State<MytournamentEventList> {
     var data =  await dbmanager.getData('userBioData');
     var daaa = json.decode(data);
     var userid = daaa['id'];
+    print(daaa);
     print(userid);
     var collection = FirebaseFirestore.instance.collection('users');
     var docSnapshot = await collection.doc(userid).get();
     if (docSnapshot.exists) {
       Map<String, dynamic>? data = docSnapshot.data();
-
       var projectList = data?['TourProjects'];
       setState(()  {
         // print(userData.length);
@@ -42,7 +42,6 @@ class _MytournamentEventListState extends State<MytournamentEventList> {
           print(i);
           myTournamentId.add(projectList[i]);
           print(myTournamentId);
-          //stream = FirebaseFirestore.instance.collection('events').doc(projectList[i]).snapshots();
         }
       });
     }

@@ -9,11 +9,13 @@ import 'package:fyp/homepage/homepage.dart';
 import 'package:fyp/login/view/LoginScreen.dart';
 import 'package:fyp/services/firebase_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../MyEventList/MyEventList.dart';
 import '/ProfilePage/ProfilePage.dart';
 import '/databaseManager/databaseManager.dart';
 import 'AdminCreateEvent.dart';
+import 'AdminMyEvents.dart';
 import 'AdminProfilePAge.dart';
-import 'approvals.dart';
+import 'ApprovalEvent/approvals.dart';
 
 class AdminSideMenueBar extends StatefulWidget {
   const AdminSideMenueBar({Key? key}) : super(key: key);
@@ -103,36 +105,20 @@ class _AdminSideMenueBarState extends State<AdminSideMenueBar> {
               //Navigator.pop(context);
             },
           ),
-          // ListTile(
-          //   title:   Text("Profile"
-          //   ),
-          //   leading: const Icon(
-          //       Icons.account_circle_outlined
-          //   ),
-          //   onTap: () {
-          //     Navigator.push(context,
-          //         MaterialPageRoute(
-          //             builder: (context) => AdminProflePage()
-          //         )
-          //     );
-          //
-          //     //Navigator.pop(context);
-          //   },
-          // ),
-          ListTile(
+           ListTile(
 //            tileColor: Colors.blue ,
 
-            title: const Text('My Events'),
-            leading: const Icon(
+            title: Text('My Events'),
+            leading: Icon(
                 Icons.event_available_outlined
             ),
-            // onTap: () {
-            //   Navigator.push(context,
-            //       MaterialPageRoute(
-            //           builder: (context) => MyEvents()
-            //       )
-            //   );
-            // },
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(
+                      builder: (context) => AdminMyEventList(title: 'My event',)
+                  )
+              );
+            },
           ),
           ListTile(
 

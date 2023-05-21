@@ -89,7 +89,7 @@ class DatabaseManager {
   }
 
   Future<void> createUserData(String fullname, String email, String password,
-      String confirmpass, String enrollmentno, String deptName) async {
+      String confirmpass, String enrollmentno, String deptName, String deviceToken) async {
     await userData.doc(userid).set(
         {
           'id':userid,
@@ -105,37 +105,47 @@ class DatabaseManager {
           'gender':'',
           'skillset':"",
           "projects": [],
-          "TourProjects": []
+          "TourProjects": [],
+          "roles":2,
+          "deviceToken": deviceToken
         }
     ).then((value) => print("data added ::::::::::::::"));
   }
 
-  Future<Object> LoginAuth(emailcheck, passwordcheck) async {
+  Future<Object> LoginAuth(emailcheck, passwordcheck, devicetoken) async {
 
     var collection = FirebaseFirestore.instance.collection('users');
     var querySnapshot = await collection.get();
-    var loginUserRole = -1;
+    var loginUserRole = 0;
     for (var queryDocumentSnapshot in querySnapshot.docs)  {
       Map<String, dynamic> data = queryDocumentSnapshot.data();
       var emails = data['email'];
       var password = data['password'];
-      print(emailcheck);
-      print(emails);
-      print(password);
-      print(password);
-
+      print("input id : $emailcheck");
+      print("input password : $passwordcheck");
+      print("id from firebase : $emails");
+      print("password from firebase : $password");
       if(emails == emailcheck && password == passwordcheck) {
-        /// user Data save in shared prefernce
-        saveData('userBioData', data);
-        loginUserRole = data['roles'];
-        return loginUserRole;
+        print("matched $emails");
+        //user Data save in shared prefernce
+          saveData('userBioData', data);
+          loginUserRole = data['roles'];
+          var loginUserID = data['id'];
+          await FirebaseFirestore.instance.collection('users').doc(loginUserID).update(
+            {
+              "deviceToken": devicetoken
+            })
+            .then((result){
+          print("new device  token ::::::::::");
+        });
+          break;
       }
       else{
-        loginUserRole = -1;
-        return loginUserRole;
+        print("not matched");
+        loginUserRole = -2;
       }
     }
-    return -2;
+    return loginUserRole;
   }
 
   Future<bool?> updataUserData(useridd,username,gender,age,phoneNumber,picture,enrollment,department,skillset) async {
@@ -201,7 +211,7 @@ class DatabaseManager {
     return newEventStatus;
   }
 
-  Future<bool?> createTournamentEvent(EventAuthor,name,address,sports,picture,time,date,totalPlayer,totalTeams) async{
+  Future<bool?> createTournamentEvent(EventAuthor,name,address,sports,picture,time,date,totalPlayer,totalTeams, totalWinning , perhead) async{
     var newEventStatus = false;
     await _firestore.collection("TourEvents").add(
         {
@@ -215,7 +225,9 @@ class DatabaseManager {
           "totalPlayer":totalPlayer,
           "totalTeams":totalTeams,
           "joinedTeamList":[],
-          "approval":false
+          "approval":false,
+          "total_winning":totalWinning,
+          "perhead": perhead
 
         }).then((value) async{
       print("event created ::::::::::::::::");
@@ -264,6 +276,7 @@ class DatabaseManager {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(key, jsonEncode(value));
   }
+
   Future<dynamic> getData(String key) async {
     final prefs = await SharedPreferences.getInstance();
     print("isnide get function ::::::::::::::::::::::::::::::");

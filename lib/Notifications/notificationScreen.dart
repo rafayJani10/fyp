@@ -6,6 +6,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../services/NotificationServices.dart';
+
 class Notifications_Screen extends StatefulWidget {
   const Notifications_Screen({Key? key}) : super(key: key);
 
@@ -14,9 +16,9 @@ class Notifications_Screen extends StatefulWidget {
 }
 class _Notifications_ScreenState extends State<Notifications_Screen> {
 
+  NotificationServices notificationServices = NotificationServices();
+
   var d_token = "";
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  String? _message;
 
   Future getDeviceToken() async{
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -28,61 +30,28 @@ class _Notifications_ScreenState extends State<Notifications_Screen> {
     print(d_token);
   }
 
-  // Future<void> _setupFirebaseMessaging() async {
-  //   NotificationSettings settings = await _firebaseMessaging.requestPermission(
-  //     alert: true,
-  //     badge: true,
-  //     sound: true,
-  //   );
-  //   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-  //     print('User granted permission for notifications');
-  //   } else {
-  //     print('User did not grant permission for notifications');
-  //   }
-  //
-  //   _firebaseMessaging.getToken().then((token) {
-  //     print('Device token: $token');
-  //   });
-  //
-  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //     setState(() {
-  //       _message = message.notification?.body;
-  //     });
-  //   });
-  // }
 
-  static Future<bool> sendFcmMessage(String title, String message, token) async {
-    try {
-      var url = 'https://fcm.googleapis.com/fcm/send';
-      var header = {
-        "Content-Type": "application/json",
-        "Authorization": "key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P",
-      };
-      var request = {
-        'notification': {'title': title, 'body': message, "sound" : "default",},
-        'data': {'click_action': 'FLUTTER_NOTIFICATION_CLICK', 'type': 'COMMENT'},
-        'to': '$token'
-      };
-
-      var response = await http.post(
-        Uri.parse(url),
-        headers: header,
-        body: json.encode(request),
-      );
-
-      if (response.statusCode == 200) {
-        print("status code 200");
-        return true;
-      } else {
-        print('FCM request failed with status: ${response.statusCode}.');
-        return false;
-      }
-    } catch (e, s) {
-      print("errorrr");
-      print(e);
-      return false;
-    }
+  Future sendMessage()async{
+    // notificationServices.getDeviceToken().then((value) async{
+    //   print(value);
+    //   var data = {
+    //     'to': 'dPJMcbhwS6aRMXfFH9VZyH:APA91bEw41Rxc9b8daV5Aoj9wm4lADf1ufHOLMsHUvAMuxspDvZLWLdPlBYBeVqVlnyoCo1y4INSVgWyiIWl1HdEBvcIVTzRHzye8PuNkI7FcHTZCRajgs-ybi_Q5tZqmSSMYTer07zh',
+    //     'priority': 'high',
+    //     'notification' : {
+    //       'title' : 'Asif',
+    //       'body' : 'Subscribe my channel,'
+    //     }
+    //   };
+    //   await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+    //       body: jsonEncode(data) ,
+    //       headers: {
+    //         'Content-Type' : 'application/json; character=UTF-8',
+    //         'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
+    //       }
+    //   );
+    // });
   }
+
 
 
 
@@ -93,14 +62,28 @@ class _Notifications_ScreenState extends State<Notifications_Screen> {
     // TODO: implement initState
     super.initState();
    // _setupFirebaseMessaging();
-    FirebaseMessaging.instance.getToken().then((token) {
-      print("Device token: $token");
-      sendFcmMessage("demo","ggggg", token);
+    notificationServices.requestNotificationPermission();
+    notificationServices.firebaseinit();
+
+    notificationServices.getDeviceToken().then((value) async{
+      print(value);
+      var data = {
+        'to': 'dPJMcbhwS6aRMXfFH9VZyH:APA91bEw41Rxc9b8daV5Aoj9wm4lADf1ufHOLMsHUvAMuxspDvZLWLdPlBYBeVqVlnyoCo1y4INSVgWyiIWl1HdEBvcIVTzRHzye8PuNkI7FcHTZCRajgs-ybi_Q5tZqmSSMYTer07zh',
+        'priority': 'high',
+        'notification' : {
+          'title' : 'Asif',
+          'body' : 'Subscribe my channel,'
+        }
+      };
+      await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+          body: jsonEncode(data) ,
+          headers: {
+            'Content-Type' : 'application/json; character=UTF-8',
+            'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
+          }
+      );
     });
 
-
-
-    //getUserData();
   }
 
 

@@ -61,7 +61,7 @@ class _AdmincreateEventsState extends State<AdmincreateEvents> with SingleTicker
         body: TabBarView(
           controller: _tabController,
           children: [
-            AdmintournamentEvent()
+            tournamentEvent()
            // friendlyEvent(),
           //  AdmintournamentEvent()
 

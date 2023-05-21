@@ -6,9 +6,10 @@ import 'package:fyp/databaseManager/databaseManager.dart';
 import 'package:fyp/homepage/Tabs/friendlyGame.dart';
 import 'package:fyp/homepage/UserEventJoined/EventParticipantUser.dart';
 import '../UIcomponents/UIcomponents.dart';
-import 'AdimTournamentView/AdminTournamentView.dart';
+import '../homepage/Tabs/tournamentEvent.dart';
+
 import 'AdminSideMenuBar.dart';
-import 'AdminEventListTabs/AdminfriendlyEvents.dart';
+
 //import 'SideBar//SideMenuBar.dart';
 //import 'package:';
 //import 'package:auto_layout/auto_layout.dart';
@@ -102,8 +103,8 @@ class _MyHomePageState extends State<MyAdminHomePage> with SingleTickerProviderS
           controller: _tabController,
           children: [
 
-            AdminFriendlyGame(),
-            adminTournametViewe(),
+            FriendlyGame(),
+            tournamentEventList(),
 
 
           ],
