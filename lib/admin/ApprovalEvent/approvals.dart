@@ -6,7 +6,7 @@ import '../../../databaseManager/databaseManager.dart';
 import '../../homepage/EventsDetailsScreen/tournametEventDetails.dart';
 import 'approvalEventForm.dart';
 
-
+//
 
 class AdminApprovalList extends StatefulWidget {
   const AdminApprovalList({Key? key}) : super(key: key);
