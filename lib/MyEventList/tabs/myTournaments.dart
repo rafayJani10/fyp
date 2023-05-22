@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../UIcomponents/UIcomponents.dart';
 import '../../databaseManager/databaseManager.dart';
+import '../../homepage/EventsDetailsScreen/tournamentJoinedTeams.dart';
 import '../../homepage/EventsDetailsScreen/tournametEventDetails.dart';
 import '../MyEventsDetailsScreen/MyTournamentEventDetails.dart';
 
@@ -82,11 +83,11 @@ class _MytournamentEventListState extends State<MytournamentEventList> {
                       print(authorId);
                       print(eventIdd);
 
-                      // Navigator.push(context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => MyTournamentEventDetail(authoreId: authorId, eventID: eventIdd, listJoinedUser: joinedUserList,)
-                      //     )
-                      // );
+                      Navigator.push(context,
+                          MaterialPageRoute(
+                              builder: (context) => tournamentJoinedTeams(authoreId: authorId, eventID: eventIdd,role_status: false)
+                          )
+                      );
 
 
                     },
@@ -97,7 +98,7 @@ class _MytournamentEventListState extends State<MytournamentEventList> {
                         color: Colors.white,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.6),
+                            color: Colors.grey.withOpacity(0.3),
                             spreadRadius: 6,
                             blurRadius: 7,
                             offset: Offset(0, 3), // changes position of shadow

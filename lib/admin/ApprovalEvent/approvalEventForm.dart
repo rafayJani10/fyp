@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../UIcomponents/UIcomponents.dart';
 import '../../services/NotificationServices.dart';
 import 'package:http/http.dart' as http;

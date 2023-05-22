@@ -95,53 +95,53 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         appBar: AppBar(
           title: const Text("Event List"),
           actions: [
-           Stack(
-            children: [
-              InkWell(
-                onTap: (){
-                  print("yes clicked");
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) =>  Notifications_Screen()),
-                  );
-                },
-                child: Container(
-                  height: 50,
-                  width: 50,
-                  //color: Colors.green,
-                  child: Center(
-                    child: Icon(Icons.notification_important,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
-                ),
-              ),
-             Padding(
-               padding: EdgeInsets.only(left: 22,top: 8),
-               child:  Container(
-                 height: 20,
-                 width: 20,
-                 decoration: BoxDecoration(
-                     color: Colors.red,
-                     borderRadius: BorderRadius.circular(100)
-                   //more than 50% of width makes circle
-                 ),
-                 child: Center(
-                   child : Text("99+",
-                   style: TextStyle(
-                     fontSize: 10
-                   ),)
-                 ),
-               ),
-             )
-            ],
-           )
+           // Stack(
+           //  children: [
+           //    // InkWell(
+           //    //   onTap: (){
+           //    //     print("yes clicked");
+           //    //     Navigator.push(
+           //    //       context,
+           //    //       MaterialPageRoute(builder: (context) =>  Notifications_Screen()),
+           //    //     );
+           //    //   },
+           //    //   child: Container(
+           //    //     height: 50,
+           //    //     width: 50,
+           //    //     //color: Colors.green,
+           //    //     child: Center(
+           //    //       child: Icon(Icons.notification_important,
+           //    //         color: Colors.white,
+           //    //         size: 30,
+           //    //       ),
+           //    //     ),
+           //    //   ),
+           //    // ),
+           //   // Padding(
+           //   //   padding: EdgeInsets.only(left: 22,top: 8),
+           //   //   child:  Container(
+           //   //     height: 20,
+           //   //     width: 20,
+           //   //     decoration: BoxDecoration(
+           //   //         color: Colors.red,
+           //   //         borderRadius: BorderRadius.circular(100)
+           //   //       //more than 50% of width makes circle
+           //   //     ),
+           //   //     child: Center(
+           //   //       child : Text("99+",
+           //   //       style: TextStyle(
+           //   //         fontSize: 10
+           //   //       ),)
+           //   //     ),
+           //   //   ),
+           //   // )
+           //  ],
+           // )
           ],
           backgroundColor: Colors.teal[900],
           bottom: TabBar(
             controller: _tabController,
-            tabs: [
+            tabs: const [
               Tab(
                 child: Text('Frinedly Games',
                 style: TextStyle(
@@ -161,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         ),
         body: TabBarView(
           controller: _tabController,
-          children: [
+          children: const [
             FriendlyGame(),
             tournamentEventList()
           ],

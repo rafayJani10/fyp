@@ -5,13 +5,15 @@ import 'dart:convert';
 
 import '../../UIcomponents/UIcomponents.dart';
 import '../../databaseManager/databaseManager.dart';
+import 'package:http/http.dart' as http;
 
 class tournamentJoinedTeams extends StatefulWidget {
   final String? authoreId;
   final String? eventID;
+  final bool? role_status;
 
 
-  tournamentJoinedTeams({required this.authoreId,required this.eventID});
+  tournamentJoinedTeams({required this.authoreId,required this.eventID, this.role_status});
 
 
   @override
@@ -26,6 +28,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
   var eventid = "";
   var joinedTeamList = [];
   var firestore = FirebaseFirestore.instance;
+  var authoreDeviceToken = "";
 
   final teamName_textController = TextEditingController();
   final tplayer_textController = TextEditingController();
@@ -51,6 +54,18 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
       }
 
       print(joinedTeamList);
+    }
+  }
+  Future getAuthoreDeviceToken() async {
+    var docSnapshot = await firestore.collection('users').doc(widget.authoreId).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      print(data?['deviceToken']);
+      setState(() {
+        authoreDeviceToken = data?['deviceToken'];
+      });
+
+      print(authoreDeviceToken);
     }
   }
   Dialog joinTeamForm(){
@@ -116,7 +131,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(Colors.teal),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           print(teamName_textController.text);
                           print(tplayer_textController.text);
                           print(eventid);
@@ -139,6 +154,21 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
 
                             Navigator.pop(context);
                             showAlertDialog(context, "Done", "you are successfukky joined the team ");
+                            var data = {
+                              'to': authoreDeviceToken,
+                              'priority': 'high',
+                              'notification' : {
+                                'title' : 'New Team',
+                                'body' : 'New team included in team list'
+                              }
+                            };
+                            await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+                                body: jsonEncode(data) ,
+                                headers: {
+                                  'Content-Type' : 'application/json; character=UTF-8',
+                                  'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
+                                }
+                            );
                           }
                         },
                         child: Text('Done'),
@@ -162,6 +192,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
       eventid = widget.eventID!;
     });
     getJoinedTeamList();
+    getAuthoreDeviceToken();
   }
   @override
   void dispose() {
@@ -204,7 +235,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                           color: Colors.white,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.6),
+                              color: Colors.grey.withOpacity(0.3),
                               spreadRadius: 7,
                               blurRadius: 4,
                               offset: Offset(0, 0), // changes position of shadow
@@ -302,7 +333,11 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
             );
           }
       ),
-     floatingActionButton: FloatingActionButton.extended(
+
+     floatingActionButton: Visibility(
+       visible: widget.role_status!,
+       child: FloatingActionButton.extended(
+
        onPressed: () {
 
          showDialog(
@@ -313,11 +348,12 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
          );
 
        },
+
        label:  Text('Create Your Team',
          style: TextStyle(color: Colors.white),),
        icon:  Icon(Icons.add,color: Colors.white,),
        backgroundColor: Colors.teal[900],
-     ),
+     ),)
     );
   }
 }

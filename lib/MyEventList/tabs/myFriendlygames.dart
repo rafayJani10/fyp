@@ -123,7 +123,7 @@ class _MyFriendlyGameState extends State<MyFriendlyGame> {
                             color: Colors.white,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.6),
+                                color: Colors.grey.withOpacity(0.3),
                                 spreadRadius: 6,
                                 blurRadius: 7,
                                 offset: Offset(0, 3), // changes position of shadow
