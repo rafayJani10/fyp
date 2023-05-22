@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
 
@@ -21,6 +22,13 @@ import '../../useable.dart';
 void main()  async{
   WidgetsFlutterBinding.ensureInitialized();
  await Firebase.initializeApp();
+
+  // Start the timer to update data every 2 days
+  Timer.periodic(Duration(days: 2), (timer) {
+    // checkAndDeleteDocuments();
+  });
+
+
   runApp(
      MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -34,6 +42,24 @@ void main()  async{
        home: LoginScreen(),
     ),
   );
+}
+Future<void> checkAndDeleteDocuments() async {
+  // Reference to the collection
+  CollectionReference collectionReference =
+  FirebaseFirestore.instance.collection('your_collection_path');
+  DateTime now = DateTime.now();
+  // Calculate the date threshold (2 days ago)
+  DateTime threshold = now.subtract(Duration(days: 2));
+  // Query the collection to find documents where the date is before the threshold
+  QuerySnapshot querySnapshot = await collectionReference
+      .where('your_date_field', isLessThan: threshold)
+      .get();
+  // Iterate through the documents
+  querySnapshot.docs.forEach((DocumentSnapshot documentSnapshot) {
+    // Delete the document
+    documentSnapshot.reference.delete();
+    print('Document deleted with ID: ${documentSnapshot.id}');
+  });
 }
 
 class LoginScreen extends StatefulWidget {
