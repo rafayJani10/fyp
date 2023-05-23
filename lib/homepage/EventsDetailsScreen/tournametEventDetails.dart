@@ -31,63 +31,6 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
   final teamName_textController = TextEditingController();
   final pSkill_textController = TextEditingController();
 
-  // Future getLoginUserData()async{
-  //   var data =  await dbmanager.getData('userBioData');
-  //   var daaa = json.decode(data);
-  //   var userid = daaa['id'];
-  //   setState(() {
-  //     LoginUserId = userid;
-  //   });
-  //
-  // }
-  // Future getTeamJoinUserLists() async {
-  //   var collection = FirebaseFirestore.instance.collection('TourEvents');
-  //   var docSnapshot = await collection.doc(widget.eventID).get();
-  //   if (docSnapshot.exists) {
-  //     Map<String, dynamic>? data = docSnapshot.data();
-  //     var tourListUser = data?['joinedUserList'];
-  //     setState(()  {
-  //       var projLength = tourListUser.length;
-  //       for (var i = 0; i < projLength; i++) {
-  //         print(i);
-  //         tournamentUserList.add(tourListUser[i]);
-  //         print("sdmasdmgadsjgdasjsad");
-  //         print(tournamentUserList);
-  //       }
-  //     });
-  //   }
-  //
-  // }
-  // Future joimSelectedEvent() async{
-  //   var data =  await dbmanager.getData('userBioData');
-  //   var daaa = json.decode(data);
-  //   var userid = daaa['id'];
-  //
-  //   await FirebaseFirestore.instance.collection("TourEvents").doc(widget.eventID)
-  //       .update(
-  //       {"joinedUserList": FieldValue.arrayUnion([LoginUserId])}
-  //   ).then((value) {
-  //     tournamentUserList = [];
-  //     showAlertDialog(context,"Successfully Join","Your team successfully join the tournaments");
-  //     getTeamJoinUserLists();
-  //   });
-  // }
-  // Future wantDeleteYourself() async{
-  //   var collection = FirebaseFirestore.instance.collection('TourEvents');
-  //   collection
-  //       .doc(widget.eventID)
-  //       .update(
-  //       {
-  //         'joinedUserList': FieldValue.arrayRemove([LoginUserId]),
-  //       }
-  //   ).then((value){
-  //
-  //     showAlertDialog(context,"Successfull","you deleted from this toyrnament");
-  //     tournamentUserList = [];
-  //     getTeamJoinUserLists();
-  //   });
-  //
-  // }
 
   Dialog joinInTeamForm(){
     return Dialog(
@@ -167,7 +110,7 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
                           print("ccccccc");
                           if(pSkill_textController.text == ''){
                             print("jdbjggffaj");
-                            Navigator.pop(context);
+
                             showAlertDialog(context, "Error!", "Kindly add your skill");
                           }else{
                             if(jteam == true ){
@@ -180,7 +123,7 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
                             else{
                               Navigator.pop(context);
                               print("sorry");
-                              showAlertDialog(context, "Something Wrong!", "you are not registered in this team ,try again");
+                              showAlertDialog(context, "Something Wrong!", "you are already registered in this team");
                             }
                           }
                         },
@@ -208,14 +151,15 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
   }
   Future<bool?> joinTheTeamButton(skillsett) async{
     var joinTeamStatus = false;
-    await FirebaseFirestore.instance.collection('users').doc(LoginUserId)
-    .update({'skillset': skillsett})
-        .then((value) async{
-          await FirebaseFirestore.instance.collection('JoinedTeams').doc(widget.teamID).update(
-            {'joinedPlayerInTeam': FieldValue.arrayUnion([LoginUserId])
-            });
-         joinTeamStatus = true;
-        });
+    bool containeUsers = joinUsersInTeams.contains(LoginUserId);
+    if(containeUsers == true){
+      print("already in table");
+    }
+    else{
+      print("new use rfound");
+      joinTeamStatus = true;
+
+    }
     return joinTeamStatus;
     }
   Future joinUserInteam()async{
@@ -275,7 +219,7 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.6),
+                        color: Colors.grey.withOpacity(0.3),
                         spreadRadius: 6, blurRadius: 7,
                         offset: Offset(0, 3), // changes position of shadow
                       ),
@@ -283,20 +227,28 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
                   ),
                   child: Row(
                     children: [
+                      SizedBox(width: 5,),
                       Flexible(
                           flex: 1,
-                          child: Container(
-                            height: 150,
-                            color: Colors.teal[900],
-                            child: Center(
-                              child: CircleAvatar(
-                                radius: 50,
-                                child: ClipOval(
-                                    child: snapshot.data?['picture'] != "" ?Image.network(snapshot.data?['picture'],  fit: BoxFit.fill) :Image.network("https://img.freepik.com/premium-vector/anonymous-user-circle-icon-vector-illustration-flat-style-with-long-shadow_520826-1931.jpg?w=2000",  fit: BoxFit.fitHeight),
-                                ),
+                          child:  Stack(
+                            children: [
+                              // Circular avatar with image or placeholder
+                              CircleAvatar(
+                                radius: 40,
+                                backgroundColor: Colors.grey, // Placeholder color
+                                backgroundImage: snapshot.data?['picture'] == null || snapshot.data?['picture'] == ""
+                                    ?  NetworkImage("https://img.freepik.com/premium-vector/anonymous-user-circle-icon-vector-illustration-flat-style-with-long-shadow_520826-1931.jpg?w=2000")
+                                    : NetworkImage(snapshot.data?['picture'])
                               ),
-                            ),
-                          )),
+
+                              // // Loader
+                              // if (is_image_loading)
+                              //   Positioned.fill(
+                              //     child: CircularProgressIndicator(),
+                              //   ),
+                            ],
+                          ),),
+                      SizedBox(width: 5,),
                       Flexible(
                           flex: 2,
                           child: Stack(
@@ -462,9 +414,6 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
             );
           }
       ),
-
-
-
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           showDialog(
@@ -474,9 +423,9 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
             },
           );
         },
-        label:  Text('Join',
+        label:  const Text('Join',
           style: TextStyle(color: Colors.white),),
-        icon:  Icon(Icons.add,color: Colors.white,),
+        icon:  const Icon(Icons.add,color: Colors.white,),
         backgroundColor: Colors.teal[900],
       ),
     );

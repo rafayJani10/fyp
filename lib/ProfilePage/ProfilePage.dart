@@ -39,6 +39,7 @@ class _ProflePageState extends State<ProflePage> {
   var skillsetu = "" ;
 
   TextEditingController userNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController genderController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
@@ -101,9 +102,6 @@ class _ProflePageState extends State<ProflePage> {
       });
     }
   }
-
-
-
   Future updateData(userId,full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset) async {
     var updateDataa = await dbmanager.updataUserData(userId,full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset);
     if(updateDataa! == true){
@@ -143,19 +141,14 @@ class _ProflePageState extends State<ProflePage> {
                 child: Center(
                   child: CircleAvatar(
                       radius: 70,
-                      backgroundColor: Colors.teal,
                       child: Stack(
                         children: [
-                          Center(
-                            child: CircleAvatar(
-                              radius: 69,
-                              backgroundColor: Colors.teal,
-                              child: ClipOval(
-                                child: _image != null
-                                    ? Image.file(_image! ,width: 130,height: 130, fit: BoxFit.fill)
-                                    : Image.network(pictureu, fit: BoxFit.fill),
-                              ),
-                            ),
+                          CircleAvatar(
+                            radius: 70,
+                            backgroundColor: Colors.grey, // Placeholder color
+                            backgroundImage: dataa["picture"] != null
+                                ? NetworkImage(dataa["picture"])
+                                : NetworkImage("https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"), // Use NetworkImage only when imageUrl is not null
                           ),
                           Align(
                               alignment: FractionalOffset.bottomRight,
@@ -164,15 +157,18 @@ class _ProflePageState extends State<ProflePage> {
                                   getImage();
                                 },
                                 child: Container(
-                                  margin: EdgeInsetsDirectional.only(bottom: 10),
+                                  margin: EdgeInsetsDirectional.only(bottom: 2),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.teal[900],
+                                  ),
                                   height: 50,
                                   width: 50,
-                                  color: Colors.white12,
-                                  child: Center(
+                                  child: const Center(
                                     child: Icon(
                                       Icons.camera_alt,
-                                      color: Colors.grey,
-                                      size: 40,
+                                      color: Colors.white,
+                                      size: 25,
                                     ),
                                   ),
                                 ),
@@ -195,33 +191,36 @@ class _ProflePageState extends State<ProflePage> {
                         Padding(
                           padding: EdgeInsets.all(15),
                           child: TextField(
-                            enabled: false,
-                            //controller: nameController,
-                            decoration: InputDecoration(
-                              labelStyle:   TextStyle(
-                                  color: Colors.black
-                              ),
-                              border: OutlineInputBorder(),
-                              labelText: dataa['email'] ?? "email",
-                             // hintText: "userName",
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
                             controller: userNameController,
                             decoration: InputDecoration(
                               labelStyle:   TextStyle(
                                   color: Colors.black
                               ),
                               border: OutlineInputBorder(),
-                              labelText: full_nameu ,
-                              hintText: "Full Name",
-                              hintStyle: TextStyle(color: Colors.black12),
+                              labelText: "Full Name" ,
+                              hintText: dataa["fullname"],
+                              hintStyle: TextStyle(color: Colors.grey),
                               fillColor: Colors.white54,
                               //filled: true
 
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(15),
+                          child: TextField(
+                            //enabled: false,
+                            controller: emailController,
+                            decoration: InputDecoration(
+                              labelStyle:   TextStyle(
+                                  color: Colors.black
+                              ),
+                              border: OutlineInputBorder(),
+                              labelText: "Email",
+                              hintText: dataa['email'],
+                              hintStyle: TextStyle(color: Colors.grey),
+                              fillColor: Colors.white54,
+                             // hintText: "userName",
                             ),
                           ),
                         ),
@@ -234,9 +233,9 @@ class _ProflePageState extends State<ProflePage> {
                                   color: Colors.black
                               ),
                               border: OutlineInputBorder(),
-                              labelText: enrollmentu,
-                              hintText: "Enrollment No",
-                              hintStyle: TextStyle(color: Colors.black12),
+                              labelText: "Enrollment No",
+                              hintText: dataa["enrollmentNo"],
+                              hintStyle: TextStyle(color: Colors.grey),
                             ),
                           ),
                         ),
@@ -249,9 +248,9 @@ class _ProflePageState extends State<ProflePage> {
                                   color: Colors.black
                               ),
                               border: OutlineInputBorder(),
-                              labelText: departmentu,
-                              hintText: "Department Name",
-                              hintStyle: TextStyle(color: Colors.black12),
+                              labelText: "department Name",
+                              hintText: dataa["deptname"],
+                              hintStyle: TextStyle(color: Colors.grey),
                             ),
                           ),
                         ),
@@ -264,9 +263,9 @@ class _ProflePageState extends State<ProflePage> {
                                   color: Colors.black
                               ),
                               border: OutlineInputBorder(),
-                              labelText: ageeu,
-                              hintText: "Age",
-                              hintStyle: TextStyle(color: Colors.black12),
+                              labelText: "Age",
+                              hintText: dataa["age"],
+                              hintStyle: TextStyle(color: Colors.grey),
                             ),
                           ),
                         ),
@@ -275,13 +274,13 @@ class _ProflePageState extends State<ProflePage> {
                           child: TextField(
                             controller: genderController,
                             decoration: InputDecoration(
-                              labelStyle:   TextStyle(
-                                  color: Colors.black
-                              ),
+                                labelStyle:   TextStyle(
+                                    color: Colors.black
+                                ),
                               border: OutlineInputBorder(),
-                              labelText: genderu,
-                              hintText: "Male or Female",
-                              hintStyle: TextStyle(color: Colors.black12),
+                              labelText: "gender",
+                              hintText: dataa["gender"],
+                              hintStyle: TextStyle(color: Colors.grey),
 
                             ),
                           ),
@@ -295,9 +294,9 @@ class _ProflePageState extends State<ProflePage> {
                                   color: Colors.black
                               ),
                               border: OutlineInputBorder(),
-                              labelText: PhoneNou,
-                              hintText: "Mobile Number",
-                              hintStyle: TextStyle(color: Colors.black12),
+                              labelText: "Phone Number",
+                              hintText: dataa["phoneNumber"],
+                              hintStyle: TextStyle(color: Colors.grey),
                             ),
                           ),
                         ),
@@ -312,9 +311,9 @@ class _ProflePageState extends State<ProflePage> {
                                   color: Colors.black
                               ),
                               border: OutlineInputBorder(),
-                              labelText: skillsetu,
-                              hintText: "Game Name and Game Skill",
-                              hintStyle: TextStyle(color: Colors.black12),
+                              labelText: "Game Skill",
+                              hintText: dataa["skillset"],
+                              hintStyle: TextStyle(color: Colors.grey),
                             ),
                           ),
                         ),

@@ -29,7 +29,6 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
   var joinedTeamList = [];
   var firestore = FirebaseFirestore.instance;
   var authoreDeviceToken = "";
-
   final teamName_textController = TextEditingController();
   final tplayer_textController = TextEditingController();
 
@@ -229,8 +228,8 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                       );
                     },
                     child: Container(
-                        height: 100,
                         width: double.infinity,
+                        height: 100,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           boxShadow: [
@@ -247,7 +246,6 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                             Container(
                                 height: 100,
                                 width: 80,
-//color: Colors.green,
                                 child: Center(
                                   child: Text("${index + 1}",
                                     style: TextStyle(
@@ -263,7 +261,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Container(
-                                    width: 300,
+                                    width: 200,
                                     //color: Colors.green,
                                     child: Padding(
                                       padding: EdgeInsets.only(left: 10, top: 5),
@@ -279,7 +277,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Container(
-                                      width: 300,
+                                      width: 200,
                                       //color: Colors.green,
                                       child: Row(
                                         children: [
@@ -302,7 +300,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Container(
-                                      width: 300,
+                                      width: 200,
                                       //color: Colors.green,
                                       child: Row(
                                         children: [
@@ -322,7 +320,6 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                                       )
                                   ),
                                 ),
-
                               ],
                             ),
                           ],
@@ -337,8 +334,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
      floatingActionButton: Visibility(
        visible: widget.role_status!,
        child: FloatingActionButton.extended(
-
-       onPressed: () {
+         onPressed: () {
 
          showDialog(
            context: context,
@@ -348,11 +344,10 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
          );
 
        },
-
-       label:  Text('Create Your Team',
-         style: TextStyle(color: Colors.white),),
-       icon:  Icon(Icons.add,color: Colors.white,),
-       backgroundColor: Colors.teal[900],
+         label:  const Text('Create Your Team',
+           style: TextStyle(color: Colors.white),),
+         icon:  Icon(Icons.add,color: Colors.white,),
+         backgroundColor: Colors.teal[900],
      ),)
     );
   }

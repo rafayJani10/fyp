@@ -41,7 +41,6 @@ class _MyFriendlyGameState extends State<MyFriendlyGame> {
       setState(()  {
         var projLength = projectList.length;
         for (var i = 0; i < projLength; i++) {
-          print(i);
           myProjectId.add(projectList[i]);
           print(myProjectId);
         }
@@ -82,17 +81,49 @@ class _MyFriendlyGameState extends State<MyFriendlyGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ListView.builder(
+        body: myProjectId.isEmpty
+            ?  Center(
+          child: Container(
+            height: 400,
+            width: 300,
+            //color: Colors.teal,
+            child: Column(
+              children: [
+                Container(
+                  height: 300,
+                  width: 300,
+                  child: Image.asset('assets/images/no_data.png'),
+                ),
+                SizedBox(height: 40,),
+                Text("No data Found", style: TextStyle(fontSize: 20,  color: Colors.grey),)
+              ],
+            ),
+          ),
+        )
+            :  ListView.builder(
             itemCount: myProjectId.length,
             itemBuilder: (BuildContext context, int index){
               return StreamBuilder(
                 stream: FirebaseFirestore.instance.collection('events').doc(myProjectId[index]).snapshots(),
                 builder: (context, snapshot){
+                  print("snapshot.data");
                   if (snapshot.data == null ) {
                     return Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 5,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                      child: Container(
+                        height: 400,
+                        width: 300,
+                        //color: Colors.teal,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 300,
+                              width: 300,
+                              child: Image.asset('assets/images/no_data.png'),
+                            ),
+                            SizedBox(height: 40,),
+                            Text("No data Found", style: TextStyle(fontSize: 20,  color: Colors.grey),)
+                          ],
+                        ),
                       ),
                     );
                   }

@@ -76,23 +76,20 @@ class _MytournamentEventListState extends State<MytournamentEventList> {
                   }
                   return InkWell(
                     onTap: (){
-
                       var authorId = snapshot.data?['eventAuthore'];
                       var eventIdd = snapshot.data?.reference.id;
                       //var joinedUserList = snapshot.data?['joinedUserList'];
                       print(authorId);
                       print(eventIdd);
-
                       Navigator.push(context,
                           MaterialPageRoute(
                               builder: (context) => tournamentJoinedTeams(authoreId: authorId, eventID: eventIdd,role_status: false)
                           )
                       );
-
-
                     },
                     child:  Container(
                       margin: EdgeInsets.all(15),
+                      width: double.infinity,
                       height: 150,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -300,75 +297,6 @@ class _MytournamentEventListState extends State<MytournamentEventList> {
                                     ],
                                   )
                               ),
-// Flexible(
-//   flex: 1,
-//   child: SizedBox(
-//       height: 150,
-//       // width: 100,
-//       //color: Colors.red,
-//       child: InkWell(
-//         child: Container(
-//             height: 150,
-//             color: Colors.teal[900],
-//             child: RotatedBox(
-//                 quarterTurns: 1,
-//                 child: Center(
-//                   child: const Text("Apply",
-//                       style: TextStyle(
-//                           letterSpacing: 5,
-//                           color: Colors.white,
-//                           fontSize: 20,
-//                           fontWeight: FontWeight.bold
-//                       )),
-//                 )
-//             )
-//         ),
-//         onTap: () {
-//           print("button pressed : $index");
-//           print(snapshot.data?.docs[index].reference.id);
-//           showDialog(
-//             context: context,
-//             builder: (BuildContext context) {
-//               return AlertDialog(
-//                 title: Text("Are You Sure"),
-//                 content: Text("are you sure to became the participant of this event ??"),
-//                 actions: <Widget>[
-//                   ElevatedButton(
-//                     child: Text("NO"),
-//                     style: ElevatedButton.styleFrom(
-//                         primary: Colors.red[900],
-//                         //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-//                         textStyle: TextStyle(
-//                             fontSize: 15,
-//                             fontWeight: FontWeight.bold)),
-//                     onPressed: () {
-//                       Navigator.of(context).pop();
-//                     },
-//                   ),
-//                   ElevatedButton(
-//                     style: ElevatedButton.styleFrom(
-//                         primary: Colors.teal[900],
-//                         //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-//                         textStyle: TextStyle(
-//                             fontSize: 15,
-//                             fontWeight: FontWeight.bold)),
-//                     child: Text("YES"),
-//                     onPressed: () async {
-//                       var selectedProjectId = snapshot.data?.docs[index].reference.id;
-//                       await FirebaseFirestore.instance.collection("events").doc(selectedProjectId)
-//                           .update({"joinedPerson" : FieldValue.arrayUnion([loginUserid])});
-//                       Navigator.of(context).pop();
-//                       showAlertDialog(context,"Done","You can joined the event successfully");
-//                     },
-//                   ),
-//                 ],
-//               );
-//             },
-//           );
-//         },
-//       )
-//   ),
-// ),
                             ],
                           ),
                           Align(

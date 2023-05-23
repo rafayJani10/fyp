@@ -1,6 +1,7 @@
 // TODO Implement this library.
 import 'dart:convert';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/CreateEvents/CreateEvents.dart';
@@ -29,6 +30,8 @@ class _SideMenueBarState extends State<SideMenueBar> {
   var noImagePlaceholder = "";
   var gender = "";
   var userId = "";
+  var email = "";
+  var is_image_loading = true;
 
 
   Future<dynamic> getUserData() async{
@@ -38,18 +41,20 @@ class _SideMenueBarState extends State<SideMenueBar> {
       userName = daaa['fullname'];
       userImage = daaa["picture"];
       gender = daaa["gender"];
+      // if(gender == "mail"){
+      //   userImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/menph.jpeg?alt=media&token=599c5531-d4d5-4776-8a3c-3eaf45a54d2e";
+      // }else{
+      //   userImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/womenph.jpeg?alt=media&token=e91ba2c5-8737-411d-8be2-42e0cd2d6e35";
+      // }
       userId = daaa["id"];
-      if (gender == "mail"){
-        noImagePlaceholder = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/menph.jpeg?alt=media&token=599c5531-d4d5-4776-8a3c-3eaf45a54d2e";
-      }else{
-        noImagePlaceholder = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/womenph.jpeg?alt=media&token=e91ba2c5-8737-411d-8be2-42e0cd2d6e35";
-      }
+      email = daaa["email"];
+      is_image_loading = false;
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
     getUserData();
   }
@@ -68,18 +73,39 @@ class _SideMenueBarState extends State<SideMenueBar> {
               ),
               child: Column(
                 children: <Widget>[
-                  CircleAvatar(
-                    radius: 50,
-                    child: ClipOval(
-                        child: userImage == "" ?Image.network(noImagePlaceholder,  fit: BoxFit.fill) :Image.network(userImage,  fit: BoxFit.fill)
-                    ),
+                  Stack(
+                    children: [
+                      // Circular avatar with image or placeholder
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.grey, // Placeholder color
+                        backgroundImage: userImage != ""
+                            ? NetworkImage("$userImage")
+                            : const NetworkImage("https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/menph.jpeg?alt=media&token=599c5531-d4d5-4776-8a3c-3eaf45a54d2e"), // Use NetworkImage only when imageUrl is not null
+                      ),
+
+                      // Loader
+                      if (is_image_loading)
+                        Positioned.fill(
+                          child: CircularProgressIndicator(),
+                        ),
+                    ],
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 10),
                     child: Text(userName,
                       style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 12,
                           color: Colors.white
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(email,
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[200]
                       ),
                     ),
                   )

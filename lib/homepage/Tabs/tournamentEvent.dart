@@ -112,13 +112,14 @@ class _tournamentEventListState extends State<tournamentEventList> {
 
                           Navigator.push(context,
                               MaterialPageRoute(
-                                  builder: (context) => tournamentJoinedTeams(authoreId: authorId, eventID: eventIdd)
+                                  builder: (context) => tournamentJoinedTeams(authoreId: authorId, eventID: eventIdd, role_status: true,)
                               )
                           );
                           },
                         child:  Container(
                           margin: EdgeInsets.all(15),
                           height: 150,
+                          width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             boxShadow: [
