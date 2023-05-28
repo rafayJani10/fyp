@@ -32,6 +32,7 @@ class _AdminSideMenueBarState extends State<AdminSideMenueBar> {
   var noImagePlaceholder = "";
   var gender = "";
   var userId = "";
+  var is_image_loading = true;
 
   Future<dynamic> getUserData() async{
     var data =  await dbmanager.getData('userBioData');
@@ -41,11 +42,10 @@ class _AdminSideMenueBarState extends State<AdminSideMenueBar> {
       userImage = daaa["picture"];
       gender = daaa["gender"];
       userId = daaa["id"];
-      if (gender == "mail"){
-        noImagePlaceholder = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/menph.jpeg?alt=media&token=599c5531-d4d5-4776-8a3c-3eaf45a54d2e";
-      }else{
-        noImagePlaceholder = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/womenph.jpeg?alt=media&token=e91ba2c5-8737-411d-8be2-42e0cd2d6e35";
+      if(userImage != ""){
+        is_image_loading = false;
       }
+
     });
   }
 
@@ -70,21 +70,33 @@ class _AdminSideMenueBarState extends State<AdminSideMenueBar> {
               ),
               child: Column(
                 children: <Widget>[
-                  CircleAvatar(
-                    radius: 50,
-                    child: ClipOval(
-                        child: Image.network("https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/menph.jpeg?alt=media&token=599c5531-d4d5-4776-8a3c-3eaf45a54d2e",  fit: BoxFit.fill)
-                    ),
+                  Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.white, // Placeholder color
+                        backgroundImage: userImage != ""
+                            ? NetworkImage("$userImage")
+                            : null, // Use NetworkImage only when imageUrl is not null
+                      ),
+                      // Loader
+                      if (is_image_loading)
+                        const Positioned.fill(
+                          child: CircularProgressIndicator(
+                            color: Colors.teal,
+                          ),
+                        ),
+                    ],
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 10),
-                    child: Text("Admin",
+                    child: Text(userName,
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.white
                       ),
                     ),
-                  )
+                  ),
                 ],
               )
 
@@ -105,7 +117,7 @@ class _AdminSideMenueBarState extends State<AdminSideMenueBar> {
               //Navigator.pop(context);
             },
           ),
-           ListTile(
+          ListTile(
 //            tileColor: Colors.blue ,
 
             title: Text('My Events'),

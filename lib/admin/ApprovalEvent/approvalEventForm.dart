@@ -29,11 +29,13 @@ class _Approval_formState extends State<Approval_form> {
   var event_authore_id = "";
 
 
+  var authore_id = "";
   var authore_name = "";
   var authore_email = "";
   var authore_dept = "";
   var authore_phone_number = "";
   var authore_device_token = "";
+  var _isloading = false;
 
   var notificationservices = NotificationServices();
   Future<DocumentSnapshot<Map<String, dynamic>>> getDocumentById(String documentId) {
@@ -51,6 +53,7 @@ class _Approval_formState extends State<Approval_form> {
       Map<String, dynamic>? data = documentSnapshot.data();
       // Process the data as needed
       setState(() {
+       // evemt_id = data.id;
         event_name = data!["name"];
         event_address = data["address"];
         event_date = data["date"];
@@ -73,6 +76,7 @@ class _Approval_formState extends State<Approval_form> {
       Map<String, dynamic>? data = documentSnapshot.data();
       // Process the data as needed
       setState(() {
+        authore_id = data!["id"];
         authore_name = data!["fullname"];
         authore_dept = data["deptname"];
         authore_email = data["email"];
@@ -86,15 +90,51 @@ class _Approval_formState extends State<Approval_form> {
     }
   }
 
-  Future approveEvent (String eventid) async{
+  Future<bool?> approveEvent (String eventid) async{
+    var _checkstatus = false;
     await FirebaseFirestore.instance.collection("TourEvents").doc(eventid).update(
         {
           'approval': true
         }).then((value) {
+          _checkstatus = true;
+          Navigator.pop(context);
       showAlertDialog(context,'Success',"You approved this event.");
+
+      setState(() {
+        _isloading = false;
+      });
+
     }).onError((error, stackTrace) {
+      _checkstatus = false;
       showAlertDialog(context,'Success',error.toString());
     });
+    return _checkstatus;
+  }
+
+  Future rejectEvent (eventidd) async{
+    try {
+      // Get the reference to the document
+      DocumentReference documentRef =
+      FirebaseFirestore.instance.collection('TourEvents').doc(widget.eventID);
+      await documentRef.delete().then((value) async {
+        var collection = FirebaseFirestore.instance.collection('users');
+        collection
+            .doc(authore_id)
+            .update(
+            {
+              'TourProjects': FieldValue.arrayRemove([widget.eventID]),
+            }
+        );
+      });
+      setState(() {
+        _isloading = false;
+        Navigator.pop(context);
+        showAlertDialog(context,'Success',"You delete this event.");
+      });
+      print('Document deleted successfully');
+    } catch (e) {
+      print('Error deleting document: $e');
+    }
   }
 
 
@@ -113,241 +153,263 @@ class _Approval_formState extends State<Approval_form> {
         backgroundColor: Colors.teal[900],
 
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.all(15),
-              height: 180,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    spreadRadius: 6,
-                    blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  Text('Author details', style: TextStyle(fontSize:20 ),),
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  Row(
-                    children: [
-                      Padding(padding: EdgeInsets.only(top: 20, left: 10)),
-                      Text("Name : ",style: TextStyle(fontSize:16 ),),
-                      Padding(padding: EdgeInsets.only(top: 20, left: 10)),
-                      Text(authore_name,style: TextStyle(fontSize:16 ),)
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  Row(
-                    children: [
-                      Padding(padding: EdgeInsets.only(top: 20, left: 10)),
-                      Text("Email : ",style: TextStyle(fontSize:16 ),),
-                      Padding(padding: EdgeInsets.only(top: 20, left: 10)),
-                      Text(authore_email,style: TextStyle(fontSize:16 ),)
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  Row(
-                    children: [
-                      Padding(padding: EdgeInsets.only(top: 20, left: 10)),
-                      Text("Dept : ",style: TextStyle(fontSize:16 ),),
-                      Padding(padding: EdgeInsets.only(top: 20, left: 10)),
-                      Text(authore_dept,style: TextStyle(fontSize:16 ),)
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  Row(
-                    children: [
-                      Padding(padding: EdgeInsets.only(top: 20, left: 10)),
-                      Text("Phone Number : ",style: TextStyle(fontSize:16 ),),
-                      Padding(padding: EdgeInsets.only(top: 20, left: 10)),
-                      Text(authore_phone_number,style: TextStyle(fontSize:16 ),)
-                    ],
-                  )
-                ],
-              )
-            ),
-            Container(
-                margin: EdgeInsets.all(15),
-                height: 250,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      spreadRadius: 6,
-                      blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    Text('Event details', style: TextStyle(fontSize:20 ),),
-                    Padding(padding: EdgeInsets.only(top: 20)),
-                    Row(
-                      children: [
-                        Padding(padding: EdgeInsets.only(top: 20, left: 10)),
-                        Text("Name : ",style: TextStyle(fontSize:16 ),),
-                        Padding(padding: EdgeInsets.only(top: 20, left: 10)),
-                        Text(event_name,style: TextStyle(fontSize:16 ),)
+      body: Stack(
+        children: [
+          Center(
+            child: Column(
+              children: [
+                Container(
+                    margin: EdgeInsets.all(15),
+                    height: 180,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 6,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
                       ],
                     ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    Row(
+                    child: Column(
                       children: [
-                        Padding(padding: EdgeInsets.only(top: 10, left: 10)),
-                        Text("Address : ",style: TextStyle(fontSize:16 ),),
-                        Padding(padding: EdgeInsets.only(top: 10, left: 10)),
-                        Text(event_address,style: TextStyle(fontSize:16 ),)
-                      ],
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    Row(
-                      children: [
-                        Padding(padding: EdgeInsets.only(top: 10, left: 10)),
-                        Text("date : ",style: TextStyle(fontSize:16 ),),
-                        Padding(padding: EdgeInsets.only(top: 10, left: 10)),
-                        Text(event_date,style: TextStyle(fontSize:16 ),)
-                      ],
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    Row(
-                      children: [
-                        Padding(padding: EdgeInsets.only(top: 10, left: 10)),
-                        Text("Time : ",style: TextStyle(fontSize:16 ),),
-                        Padding(padding: EdgeInsets.only(top: 10, left: 10)),
-                        Text(event_time,style: TextStyle(fontSize:16 ),)
-                      ],
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    Row(
-                      children: [
-                        Padding(padding: EdgeInsets.only(top: 10, left: 10)),
-                        Text("Winning : ",style: TextStyle(fontSize:16 ),),
-                        Padding(padding: EdgeInsets.only(top: 10, left: 10)),
-                        Text(event_winning,style: TextStyle(fontSize:16 ),)
-                      ],
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    Row(
-                      children: [
-                        Padding(padding: EdgeInsets.only(top: 10, left: 10)),
-                        Text("Perhead team : ",style: TextStyle(fontSize:16 ),),
-                        Padding(padding: EdgeInsets.only(top: 10, left: 10)),
-                        Text(event_perhead,style: TextStyle(fontSize:16 ),)
-
-
+                        Padding(padding: EdgeInsets.only(top: 10)),
+                        Text('Author details', style: TextStyle(fontSize:20 ),),
+                        Padding(padding: EdgeInsets.only(top: 10)),
+                        Row(
+                          children: [
+                            Padding(padding: EdgeInsets.only(top: 20, left: 10)),
+                            Text("Name : ",style: TextStyle(fontSize:16 ),),
+                            Padding(padding: EdgeInsets.only(top: 20, left: 10)),
+                            Text(authore_name,style: TextStyle(fontSize:16 ),)
+                          ],
+                        ),
+                        Padding(padding: EdgeInsets.only(top: 10)),
+                        Row(
+                          children: [
+                            Padding(padding: EdgeInsets.only(top: 20, left: 10)),
+                            Text("Email : ",style: TextStyle(fontSize:16 ),),
+                            Padding(padding: EdgeInsets.only(top: 20, left: 10)),
+                            Text(authore_email,style: TextStyle(fontSize:16 ),)
+                          ],
+                        ),
+                        Padding(padding: EdgeInsets.only(top: 10)),
+                        Row(
+                          children: [
+                            Padding(padding: EdgeInsets.only(top: 20, left: 10)),
+                            Text("Dept : ",style: TextStyle(fontSize:16 ),),
+                            Padding(padding: EdgeInsets.only(top: 20, left: 10)),
+                            Text(authore_dept,style: TextStyle(fontSize:16 ),)
+                          ],
+                        ),
+                        Padding(padding: EdgeInsets.only(top: 10)),
+                        Row(
+                          children: [
+                            Padding(padding: EdgeInsets.only(top: 20, left: 10)),
+                            Text("Phone Number : ",style: TextStyle(fontSize:16 ),),
+                            Padding(padding: EdgeInsets.only(top: 20, left: 10)),
+                            Text(authore_phone_number,style: TextStyle(fontSize:16 ),)
+                          ],
+                        )
                       ],
                     )
-                  ],
-                )
-            ),
-            Container(
-                margin: EdgeInsets.all(15),
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      spreadRadius: 6,
-                      blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
                 ),
-              child: Row(
-                children: [
-                  Flexible(
-                      flex: 1,
-                      child: InkWell(
-                        onTap: () async {
-                          print(authore_device_token);
-                          var data = {
-                            'to': authore_device_token,
-                            'priority': 'high',
-                            'notification' : {
-                              'title' : 'Event Not Approved',
-                              'body' : 'Admin does not approved your event which is name as $event_name'
-                            }
-                          };
-                          await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-                              body: jsonEncode(data) ,
-                              headers: {
-                                'Content-Type' : 'application/json; character=UTF-8',
-                                'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
-                              }
-                          );
+                Container(
+                    margin: EdgeInsets.all(15),
+                    height: 250,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 6,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(padding: EdgeInsets.only(top: 10)),
+                        Text('Event details', style: TextStyle(fontSize:20 ),),
+                        Padding(padding: EdgeInsets.only(top: 20)),
+                        Row(
+                          children: [
+                            Padding(padding: EdgeInsets.only(top: 20, left: 10)),
+                            Text("Name : ",style: TextStyle(fontSize:16 ),),
+                            Padding(padding: EdgeInsets.only(top: 20, left: 10)),
+                            Text(event_name,style: TextStyle(fontSize:16 ),)
+                          ],
+                        ),
+                        Padding(padding: EdgeInsets.only(top: 10)),
+                        Row(
+                          children: [
+                            Padding(padding: EdgeInsets.only(top: 10, left: 10)),
+                            Text("Address : ",style: TextStyle(fontSize:16 ),),
+                            Padding(padding: EdgeInsets.only(top: 10, left: 10)),
+                            Text(event_address,style: TextStyle(fontSize:16 ),)
+                          ],
+                        ),
+                        Padding(padding: EdgeInsets.only(top: 10)),
+                        Row(
+                          children: [
+                            Padding(padding: EdgeInsets.only(top: 10, left: 10)),
+                            Text("date : ",style: TextStyle(fontSize:16 ),),
+                            Padding(padding: EdgeInsets.only(top: 10, left: 10)),
+                            Text(event_date,style: TextStyle(fontSize:16 ),)
+                          ],
+                        ),
+                        Padding(padding: EdgeInsets.only(top: 10)),
+                        Row(
+                          children: [
+                            Padding(padding: EdgeInsets.only(top: 10, left: 10)),
+                            Text("Time : ",style: TextStyle(fontSize:16 ),),
+                            Padding(padding: EdgeInsets.only(top: 10, left: 10)),
+                            Text(event_time,style: TextStyle(fontSize:16 ),)
+                          ],
+                        ),
+                        Padding(padding: EdgeInsets.only(top: 10)),
+                        Row(
+                          children: [
+                            Padding(padding: EdgeInsets.only(top: 10, left: 10)),
+                            Text("Winning : ",style: TextStyle(fontSize:16 ),),
+                            Padding(padding: EdgeInsets.only(top: 10, left: 10)),
+                            Text(event_winning,style: TextStyle(fontSize:16 ),)
+                          ],
+                        ),
+                        Padding(padding: EdgeInsets.only(top: 10)),
+                        Row(
+                          children: [
+                            Padding(padding: EdgeInsets.only(top: 10, left: 10)),
+                            Text("Perhead team : ",style: TextStyle(fontSize:16 ),),
+                            Padding(padding: EdgeInsets.only(top: 10, left: 10)),
+                            Text(event_perhead,style: TextStyle(fontSize:16 ),)
 
-                        },
-                        child: Container(
-                            height: 50,
-                            color: Colors.red,
-                            child:Center(
-                              child:  Text('Rejected the event',
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.white
-                                ),
-                              ),
-                            )
-                        ),
-                      )
+
+                          ],
+                        )
+                      ],
+                    )
+                ),
+                Container(
+                  margin: EdgeInsets.all(15),
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.1),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 6,
+                        blurRadius: 7,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
                   ),
-                  Container(
-                    width: 20,
+                  child: Row(
+                    children: [
+                      Flexible(
+                          flex: 1,
+                          child: InkWell(
+                            onTap: () async {
+                              setState(() {
+                                _isloading = true;
+                              });
+                              print(authore_device_token);
+                              rejectEvent(widget.eventID);
+                              var data = {
+                                'to': authore_device_token,
+                                'priority': 'high',
+                                'notification' : {
+                                  'title' : 'Event Not Approved',
+                                  'body' : 'Admin does not approved your event which is name as $event_name'
+                                }
+                              };
+                              await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+                                  body: jsonEncode(data) ,
+                                  headers: {
+                                    'Content-Type' : 'application/json; character=UTF-8',
+                                    'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
+                                  }
+                              );
+
+
+                            },
+                            child: Container(
+                                height: 50,
+                                color: Colors.red,
+                                child:Center(
+                                  child:  Text('Rejected the event',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white
+                                    ),
+                                  ),
+                                )
+                            ),
+                          )
+                      ),
+                      Container(
+                        width: 20,
+                      ),
+                      Flexible(
+                          flex: 1,
+                          child:InkWell(
+                            onTap: () async {
+                              setState(() {
+                                _isloading = true;
+                              });
+                              print("device token :::::::::::::::::::::");
+                              print(authore_device_token);
+                              var approvevent = approveEvent(widget.eventID!);
+                              print(authore_device_token);
+                              var data = {
+                                'to': authore_device_token,
+                                'priority': 'high',
+                                'notification' : {
+                                  'title' : 'Event Approved',
+                                  'body' : 'Admin approved your event which is name as $event_name'
+                                }
+                              };
+                              await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+                                  body: jsonEncode(data) ,
+                                  headers: {
+                                    'Content-Type' : 'application/json; character=UTF-8',
+                                    'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
+                                  }
+                              );
+
+                            },
+                            child:  Container(
+                                height: 50,
+                                color: Colors.green,
+                                child:Center(
+                                  child:  Text('Approved the event',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white
+                                    ),
+                                  ),
+                                )
+                            ),
+                          )),
+                    ],
                   ),
-                  Flexible(
-                      flex: 1,
-                      child:InkWell(
-                        onTap: () async {
-                          print("device token :::::::::::::::::::::");
-                          print(authore_device_token);
-                          approveEvent(widget.eventID!);
-                          print(authore_device_token);
-                          var data = {
-                            'to': authore_device_token,
-                            'priority': 'high',
-                            'notification' : {
-                              'title' : 'Event Approved',
-                              'body' : 'Admin approved your event which is name as $event_name'
-                            }
-                          };
-                          await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-                              body: jsonEncode(data) ,
-                              headers: {
-                                'Content-Type' : 'application/json; character=UTF-8',
-                                'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
-                              }
-                          );
-                        },
-                        child:  Container(
-                            height: 50,
-                            color: Colors.green,
-                            child:Center(
-                              child:  Text('Approved the event',
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.white
-                                ),
-                              ),
-                            )
-                        ),
-                      )),
-                ],
+                ),
+              ],
+            ),
+          ),
+          Center(child: Visibility(
+            visible: _isloading,
+            child: Container(
+              color: Colors.black.withOpacity(0.5), // Overlay color
+              child: Center(
+                child: CircularProgressIndicator(),
               ),
             ),
-          ],
-        ),
-      ),
+          ),)
+        ],
+      )
     );
   }
 }

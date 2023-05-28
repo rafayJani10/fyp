@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/homepage/EventsDetailsScreen/tournametEventDetails.dart';
@@ -29,6 +30,8 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
   var joinedTeamList = [];
   var firestore = FirebaseFirestore.instance;
   var authoreDeviceToken = "";
+  var _isloading = true;
+  var _noDataALert = false;
   final teamName_textController = TextEditingController();
   final tplayer_textController = TextEditingController();
 
@@ -46,13 +49,18 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
     if (docSnapshot.exists) {
       Map<String, dynamic>? data = docSnapshot.data();
       print(data?['joinedTeamList']);
-      for (var i in data?['joinedTeamList']){
-        setState(() {
+      setState(() {
+        for (var i in data?['joinedTeamList']){
           joinedTeamList.add(i);
-        });
-      }
-
-      print(joinedTeamList);
+        }
+        print(joinedTeamList);
+        if(joinedTeamList.isNotEmpty){
+          _isloading = false;
+        }else{
+          _isloading = false;
+          _noDataALert = true;
+        }
+      });
     }
   }
   Future getAuthoreDeviceToken() async {
@@ -135,7 +143,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                           print(tplayer_textController.text);
                           print(eventid);
 
-                          var jteamHitter = dbmanager.joinedTournamentTeams(teamName_textController.text, tplayer_textController.text, loginUserName, eventid);
+                          var jteamHitter = dbmanager.createTeamsInTornament(teamName_textController.text, tplayer_textController.text, loginUserName, eventid);
                           if (jteamHitter == false){
                             teamName_textController.clear();
                             tplayer_textController.clear();
@@ -206,129 +214,152 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
         title: const Text("Joined Teams List"),
         backgroundColor: Colors.teal[900],
       ),
-      body: ListView.builder(
-          itemCount: joinedTeamList.length,//myProjectId.length,
-          itemBuilder: (BuildContext context, int index){
-            return StreamBuilder(
-              stream: FirebaseFirestore.instance.collection('JoinedTeams').doc(joinedTeamList[index]).snapshots(),
-              builder: (context, snapshot){
-                if (snapshot.data == null ) {
-                  return Center(child: Text('NO DATA'));
-                }
-                return Padding(
-                  padding: EdgeInsets.all(10),
-                  child: InkWell(
-                    onTap: (){
-                      print('team ${snapshot.data?['teamName']} is clicked ');
-                      print(snapshot.data?.id);
-                      var tournamentID = snapshot.data?.id;
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) =>  tournamentEventDetail(authoreId: widget.authoreId,teamID: snapshot.data?.id)),
-                      );
-                    },
-                    child: Container(
-                        width: double.infinity,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.3),
-                              spreadRadius: 7,
-                              blurRadius: 4,
-                              offset: Offset(0, 0), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                                height: 100,
-                                width: 80,
-                                child: Center(
-                                  child: Text("${index + 1}",
-                                    style: TextStyle(
-                                        fontSize: 50,
-                                        fontWeight: FontWeight.w900,
-                                        color: Colors.teal
-                                    ),
+      body: Stack(
+        children: [
+          ListView.builder(
+              itemCount: joinedTeamList.length,//myProjectId.length,
+              itemBuilder: (BuildContext context, int index){
+                return StreamBuilder(
+                  stream: FirebaseFirestore.instance.collection('JoinedTeams').doc(joinedTeamList[index]).snapshots(),
+                  builder: (context, snapshot){
+                    if(snapshot.hasData){
+                      return Padding(
+                        padding: EdgeInsets.all(10),
+                        child: InkWell(
+                          onTap: (){
+                            print('team ${snapshot.data?['teamName']} is clicked ');
+                            print(snapshot.data?.id);
+                            var tournamentID = snapshot.data?.id;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) =>  tournamentEventDetail(authoreId: widget.authoreId,teamID: snapshot.data?.id, role_status: widget.role_status)),
+                            );
+                          },
+                          child: Container(
+                              width: double.infinity,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 7,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 0), // changes position of shadow
                                   ),
-                                )
-                            ),
-                            Column(
-                              children: <Widget>[
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Container(
-                                    width: 200,
-                                    //color: Colors.green,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(left: 10, top: 5),
-                                      child: Text(snapshot.data?['teamName'],
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                      height: 100,
+                                      width: 80,
+                                      child: Center(
+                                        child: Text("${index + 1}",
+                                          style: TextStyle(
+                                              fontSize: 50,
+                                              fontWeight: FontWeight.w900,
+                                              color: Colors.teal
+                                          ),
+                                        ),
+                                      )
+                                  ),
+                                  Column(
+                                    children: <Widget>[
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Container(
+                                          width: 200,
+                                          //color: Colors.green,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(left: 10, top: 5),
+                                            child: Text(snapshot.data?['teamName'],
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Container(
+                                            width: 200,
+                                            //color: Colors.green,
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                    padding: EdgeInsets.only(left: 10, top: 5),
+                                                    child: Icon(Icons.person, size: 18,)
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(left: 10, top: 5),
+                                                  child: Text(snapshot.data?['creatorName'],
+                                                    style: TextStyle(
+                                                        fontSize: 15
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Container(
+                                            width: 200,
+                                            //color: Colors.green,
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                    padding: EdgeInsets.only(left: 10, top: 5),
+                                                    child: Icon(Icons.person, size: 18,)
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(left: 10, top: 5),
+                                                  child: Text(snapshot.data?['Tplayers'],
+                                                    style: TextStyle(
+                                                        fontSize: 15
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Container(
-                                      width: 200,
-                                      //color: Colors.green,
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                              padding: EdgeInsets.only(left: 10, top: 5),
-                                              child: Icon(Icons.person, size: 18,)
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 10, top: 5),
-                                            child: Text(snapshot.data?['creatorName'],
-                                              style: TextStyle(
-                                                  fontSize: 15
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Container(
-                                      width: 200,
-                                      //color: Colors.green,
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                              padding: EdgeInsets.only(left: 10, top: 5),
-                                              child: Icon(Icons.person, size: 18,)
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 10, top: 5),
-                                            child: Text(snapshot.data?['Tplayers'],
-                                              style: TextStyle(
-                                                  fontSize: 15
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                    ),
-                  ),);
-              },
-            );
-          }
+                                ],
+                              )
+                          ),
+                        ),);
+                    }
+                    return SizedBox();
+                  },
+                );
+              }
+          ),
+          Visibility(visible:_isloading,child: Center(child: CircularProgressIndicator(),)),
+          Visibility(visible:_noDataALert, child: Center(
+            child: Container(
+              height: 400,
+              width: 300,
+              //color: Colors.teal,
+              child: Column(
+                children: [
+                  Container(
+                    height: 300,
+                    width: 300,
+                    child: Image.asset('assets/images/team.png'),
+                  ),
+                  SizedBox(height: 40,),
+                  Text("No Team Joined", style: TextStyle(fontSize: 20,  color: Colors.grey),)
+                ],
+              ),
+            ),
+          )),
+        ],
       ),
 
      floatingActionButton: Visibility(

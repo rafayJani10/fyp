@@ -41,14 +41,12 @@ class _SideMenueBarState extends State<SideMenueBar> {
       userName = daaa['fullname'];
       userImage = daaa["picture"];
       gender = daaa["gender"];
-      // if(gender == "mail"){
-      //   userImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/menph.jpeg?alt=media&token=599c5531-d4d5-4776-8a3c-3eaf45a54d2e";
-      // }else{
-      //   userImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/womenph.jpeg?alt=media&token=e91ba2c5-8737-411d-8be2-42e0cd2d6e35";
-      // }
       userId = daaa["id"];
       email = daaa["email"];
-      is_image_loading = false;
+      if(userImage != ""){
+        is_image_loading = false;
+      }
+
     });
   }
 
@@ -78,16 +76,18 @@ class _SideMenueBarState extends State<SideMenueBar> {
                       // Circular avatar with image or placeholder
                       CircleAvatar(
                         radius: 40,
-                        backgroundColor: Colors.grey, // Placeholder color
+                        backgroundColor: Colors.white, // Placeholder color
                         backgroundImage: userImage != ""
                             ? NetworkImage("$userImage")
-                            : const NetworkImage("https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/menph.jpeg?alt=media&token=599c5531-d4d5-4776-8a3c-3eaf45a54d2e"), // Use NetworkImage only when imageUrl is not null
+                            : null, // Use NetworkImage only when imageUrl is not null
                       ),
 
                       // Loader
                       if (is_image_loading)
-                        Positioned.fill(
-                          child: CircularProgressIndicator(),
+                        const Positioned.fill(
+                          child: CircularProgressIndicator(
+                            color: Colors.teal,
+                          ),
                         ),
                     ],
                   ),

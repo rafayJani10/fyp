@@ -101,8 +101,8 @@ class _LoginScreenState extends State<LoginScreen> {
     // TODO: implement initState
     super.initState();
 
-    emailController.text = "syedahad921@gmail.com";
-    passwordController.text = "12345678";
+    // emailController.text = "syedahad921@gmail.com";
+    // passwordController.text = "12345678";
 
     getDeviceToken();
     notificationServices.requestNotificationPermission();

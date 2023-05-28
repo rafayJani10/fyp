@@ -1,13 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-import '../../UIcomponents/UIcomponents.dart';
 import '../../databaseManager/databaseManager.dart';
 import '../../services/NotificationServices.dart';
 import '../EventsDetailsScreen/tournamentJoinedTeams.dart';
-import '../EventsDetailsScreen/tournametEventDetails.dart';
-import '../UserEventJoined/EventParticipantUser.dart';
-
 
 class tournamentEventList extends StatefulWidget {
   const tournamentEventList({Key? key}) : super(key: key);
@@ -56,15 +51,16 @@ class _tournamentEventListState extends State<tournamentEventList> {
           height: 80,
           color: Colors.white,
           child: Container(
-            margin: EdgeInsets.all(15),
+            margin: EdgeInsets.all(8),
             height: 80,
             decoration: BoxDecoration(
               //color: Colors.white,
+              borderRadius: BorderRadius.circular(10.0),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.6),
-                  spreadRadius: 7,
-                  blurRadius: 4,
+                  color: Colors.grey.withOpacity(0.3),
+                  spreadRadius: 3,
+                  blurRadius: 3,
                   offset: Offset(0, 0), // changes position of shadow
                 ),
               ],
@@ -77,14 +73,21 @@ class _tournamentEventListState extends State<tournamentEventList> {
                   searchData(searchKey);
                 });
               },
-              decoration: InputDecoration(
-                suffixIcon: Icon(Icons.search),
-                hintText: 'Type Text Here...',
-                hintStyle: TextStyle(color: Colors.grey),
-                filled: true,
-                fillColor: Colors.white,
-
-              ),),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors
+                          .transparent, // Set the desired color for the focused border
+                    ),
+                  ),
+                  suffixIcon: Icon(Icons.search),
+                  suffixIconColor: Colors.teal[900],
+                  hintText: 'Type Text Here...',
+                  hintStyle: TextStyle(color: Colors.grey),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),),
           ),
         ),
         // body of screen
@@ -117,11 +120,12 @@ class _tournamentEventListState extends State<tournamentEventList> {
                           );
                           },
                         child:  Container(
-                          margin: EdgeInsets.all(15),
+                          margin: EdgeInsets.all(8),
                           height: 150,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.3),

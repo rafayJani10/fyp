@@ -31,12 +31,13 @@ class _AdminApprovalListState extends State<AdminApprovalList> {
         stream: FirebaseFirestore.instance.collection('TourEvents').snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData) return const
-          Text('loading ...');
+          Spacer();
           return ListView.builder(
               itemCount: snapshot.data?.docs.length,
               itemBuilder: (BuildContext context, int index) {
-                if(snapshot.data?.docs[index]["approval"] == false){
-                  return InkWell(
+                return snapshot.data?.docs[index]["approval"] == true
+                   ?Spacer()
+                    :InkWell(
                     onTap: (){
                       print("");
                       Navigator.push(context,
@@ -253,9 +254,6 @@ class _AdminApprovalListState extends State<AdminApprovalList> {
                       ),
                     ),
                   );
-                }else{
-                  return Text("");
-                }
               });
         },
       ),

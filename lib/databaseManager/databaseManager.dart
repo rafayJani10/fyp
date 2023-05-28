@@ -248,7 +248,7 @@ class DatabaseManager {
 
   }
 
-  Future<bool?> joinedTournamentTeams(teamName, tplayers, creatorName, eventID) async {
+  Future<bool?> createTeamsInTornament(teamName, tplayers, creatorName, eventID) async {
     var jtstatus = false;
     await _firestore.collection("JoinedTeams").add(
       {
@@ -268,6 +268,18 @@ class DatabaseManager {
       jtstatus = true;
     });
     return jtstatus;
+  }
+
+  Future<bool?> joinedMemeberInteam(teamId,memeberId)async{
+    var _status = false;
+    await _firestore.collection("JoinedTeams").doc(teamId).update(
+        {
+          "joinedPlayerInTeam" : FieldValue.arrayUnion([memeberId])
+        }
+    ).then((value) {
+      _status = true;
+    });
+    return _status;
   }
 
   /// Login user data save in shared prefernce
