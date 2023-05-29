@@ -32,15 +32,20 @@ class FriendlyEventDetails extends StatefulWidget {
 
 class _FriendlyEventDetailsState extends State<FriendlyEventDetails> with SingleTickerProviderStateMixin{
   late TabController _tabController;
+
+
   final List<Tab> myTabs =  <Tab>[
     new Tab(text: 'a'),
     new Tab(text: 'b'),
   ];
 
+
+
  @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     _tabController = new TabController(length: 2, vsync: this);
   }
 
@@ -81,7 +86,7 @@ class _FriendlyEventDetailsState extends State<FriendlyEventDetails> with Single
         body: TabBarView(
           controller: _tabController,
           children: [
-            TeamATab(AuthoreId: widget.AuthoreId, teamAlist: widget.teamAlist, teamBlist: widget.teamBlist, eventId: widget.eventId),
+            TeamATab(AuthoreId: widget.AuthoreId, teamAlist: widget.teamAlist, teamBlist: widget.teamBlist, eventId: widget.eventId,),
             TeamBTab(AuthoreId: widget.AuthoreId, teamAlist: widget.teamAlist, teamBlist: widget.teamBlist, eventId: widget.eventId),
           ],
         ),

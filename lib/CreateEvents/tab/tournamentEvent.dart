@@ -52,12 +52,12 @@ class _tournamentEventState extends State<tournamentEvent> {
   }
   List<DropdownMenuItem<String>> get sportsList{
     List<DropdownMenuItem<String>> menuItems = [
-      DropdownMenuItem(child: Text("Table Tennis"),value: "Table Tennis"),
-      DropdownMenuItem(child: Text("futsul"),value: "futsul"),
-      DropdownMenuItem(child: Text("cricket"),value: "cricket"),
-      DropdownMenuItem(child: Text("bedminton"),value: "bedminton"),
-      DropdownMenuItem(child: Text("Volley Ball"),value: "Volley Ball"),
-      DropdownMenuItem(child: Text("Basket Ball"),value: "Basket Ball")
+      DropdownMenuItem(child: Text("Table Tennis"), value: "Table Tennis"),
+      DropdownMenuItem(child: Text("Futsul"), value: "Futsul"),
+      DropdownMenuItem(child: Text("Cricket"), value: "Cricket"),
+      DropdownMenuItem(child: Text("Bedminton"), value: "Bedminton"),
+      DropdownMenuItem(child: Text("Volley Ball"), value: "Volley Ball"),
+      DropdownMenuItem(child: Text("Basket Ball"), value: "Basket Ball")
     ];
     return menuItems;
   }
@@ -393,8 +393,8 @@ class _tournamentEventState extends State<tournamentEvent> {
                                         onTap: () async{
                                           DateTime? datePicked =  await  showDatePicker(
                                             context: context,
-                                            initialDate: DateTime.now(),
-                                            firstDate: DateTime(2011),
+                                            initialDate: DateTime.now().add(Duration(days: 21)),
+                                            firstDate: DateTime.now().add(Duration(days: 21)),
                                             lastDate: DateTime(2030),
                                           );
                                           if(datePicked != null){
@@ -527,6 +527,7 @@ class _tournamentEventState extends State<tournamentEvent> {
                         borderRadius: BorderRadius.circular(32.0)),
                   ),
                   onPressed: () async{
+
                     setState(() {
                       isloading = true;
                     });
@@ -555,35 +556,46 @@ class _tournamentEventState extends State<tournamentEvent> {
                     setState(() {
                       teamAlist.add(EventAuthor);
                     });
-                    var eventCreate = await dbmanager.createTournamentEvent(EventAuthor, tornamentNameController.text, selectedLocation, selectedsports, sportsImage, userSelectedTime, date, selectedTp, selectteamss, total_winning.text, per_team.text);
-                    if(eventCreate == true){
+                    if (tornamentNameController.text == "Tournament Name" ||
+                        userSelectedTime == null ||
+                        date == "Pick a Date" ) {
                       setState(() {
                         isloading = false;
                       });
-                      print(deviceToken);
-                      var data = {
-                        'to': deviceToken,
-                        'priority': 'high',
-                        'notification' : {
-                          'title' : 'New Event',
-                          'body' : 'new tournament created'
-                        }
-                      };
-                      await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-                          body: jsonEncode(data) ,
-                          headers: {
-                            'Content-Type' : 'application/json; character=UTF-8',
-                            'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
-                          }
-                      );
-
-                      showAlertDialog(context,"Done","Event created successfully");
-
-                      clearTextInput();
+                      showAlertDialog(context, "Error", "Kindly add all event info");
                     }else{
-                      showAlertDialog(context,"Error","Event Not created");
-                      clearTextInput();
+                      var eventCreate = await dbmanager.createTournamentEvent(EventAuthor, tornamentNameController.text, selectedLocation, selectedsports, sportsImage, userSelectedTime, date, selectedTp, selectteamss, total_winning.text, per_team.text);
+                      if(eventCreate == true){
+                        setState(() {
+                          isloading = false;
+                        });
+                        print(deviceToken);
+                        var data = {
+                          'to': deviceToken,
+                          'priority': 'high',
+                          'notification' : {
+                            'title' : 'New Event',
+                            'body' : 'new tournament created'
+                          }
+                        };
+                        await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+                            body: jsonEncode(data) ,
+                            headers: {
+                              'Content-Type' : 'application/json; character=UTF-8',
+                              'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
+                            }
+                        );
+
+                        showAlertDialog(context,"Done","Event created successfully");
+
+                        clearTextInput();
+                      }else{
+                        showAlertDialog(context,"Error","Event Not created");
+                        clearTextInput();
+                      }
                     }
+
+
                   },
                   child: Text('Create Event'),
                 ),

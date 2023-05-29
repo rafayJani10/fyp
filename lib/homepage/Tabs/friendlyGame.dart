@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../UIcomponents/UIcomponents.dart';
@@ -17,6 +19,7 @@ class _FriendlyGameState extends State<FriendlyGame> {
   var loginUserid = "";
   var serachList = [];
   var searchKey = "";
+  var roles = false;
 
   Stream<QuerySnapshot> stream() async* {
     var firestore = FirebaseFirestore.instance;
@@ -25,7 +28,7 @@ class _FriendlyGameState extends State<FriendlyGame> {
   }
 
   Stream<QuerySnapshot> searchData(String string) async* {
-    var stringg = string.toLowerCase();
+    var stringg = string;
     var firestore = FirebaseFirestore.instance;
     var _search = firestore
         .collection('events')
@@ -34,6 +37,8 @@ class _FriendlyGameState extends State<FriendlyGame> {
         .snapshots();
     yield* _search;
   }
+
+
 
   @override
   void initState() {

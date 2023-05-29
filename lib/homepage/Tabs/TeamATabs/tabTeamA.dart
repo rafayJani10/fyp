@@ -11,6 +11,7 @@ class TeamATab extends StatefulWidget {
   final List teamAlist;
   final List teamBlist;
   final String eventId;
+
   TeamATab({super.key, required this.AuthoreId,required this.teamAlist,required this.teamBlist,required this.eventId});
 
   @override
@@ -32,7 +33,7 @@ class _TeamATabState extends State<TeamATab> {
   var joinedUserStatus = false;
   var _isloading = true;
   var _isNodataAlert = false;
-
+  var role_check = false;
 
   Future getAuthoreData() async{
     var collection = FirebaseFirestore.instance.collection('users');
@@ -50,6 +51,9 @@ class _TeamATabState extends State<TeamATab> {
         department = data?['deptname'];
         phoneNo = data?['phoneNumber'];
         skillset = data?['skillset'];
+
+
+
       });
     }
   }
@@ -59,6 +63,11 @@ class _TeamATabState extends State<TeamATab> {
     var userid = daaa['id'];
     setState(() {
       useriddd = userid;
+      if(daaa?['roles'] == 2){
+        role_check = true;
+      }else{
+        role_check = false;
+      }
     });
 
   }
@@ -230,7 +239,9 @@ class _TeamATabState extends State<TeamATab> {
                                               ),
                                               SizedBox(width: 4,),
                                               Text(email,
-                                                overflow: TextOverflow.clip,
+                                                softWrap: false,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
 
                                                 style: TextStyle(
                                                   color: Colors.black,
@@ -238,8 +249,7 @@ class _TeamATabState extends State<TeamATab> {
 
 //fontWeight: FontWeight.bold
                                                 ),
-                                                softWrap: false,
-                                                maxLines: 1,
+
                                                // overflow: TextOverflow.fade,
                                               ),
                                             ],
@@ -256,6 +266,9 @@ class _TeamATabState extends State<TeamATab> {
                                               ),
                                               SizedBox(width: 4,),
                                               Text(department,
+                                                softWrap: false,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
 
                                                 style: TextStyle(
                                                   color: Colors.black,
@@ -277,7 +290,9 @@ class _TeamATabState extends State<TeamATab> {
                                               ),
                                               SizedBox(width: 4,),
                                               Text(skillset,
-
+                                                softWrap: false,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 12,
@@ -298,6 +313,9 @@ class _TeamATabState extends State<TeamATab> {
                                               ),
                                               SizedBox(width: 4,),
                                               Text(phoneNo,
+                                                softWrap: false,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
 
                                                 style: TextStyle(
                                                   color: Colors.black,
@@ -571,61 +589,64 @@ class _TeamATabState extends State<TeamATab> {
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          getLoginUserData();
-          if (joinPersoTeamA != teamtp){
-            if(useriddd != widget.AuthoreId){
-              if(TeamA_joinUser.contains(useriddd)){
-                showAlertDialog(context,"Error","You are already join in Team A");
-              }
-              else if (widget.teamBlist.contains(useriddd)){
-                showAlertDialog(context,"Error","You are already join in Team B");
+      floatingActionButton: Visibility(
+        visible: role_check,
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            getLoginUserData();
+            if (joinPersoTeamA != teamtp){
+              if(useriddd != widget.AuthoreId){
+                if(TeamA_joinUser.contains(useriddd)){
+                  showAlertDialog(context,"Error","You are already join in Team A");
+                }
+                else if (widget.teamBlist.contains(useriddd)){
+                  showAlertDialog(context,"Error","You are already join in Team B");
+                }else{
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Want To Join??"),
+                        actions: <Widget>[
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.red
+                              //onPrimary: Colors.black,
+                            ),
+                            child: Text("No"),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.teal[900]
+                              //onPrimary: Colors.black,
+                            ),
+                            child: Text("Yes"),
+                            onPressed: () {
+                              joindeTeam();
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
               }else{
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Want To Join??"),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              primary: Colors.red
-                            //onPrimary: Colors.black,
-                          ),
-                          child: Text("No"),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              primary: Colors.teal[900]
-                            //onPrimary: Colors.black,
-                          ),
-                          child: Text("Yes"),
-                          onPressed: () {
-                            joindeTeam();
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
+                showAlertDialog(context,"Error","You are already joined");
               }
             }else{
-              showAlertDialog(context,"Error","You are already joined");
+              showAlertDialog(context,"Housfull","Sorry member are on its capacity ?");
             }
-          }else{
-            showAlertDialog(context,"Housfull","Sorry member are on its capacity ?");
-          }
-        },
-        label:  Text('Join Team',
-          style: TextStyle(color: Colors.white),),
-        icon:  Icon(Icons.add,color: Colors.white,),
-        backgroundColor: Colors.teal[900],
-      ),
+          },
+          label:  Text('Join Team',
+            style: TextStyle(color: Colors.white),),
+          icon:  Icon(Icons.add,color: Colors.white,),
+          backgroundColor: Colors.teal[900],
+        ),
+      )
     );
   }
 }

@@ -29,6 +29,7 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
   var joinUsersInTeams = [];
   var _isloading = true;
   var _isNodataAlert = false;
+  var role_check = false;
 
 
   final teamName_textController = TextEditingController();
@@ -126,14 +127,14 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
                                   joinUsersInTeams = [];
                                   joinUserInteam();
                                 });
-                                showAlertDialog(context, "Done!", "you are in this team");
+                                showAlertDialog(context, "Done!", "You are in this team");
                               }
 
                             }
                             else{
                               Navigator.pop(context);
                               print("sorry");
-                              showAlertDialog(context, "Something Wrong!", "you are already registered in this team");
+                              showAlertDialog(context, "Something Wrong!", "You are already registered in this team");
                             }
                           }
                         },
@@ -157,6 +158,11 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
       LoginUserDept = daaa['deptname'];
       LoginUserSkills = daaa['skillset'];
       LoginUserImage = daaa['picture'];
+      if(daaa?['roles'] == 2){
+        role_check = true;
+      }else{
+        role_check = false;
+      }
     });
   }
   Future<bool?> joinTheTeamButton(skillsett) async{
@@ -192,6 +198,24 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
 
       print(joinUsersInTeams);
     }
+  }
+  Future deleteownSelf() async{
+    var collection = FirebaseFirestore.instance.collection('JoinedTeams');
+    collection
+        .doc(widget.teamID)
+        .update(
+        {
+          'joinedPlayerInTeam': FieldValue.arrayRemove([LoginUserId]),
+        }
+    ).then((value){
+
+      showAlertDialog(context,"Successfull","You deleted from this tournament");
+      joinUsersInTeams = [];
+      joinUserInteam();
+      setState(() {
+        _isloading = false;
+      });
+    });
   }
 
 
@@ -272,101 +296,136 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
                                  children: [
                                    Container(
                                      height: 150,
-                                     child: Column(
+                                     child: Stack(
                                        children: [
-                                         Padding(
-                                           padding: EdgeInsets.only(top: 8,left: 8),
-                                           child: Text(snapshot.data?['fullname'],
+                                         Column(
+                                           children: [
+                                             Padding(
+                                               padding: EdgeInsets.only(top: 8,left: 8),
+                                               child: Text(snapshot.data?['fullname'],
+                                                 softWrap: false,
+                                                 maxLines: 1,
+                                                 overflow: TextOverflow.ellipsis,
 // snapshot.data?['fullname'],
-                                             style: TextStyle(
-                                                 color: Colors.black,
-                                                 fontSize: 16,
-                                                 fontWeight: FontWeight.bold
-                                             ),
-                                           ),
-                                         ),
-                                         Padding(
-                                             padding: EdgeInsets.only(top: 10,left: 10),
-                                             child: Row(
-                                               children: [
-                                                 Icon(
-                                                   Icons.email,
-                                                   size: 20,
-                                                   color: Colors.grey,
+                                                 style: TextStyle(
+                                                     color: Colors.black,
+                                                     fontSize: 16,
+                                                     fontWeight: FontWeight.bold
                                                  ),
-                                                 SizedBox(width: 4,),
-                                                 Text(snapshot.data?['email'],
+                                               ),
+                                             ),
+                                             Padding(
+                                                 padding: EdgeInsets.only(top: 10,left: 10),
+                                                 child: Row(
+                                                   children: [
+                                                     Icon(
+                                                       Icons.email,
+                                                       size: 20,
+                                                       color: Colors.grey,
+                                                     ),
+                                                     SizedBox(width: 4,),
+                                                     Text(snapshot.data?['email'],
+                                                       softWrap: false,
+                                                       maxLines: 1,
+                                                       overflow: TextOverflow.ellipsis,
 // snapshot.data?['email'],
 
 
-                                                   style: TextStyle(
-                                                     color: Colors.black,
-                                                     fontSize: 11,
+                                                       style: TextStyle(
+                                                         color: Colors.black,
+                                                         fontSize: 11,
 //fontWeight: FontWeight.bold
-                                                   ),
-                                                 ),
-                                               ],
+                                                       ),
+                                                     ),
+                                                   ],
+                                                 )
+                                             ),
+                                             Padding(
+                                                 padding: EdgeInsets.only(top: 3,left: 10),
+                                                 child: Row(
+                                                   children: [
+                                                     Icon(
+                                                       Icons.add_business_outlined,
+                                                       size: 20,
+                                                       color: Colors.grey,
+                                                     ),
+                                                     SizedBox(width: 4,),
+                                                     Text(snapshot.data?['deptname'],
+                                                       softWrap: false,
+                                                       maxLines: 1,
+                                                       overflow: TextOverflow.ellipsis,
+                                                       style: TextStyle(
+                                                         color: Colors.black,
+                                                         fontSize: 12,
+//fontWeight: FontWeight.bold
+                                                       ),
+                                                     ),
+                                                   ],
+                                                 )
+                                             ),
+                                             Padding(
+                                                 padding: EdgeInsets.only(top: 3,left: 10),
+                                                 child: Row(
+                                                   children: [
+                                                     Icon(
+                                                       Icons.equalizer,
+                                                       size: 20,
+                                                       color: Colors.grey,
+                                                     ),
+                                                     SizedBox(width: 4,),
+                                                     Text(snapshot.data?['skillset'],
+                                                       softWrap: false,
+                                                       maxLines: 1,
+                                                       overflow: TextOverflow.ellipsis,
+                                                       style: TextStyle(
+                                                         color: Colors.black,
+                                                         fontSize: 12,
+//fontWeight: FontWeight.bold
+                                                       ),
+                                                     ),
+                                                   ],
+                                                 )
+                                             ),
+                                             Padding(
+                                                 padding: EdgeInsets.only(top: 3,left: 10),
+                                                 child: Row(
+                                                   children: [
+                                                     Icon(
+                                                       Icons.phone_android_sharp,
+                                                       size: 20,
+                                                       color: Colors.grey,
+                                                     ),
+                                                     SizedBox(width: 4,),
+                                                     Text(snapshot.data?['phoneNumber'],
+                                                       softWrap: false,
+                                                       maxLines: 1,
+                                                       overflow: TextOverflow.ellipsis,
+                                                       style: TextStyle(
+                                                         color: Colors.black,
+                                                         fontSize: 12,
+//fontWeight: FontWeight.bold
+                                                       ),
+                                                     ),
+                                                   ],
+                                                 )
                                              )
+                                           ],
                                          ),
-                                         Padding(
-                                             padding: EdgeInsets.only(top: 3,left: 10),
-                                             child: Row(
-                                               children: [
-                                                 Icon(
-                                                   Icons.add_business_outlined,
-                                                   size: 20,
-                                                   color: Colors.grey,
-                                                 ),
-                                                 SizedBox(width: 4,),
-                                                 Text(snapshot.data?['deptname'],
-                                                   style: TextStyle(
-                                                     color: Colors.black,
-                                                     fontSize: 12,
-//fontWeight: FontWeight.bold
-                                                   ),
-                                                 ),
-                                               ],
-                                             )
-                                         ),
-                                         Padding(
-                                             padding: EdgeInsets.only(top: 3,left: 10),
-                                             child: Row(
-                                               children: [
-                                                 Icon(
-                                                   Icons.equalizer,
-                                                   size: 20,
-                                                   color: Colors.grey,
-                                                 ),
-                                                 SizedBox(width: 4,),
-                                                 Text(snapshot.data?['skillset'],
-                                                   style: TextStyle(
-                                                     color: Colors.black,
-                                                     fontSize: 12,
-//fontWeight: FontWeight.bold
-                                                   ),
-                                                 ),
-                                               ],
-                                             )
-                                         ),
-                                         Padding(
-                                             padding: EdgeInsets.only(top: 3,left: 10),
-                                             child: Row(
-                                               children: [
-                                                 Icon(
-                                                   Icons.phone_android_sharp,
-                                                   size: 20,
-                                                   color: Colors.grey,
-                                                 ),
-                                                 SizedBox(width: 4,),
-                                                 Text(snapshot.data?['phoneNumber'],
-                                                   style: TextStyle(
-                                                     color: Colors.black,
-                                                     fontSize: 12,
-//fontWeight: FontWeight.bold
-                                                   ),
-                                                 ),
-                                               ],
-                                             )
+
+                                         if(snapshot.data!["id"] == LoginUserId)
+                                         Align(
+                                           alignment: Alignment.bottomRight,
+                                           child: InkWell(
+                                             onTap: (){
+                                               setState(() {
+                                                 _isloading = true;
+                                               });
+                                               deleteownSelf();
+                                             },
+                                             child: Container(
+                                               child: Icon(Icons.delete, color: Colors.red,),
+                                             ),
+                                           ),
                                          )
                                        ],
                                      ),
@@ -457,7 +516,7 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
 
 
       floatingActionButton: Visibility(
-        visible: widget.role_status!,
+        visible: role_check,
         child: FloatingActionButton.extended(
           onPressed: () {
             showDialog(

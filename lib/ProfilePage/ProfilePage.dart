@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,6 +10,9 @@ import '../UIcomponents/UIcomponents.dart';
 import '../databaseManager/databaseManager.dart';
 
 import '../homepage/SideBar/SideMenuBar.dart';
+import '../services/twoFactorVerifications.dart';
+import 'package:intl/intl.dart';
+
 
 
 class ProflePage extends StatefulWidget {
@@ -29,6 +33,7 @@ class _ProflePageState extends State<ProflePage> {
   var imageurlfromfirestore = "";
   late File _imageFile;
 
+  var user_id = "";
   var full_nameu ;
   var genderu = "";
   var ageeu = "";
@@ -48,6 +53,94 @@ class _ProflePageState extends State<ProflePage> {
   TextEditingController skillsetController = TextEditingController();
 
 
+  void startPhoneAuth(phoneeNumber) {
+    String phoneNumber = phoneeNumber;
+    if (phoneNumber.isNotEmpty) {
+      var formattedPhonenumber = "+92" + phoneNumber;
+      startPhoneAuthVerification(formattedPhonenumber);
+    } else {
+      // Handle empty phone number input
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Please enter a valid phone number.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void startPhoneAuthVerification(String phoneNumber) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    await auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await auth.signInWithCredential(credential);
+        // Handle authentication success
+        Navigator.pop(context);
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Success'),
+              content: Text('Phone authentication successful.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        // Verification failed
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Phone authentication failed. ${e.message}'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      codeSent: (verificationId, resendToken) {
+        // Save the verification ID and navigate to the verification code screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerificationCodeScreen(
+              verificationId: verificationId,
+              userid: user_id,
+              phoneno: phoneNumber,
+            ),
+          ),
+        );
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        // Called when the SMS code auto-retrieval times out
+        print('Verification timeout');
+      },
+    );
+  }
+
   Future<dynamic> getUserData() async{
     var data =  await dbmanager.getData('userBioData');
     var daaa = json.decode(data);
@@ -57,6 +150,7 @@ class _ProflePageState extends State<ProflePage> {
       print("lllllllllllllllllll");
       print(daaa);
       useridd = dataa['id'];
+      user_id =  dataa['id'];
       print(dataa['id']);
     });
     getuserrDataup(useridd);
@@ -337,25 +431,24 @@ class _ProflePageState extends State<ProflePage> {
                             var enrollment = enrollmentController.text == "" ? dataa['enrollmentNo'] : enrollmentController.text;
                             var department = departmentController.text == "" ? dataa['deptname'] : departmentController.text;
                             var skillset = skillsetController.text == "" ? dataa['skillset'] :  skillsetController.text;
-
-                            print(full_name);
-                            print(gender);
-                            print(agee);
-                            print(PhoneNo);
                             updateData(dataa['id'],full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset);
                             getuserrDataup(dataa['id']);
+                            if(dataa['phoneNumber'] == ""){
+                             print("no number found");
+                             // startPhoneAuth(PhoneNo);
+                             // Navigator.push(
+                             //   context,
+                             //   MaterialPageRoute(builder: (context) =>  VerificationCodeScreen()),
+                             // );
+
+                           }else{
+                             print("yes");
+                             // updateData(dataa['id'],full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset);
+                             // getuserrDataup(dataa['id']);
+                           }
 
 
-                            // var updateData = await dbmanager.updataUserData(dataa['id'],full_name,gender,agee,PhoneNo);
-                            // if (updateData == true){
-                            //   print("data saved");
-                            //   showAlertDialog(context,"Done","Data Updated Successfully");
-                            //   dbmanager.saveData('userBioData', dataa);
-                            //   getUserData();
-                            // }else{
-                            //   //showAlertDialog(context,"Error!","Data Not Updated");
-                            //   print("error");
-                            // }
+
                           },
                           child: Text('Update'),
                         ),
@@ -370,4 +463,6 @@ class _ProflePageState extends State<ProflePage> {
     );
   }
 }
+
+
 

@@ -248,12 +248,12 @@ class DatabaseManager {
 
   }
 
-  Future<bool?> createTeamsInTornament(teamName, tplayers, creatorName, eventID) async {
+  Future<bool?> createTeamsInTornament(teamName, phone, creatorName, eventID) async {
     var jtstatus = false;
     await _firestore.collection("JoinedTeams").add(
       {
         'teamName' : teamName,
-        'Tplayers' : tplayers,
+        'phoneNO' : phone,
         'creatorName' : creatorName,
         'joinedPlayerInTeam' : []
       }

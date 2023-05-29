@@ -1,6 +1,5 @@
 // TODO Implement this library.
 import 'dart:convert';
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/CreateEvents/CreateEvents.dart';
@@ -16,6 +15,7 @@ import 'AdminCreateEvent.dart';
 import 'AdminMyEvents.dart';
 import 'AdminProfilePAge.dart';
 import 'ApprovalEvent/approvals.dart';
+import 'ChangePassword.dart';
 
 class AdminSideMenueBar extends StatefulWidget {
   const AdminSideMenueBar({Key? key}) : super(key: key);
@@ -32,6 +32,7 @@ class _AdminSideMenueBarState extends State<AdminSideMenueBar> {
   var noImagePlaceholder = "";
   var gender = "";
   var userId = "";
+  var email = "";
   var is_image_loading = true;
 
   Future<dynamic> getUserData() async{
@@ -42,6 +43,8 @@ class _AdminSideMenueBarState extends State<AdminSideMenueBar> {
       userImage = daaa["picture"];
       gender = daaa["gender"];
       userId = daaa["id"];
+      email = daaa["email"];
+
       if(userImage != ""){
         is_image_loading = false;
       }
@@ -93,6 +96,15 @@ class _AdminSideMenueBarState extends State<AdminSideMenueBar> {
                     child: Text(userName,
                       style: TextStyle(
                           fontSize: 16,
+                          color: Colors.white
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(email,
+                      style: TextStyle(
+                          fontSize: 12,
                           color: Colors.white
                       ),
                     ),
@@ -157,6 +169,21 @@ class _AdminSideMenueBarState extends State<AdminSideMenueBar> {
               Navigator.push(context,
                   MaterialPageRoute(
                       builder: (context) => AdminApprovalList()
+                  )
+              );
+
+            },
+          ),
+          ListTile(
+
+            title: const Text('Change Password'),
+            leading: const Icon(
+                Icons.approval
+            ),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(
+                      builder: (context) => ChangePassword(userid: userId,)
                   )
               );
 

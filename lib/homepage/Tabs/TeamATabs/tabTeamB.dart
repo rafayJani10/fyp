@@ -34,6 +34,7 @@ class _TeamBTabState extends State<TeamBTab> {
   var _isloading = true;
   var _isNodataAlert = false;
   var joinedUserStatus = false;
+  var role_check = false;
 
 
   Future getAuthoreData() async{
@@ -61,6 +62,11 @@ class _TeamBTabState extends State<TeamBTab> {
     var userid = daaa['id'];
     setState(() {
       useriddd = userid;
+      if(daaa?['roles'] == 2){
+        role_check = true;
+      }else{
+        role_check = false;
+      }
     });
 
   }
@@ -230,6 +236,9 @@ class _TeamBTabState extends State<TeamBTab> {
                                                       ),
                                                       SizedBox(width: 4,),
                                                       Text(snapshot.data?['email'],
+                                                        softWrap: false,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
 
                                                         style: TextStyle(
                                                           color: Colors.black,
@@ -251,7 +260,9 @@ class _TeamBTabState extends State<TeamBTab> {
                                                       ),
                                                       SizedBox(width: 4,),
                                                       Text(snapshot.data?['deptname'],
-
+                                                        softWrap: false,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
                                                         style: TextStyle(
                                                           color: Colors.black,
                                                           fontSize: 16,
@@ -272,7 +283,9 @@ class _TeamBTabState extends State<TeamBTab> {
                                                       ),
                                                       SizedBox(width: 4,),
                                                       Text(snapshot.data?['skillset'],
-
+                                                        softWrap: false,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
                                                         style: TextStyle(
                                                           color: Colors.black,
                                                           fontSize: 16,
@@ -293,7 +306,9 @@ class _TeamBTabState extends State<TeamBTab> {
                                                       ),
                                                       SizedBox(width: 4,),
                                                       Text(snapshot.data?['phoneNumber'],
-
+                                                        softWrap: false,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
                                                         style: TextStyle(
                                                           color: Colors.black,
                                                           fontSize: 16,
@@ -391,65 +406,68 @@ class _TeamBTabState extends State<TeamBTab> {
           )),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          getLoginUserData();
+      floatingActionButton:Visibility(
+        visible: role_check,
+        child:  FloatingActionButton.extended(
+          onPressed: () {
+            getLoginUserData();
 
-          print(widget.teamAlist);
+            print(widget.teamAlist);
 
-          if(TeamB_joinUser.isEmpty){
-            print("team b is empty");
-            if(widget.teamAlist.contains(useriddd)){
-              print("user in team a");
-              showAlertDialog(context,"Error","You Already in Team A");
-            }
-            else{
-              joindeTeam();
-            }
+            if(TeamB_joinUser.isEmpty){
+              print("team b is empty");
+              if(widget.teamAlist.contains(useriddd)){
+                print("user in team a");
+                showAlertDialog(context,"Error","You Already in Team A");
+              }
+              else{
+                joindeTeam();
+              }
 
-          }else{
-            print("team b list is not epmty");
-            for (int i = 0; i < TeamB_joinUser.length; i++) {
-              if (TeamB_joinUser[i] == useriddd){
-                print("user in team b");
-                showAlertDialog(context,"Error","You Already in Team B");
-              }else{
-                print("user not in team b");
-                if(widget.teamAlist.contains(useriddd)){
-                  showAlertDialog(context,"Error","You Already in Team A");
-                }
-                else{
-                  print("user going to add");
-                  joindeTeam();
+            }else{
+              print("team b list is not epmty");
+              for (int i = 0; i < TeamB_joinUser.length; i++) {
+                if (TeamB_joinUser[i] == useriddd){
+                  print("user in team b");
+                  showAlertDialog(context,"Error","You Already in Team B");
+                }else{
+                  print("user not in team b");
+                  if(widget.teamAlist.contains(useriddd)){
+                    showAlertDialog(context,"Error","You Already in Team A");
+                  }
+                  else{
+                    print("user going to add");
+                    joindeTeam();
+                  }
                 }
               }
             }
-          }
 
 
 
-          // if(useriddd != widget.AuthoreId){
-          //   if(TeamB_joinUser.isEmpty){
-          //     joindeTeam();
-          //   }else{
-          //     for (int i = 0; i < TeamB_joinUser.length; i++) {
-          //       if(TeamB_joinUser[i] == useriddd){
-          //         showAlertDialog(context,"Error","You are already joined");
-          //       }else{
-          //         joindeTeam();
-          //       }
-          //     }
-          //   }
-          //
-          // }else{
-          //   showAlertDialog(context,"Error","You are already joinedddd");
-          // }
-        },
-        label:  Text('Join Team',
-          style: TextStyle(color: Colors.white),),
-        icon:  Icon(Icons.add,color: Colors.white,),
+            // if(useriddd != widget.AuthoreId){
+            //   if(TeamB_joinUser.isEmpty){
+            //     joindeTeam();
+            //   }else{
+            //     for (int i = 0; i < TeamB_joinUser.length; i++) {
+            //       if(TeamB_joinUser[i] == useriddd){
+            //         showAlertDialog(context,"Error","You are already joined");
+            //       }else{
+            //         joindeTeam();
+            //       }
+            //     }
+            //   }
+            //
+            // }else{
+            //   showAlertDialog(context,"Error","You are already joinedddd");
+            // }
+          },
+          label:  Text('Join Team',
+            style: TextStyle(color: Colors.white),),
+          icon:  Icon(Icons.add,color: Colors.white,),
 
-        backgroundColor: Colors.teal[900],
+          backgroundColor: Colors.teal[900],
+        ),
       ),
     );
   }

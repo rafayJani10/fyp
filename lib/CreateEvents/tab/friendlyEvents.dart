@@ -39,8 +39,6 @@ class _friendlyEventState extends State<friendlyEvent> {
     {'time': '3-4 pm', 'isBooked': false},
     {'time': '4-5 pm', 'isBooked': false}
   ];
-
-
   List<DropdownMenuItem<String>>? totalPersonDropDownList = [];
   TextEditingController eventNameController = TextEditingController();
   TextEditingController totalPersonTeamA = TextEditingController();
@@ -61,9 +59,9 @@ class _friendlyEventState extends State<friendlyEvent> {
   List<DropdownMenuItem<String>> get sportsList {
     List<DropdownMenuItem<String>> menuItems = [
       DropdownMenuItem(child: Text("Table Tennis"), value: "Table Tennis"),
-      DropdownMenuItem(child: Text("futsul"), value: "futsul"),
-      DropdownMenuItem(child: Text("cricket"), value: "cricket"),
-      DropdownMenuItem(child: Text("bedminton"), value: "bedminton"),
+      DropdownMenuItem(child: Text("Futsul"), value: "Futsul"),
+      DropdownMenuItem(child: Text("Cricket"), value: "Cricket"),
+      DropdownMenuItem(child: Text("Bedminton"), value: "Bedminton"),
       DropdownMenuItem(child: Text("Volley Ball"), value: "Volley Ball"),
       DropdownMenuItem(child: Text("Basket Ball"), value: "Basket Ball")
     ];
@@ -339,7 +337,7 @@ class _friendlyEventState extends State<friendlyEvent> {
                                     DateTime? datePicked = await showDatePicker(
                                       context: context,
                                       initialDate: DateTime.now(),
-                                      firstDate: DateTime(2011),
+                                      firstDate: DateTime.now(),
                                       lastDate: DateTime(2030),
                                     );
                                     if (datePicked != null) {

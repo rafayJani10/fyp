@@ -26,6 +26,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
 
   var dbmanager = DatabaseManager();
   var loginUserName = "";
+  var loginuserNO = "";
   var eventid = "";
   var joinedTeamList = [];
   var firestore = FirebaseFirestore.instance;
@@ -34,6 +35,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
   var _noDataALert = false;
   final teamName_textController = TextEditingController();
   final tplayer_textController = TextEditingController();
+  var role_check = false;
 
   Future getLoginUserData()async{
     var data =  await dbmanager.getData('userBioData');
@@ -41,6 +43,12 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
     var userid = daaa['id'];
     setState(() {
       loginUserName = daaa['fullname'];
+      loginuserNO = daaa["phoneNumber"];
+      if(daaa?['roles'] == 2){
+        role_check = true;
+      }else{
+        role_check = false;
+      }
     });
 
   }
@@ -107,15 +115,15 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
               ),
             ),
             SizedBox(height: 16),
-            TextField(
-              style: TextStyle(color: Colors.black),
-              controller: tplayer_textController,
-              decoration: InputDecoration(
-                hintText: 'Enter Total No of Players',
-                hintStyle: TextStyle(color: Colors.black),
-              ),
-            ),
-            SizedBox(height: 24),
+            // TextField(
+            //   style: TextStyle(color: Colors.black),
+            //   controller: tplayer_textController,
+            //   decoration: InputDecoration(
+            //     hintText: 'Enter Total No of Players',
+            //     hintStyle: TextStyle(color: Colors.black),
+            //   ),
+            // ),
+            // SizedBox(height: 24),
             Align(
                 alignment: Alignment.topRight,
                 child: Container(
@@ -140,13 +148,13 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                         ),
                         onPressed: () async {
                           print(teamName_textController.text);
-                          print(tplayer_textController.text);
+                          //print(tplayer_textController.text);
                           print(eventid);
 
-                          var jteamHitter = dbmanager.createTeamsInTornament(teamName_textController.text, tplayer_textController.text, loginUserName, eventid);
+                          var jteamHitter = dbmanager.createTeamsInTornament(teamName_textController.text, loginuserNO, loginUserName, eventid);
                           if (jteamHitter == false){
                             teamName_textController.clear();
-                            tplayer_textController.clear();
+                            //tplayer_textController.clear();
                             Navigator.pop(context);
                             print("sorry");
                             showAlertDialog(context, "Something Wrong!", "you are not registered in this team ,try again");
@@ -274,6 +282,9 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                                           child: Padding(
                                             padding: EdgeInsets.only(left: 10, top: 5),
                                             child: Text(snapshot.data?['teamName'],
+                                              softWrap: false,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 20
@@ -296,6 +307,9 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                                                 Padding(
                                                   padding: EdgeInsets.only(left: 10, top: 5),
                                                   child: Text(snapshot.data?['creatorName'],
+                                                    softWrap: false,
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                         fontSize: 15
                                                     ),
@@ -314,11 +328,14 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                                               children: [
                                                 Padding(
                                                     padding: EdgeInsets.only(left: 10, top: 5),
-                                                    child: Icon(Icons.person, size: 18,)
+                                                    child: Icon(Icons.phone_android_sharp, size: 18,)
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsets.only(left: 10, top: 5),
-                                                  child: Text(snapshot.data?['Tplayers'],
+                                                  child: Text(snapshot.data?['phoneNO'],
+                                                    softWrap: false,
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                         fontSize: 15
                                                     ),
@@ -363,7 +380,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
       ),
 
      floatingActionButton: Visibility(
-       visible: widget.role_status!,
+       visible: role_check,
        child: FloatingActionButton.extended(
          onPressed: () {
 

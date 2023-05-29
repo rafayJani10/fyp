@@ -20,28 +20,6 @@ import '../../UIcomponents/UIcomponents.dart';
 import '../../services/NotificationServices.dart';
 import '../../useable.dart';
 
-void main()  async{
-  WidgetsFlutterBinding.ensureInitialized();
- await Firebase.initializeApp();
-  // Start the timer to update data every 2 days
-  Timer.periodic(Duration(days: 2), (timer) {
-    // checkAndDeleteDocuments();
-  });
-  runApp(
-     MaterialApp(
-      debugShowCheckedModeBanner: false,
-       theme: ThemeData(
-         primaryColor: Colors.white,
-         accentColor: Colors.white,
-         highlightColor: Colors.white,
-         hintColor: Colors.white
-       ),
-       title: "Login Screen ",
-       home: LoginScreen(),
-
-    ),
-  );
-}
 
 
 Future<void> checkAndDeleteDocuments() async {
@@ -194,29 +172,41 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 30,
                     ),
                     signInSignUpButton(context, true, () async{
-                      setState(() {
-                        isloading = true;
-                      });
-                      print("object ::::::::::::::::::");
 
-                      var loginCheck = await dbmanager.LoginAuth(emailController.text, passwordController.text, deviceToken);
-                      print("login user status:::::::::::::::::::::::");
-                      print(loginCheck);
-                      num status = loginCheck as num;
-                      if(status == 2){
-                        setState(() {
-                          isloading = false;
-                        });
-                        Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
-                      }if(status == -1){
-                        setState(() {
-                          isloading = false;
-                        });
-                        print(status);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyAdminHomePage(title: "Admin")));
+                      print("object ::::::::::::::::::");
+                      if(emailController.text == "" || passwordController.text == ""){
+                        print("no email password");
+                        showAlertDialog(context,"Authentication Failed","Fill the email or password");
                       }else{
-                        print("error");
+                        setState(() {
+                          isloading = true;
+                        });
+                        var loginCheck = await dbmanager.LoginAuth(emailController.text, passwordController.text, deviceToken);
+                        print("login user status:::::::::::::::::::::::");
+                        print(loginCheck);
+                        num status = loginCheck as num;
+                        if(status == 2){
+                          setState(() {
+                            isloading = false;
+                          });
+                          Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyHomePage(title: '',)));
+                        }if(status == -1){
+                          setState(() {
+                            isloading = false;
+                          });
+                          print(status);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => MyAdminHomePage(title: "Admin")));
+                        }if(status == -2){
+                          print("error");
+                          setState(() {
+                            isloading = false;
+                          });
+                          showAlertDialog(context,"Authentication Failed","Incorrect email or password");
+                        }
+
                       }
+
+
                     }),
 
                     signUpOption(),

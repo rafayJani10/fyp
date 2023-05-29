@@ -23,7 +23,7 @@ class _tournamentEventListState extends State<tournamentEventList> {
   }
 
   Stream<QuerySnapshot> searchData(String string) async* {
-    var stringg = string.toLowerCase();
+    var stringg = string;
     var firestore = FirebaseFirestore.instance;
     var _search = firestore
         .collection('TourEvents')
@@ -98,6 +98,7 @@ class _tournamentEventListState extends State<tournamentEventList> {
                   ? searchData(searchKey)
                   : stream(),
               builder: (context, snapshot){
+                var data = snapshot.data?.docs;
                 if(!snapshot.hasData) return const
                 Text('loading ...');
                 return ListView.builder(
@@ -138,7 +139,7 @@ class _tournamentEventListState extends State<tournamentEventList> {
                           child: Row(
                             children: <Widget>[
                               Flexible(
-                                flex: 3,
+                                flex: 2,
                                 child: SizedBox(
                                   height: 130,
                                   child: Center(
@@ -164,6 +165,9 @@ class _tournamentEventListState extends State<tournamentEventList> {
                                             padding: EdgeInsets.only(left: 10, top: 15),
                                             height: 50,
                                             child: Text(snapshot.data?.docs[index]['name'],
+                                                softWrap: false,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                     color: Colors.grey[800],
                                                     fontWeight: FontWeight.bold,
@@ -187,6 +191,9 @@ class _tournamentEventListState extends State<tournamentEventList> {
                                                         size: 20.0,
                                                       ),
                                                       Text(snapshot.data?.docs[index]['sports'],
+                                                          softWrap: false,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow.ellipsis,
                                                           style: TextStyle(
                                                               color: Colors.grey[600],
                                                               fontSize: 13))
@@ -201,6 +208,9 @@ class _tournamentEventListState extends State<tournamentEventList> {
                                                         size: 20.0,
                                                       ),
                                                       Text(snapshot.data?.docs[index]['address'],
+                                                          softWrap: false,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow.ellipsis,
                                                           style: TextStyle(
                                                               color: Colors.grey[600],
                                                               fontSize: 13))
@@ -218,125 +228,41 @@ class _tournamentEventListState extends State<tournamentEventList> {
                                                 padding: const EdgeInsets.only(
                                                     left: 10.0, top: 5),
                                                 child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceEvenly,
                                                   children: [
-                                                    Container(
-                                                      height: 50,
-                                                      width: 35,
-                                                      child: Column(
-                                                        children:  <Widget>[
-                                                          Icon(
-                                                            Icons.calendar_month,
-                                                            color: Colors.grey,
-                                                            size: 20.0,
-                                                          ),
-                                                          Text(snapshot.data?.docs[index]['date'],
-                                                              maxLines: 2,
-                                                              style: TextStyle(
-                                                                  fontSize: 9)),
-                                                        ],
-                                                      ),
+                                                    IconContainer(
+                                                        "",
+                                                        Icons.date_range,
+                                                        data![index]["date"],
+                                                        Colors.grey),
+                                                    IconContainer(
+                                                        "",
+                                                        Icons.timer,
+                                                        data![index]["time"][0],
+                                                        Colors.black),
+                                                    IconContainer(
+                                                        "",
+                                                        Icons.person,
+                                                        data![index]["totalPlayer"],
+                                                        Colors.blue),
+                                                    IconContainer(
+                                                        "",
+                                                        Icons.group,
+                                                        data![index]["totalTeams"],
+                                                        Colors.blueAccent),
+                                                    IconContainer(
+                                                        "",
+                                                        Icons.military_tech_outlined,
+                                                        data![index]["total_winning"],
+                                                        Colors.orange),
+                                                    IconContainer(
+                                                        "",
+                                                        Icons.attach_money,
+                                                        data![index]["perhead"],
+                                                        Colors.deepOrangeAccent),
 
-                                                    ),
-                                                    SizedBox(width: 5,),
-                                                    Container(
-                                                      height: 50,
-                                                      width: 35,
-//color: Colors.green,
-                                                      child: Column(
-                                                        children:  <Widget>[
-                                                          Icon(
-                                                            Icons.timer,
-                                                            color: Colors.black,
-                                                            size: 20.0,
-                                                          ),
-                                                          Text(snapshot.data?.docs[index]['time'][0],
-                                                              style: TextStyle(
-                                                                  fontSize: 9)),
-                                                        ],
-                                                      ),
-
-                                                    ),
-                                                    SizedBox(width: 5,),
-                                                    Container(
-                                                      height: 50,
-                                                      width: 25,
-//color: Colors.green,
-                                                      child: Column(
-                                                        children:  <Widget>[
-                                                          Icon(
-                                                            Icons.group,
-                                                            color: Colors.black,
-                                                            size: 20.0,
-                                                          ),
-                                                          Text(snapshot.data?.docs[index]['totalTeams'],
-                                                              style: TextStyle(
-                                                                  fontSize: 9)),
-                                                        ],
-                                                      ),
-
-                                                    ),
-                                                    SizedBox(width: 5,),
-                                                    Container(
-                                                      height: 50,
-                                                      width: 25,
-//color: Colors.green,
-                                                      child: Column(
-                                                        children:  <Widget>[
-                                                          Icon(
-                                                            Icons.person_add,
-                                                            color: Colors.green,
-                                                            size: 20.0,
-                                                          ),
-                                                          Text('ss',
-                                                              style: TextStyle(
-                                                                  fontSize: 9)),
-                                                        ],
-                                                      ),
-
-                                                    ),
-                                                    SizedBox(width: 5,),
-                                                    Tooltip(
-                                                      message: "Winning Price",
-                                                      child:  Container(
-                                                        height: 50,
-                                                        width: 35,
-
-
-//color: Colors.green,
-                                                        child: Column(
-                                                          children:  <Widget>[
-                                                            Icon(
-                                                              Icons.military_tech_outlined,
-                                                              color: Colors.yellow[800],
-                                                              size: 20.0,
-                                                            ),
-                                                            Text(snapshot.data?.docs[index]['total_winning'] ?? "0",
-                                                                style: TextStyle(
-                                                                    fontSize: 9)),
-                                                          ],
-                                                        ),
-
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 5,),
-                                                    Container(
-                                                      height: 50,
-                                                      width: 35,
-//color: Colors.green,
-                                                      child: Column(
-                                                        children:  <Widget>[
-                                                          Icon(
-                                                            Icons.attach_money,
-                                                            color: Colors.green,
-                                                            size: 20.0,
-                                                          ),
-                                                          Text(snapshot.data?.docs[index]['perhead'] ?? "0",
-                                                              style: TextStyle(
-                                                                  fontSize: 9)),
-                                                        ],
-                                                      ),
-
-                                                    ),
                                                   ],
                                                 )
                                             ),
@@ -356,4 +282,26 @@ class _tournamentEventListState extends State<tournamentEventList> {
       ],
     );
   }
+
+  Widget IconContainer(
+      String message, IconData icon, String value, Color iconTint) {
+    return Tooltip(
+      message: message,
+      child: Column(
+        children: <Widget>[
+          Icon(
+            icon,
+            color: iconTint,
+            size: 20.0,
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Text(value, maxLines: 2, style: const TextStyle(fontSize: 10)),
+        ],
+      ),
+    );
+  }
 }
+
+
