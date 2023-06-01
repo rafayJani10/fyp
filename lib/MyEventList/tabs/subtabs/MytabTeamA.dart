@@ -34,6 +34,8 @@ class _MyTeamATabState extends State<MyTeamATab> {
   var department  = "";
   var skillset = "";
   var joinedUserStatus = false;
+  var _isloading = false;
+  var is_image_loading = true;
 
 
   Future getAuthoreData() async{
@@ -53,6 +55,8 @@ class _MyTeamATabState extends State<MyTeamATab> {
         phoneNo = data?['phoneNumber'];
         department = data?['deptname'];
         skillset = data?['skillset'];
+
+        is_image_loading = false;
       });
     }
   }
@@ -63,6 +67,7 @@ class _MyTeamATabState extends State<MyTeamATab> {
     var userid = daaa['id'];
     setState(() {
       useriddd = userid;
+
     });
 
   }
@@ -74,7 +79,6 @@ class _MyTeamATabState extends State<MyTeamATab> {
       Map<String, dynamic>? data = docSnapshot.data();
       var teamAlist = data?['teamA'];
       setState(()  {
-        // print(userData.length);
         var projLength = teamAlist.length;
         var joinedUserStatus = data?['JoindePersonTeamA'];
         print(projLength);
@@ -124,7 +128,13 @@ class _MyTeamATabState extends State<MyTeamATab> {
           'teamA': FieldValue.arrayRemove([useriid]),
         }
     ).then((value) {
+      setState(() {
+        _isloading = false;
+        TeamA_joinUser = [];
+        getTeamJoinUserList();
+      });
       showAlertDialog(context,"Success","you delete the user");
+
     });
   }
 
@@ -140,343 +150,369 @@ class _MyTeamATabState extends State<MyTeamATab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
-          Flexible(
-              flex: 1,
-              child: Container(
-                width: double.infinity,
-                //color: Colors.green,
-                child:  Center(
-                    child: Container(
-                      margin: EdgeInsets.all(10),
-                      height: 150,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.6),
-                            spreadRadius: 6, blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
+          Column(
+            children: [
+              Flexible(
+                  flex: 1,
+                  child: Container(
+                    width: double.infinity,
+                    //color: Colors.green,
+                    child:  Center(
+                        child: Container(
+                          margin: EdgeInsets.all(10),
+                          height: 150,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.6),
+                                spreadRadius: 6, blurRadius: 7,
+                                offset: Offset(0, 3), // changes position of shadow
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Flexible(
-                              flex: 1,
-                              child: Container(
-                                height: 150,
-                                color: Colors.teal[900],
-                                child: Center(
-                                  child: CircleAvatar(
-                                    radius: 50,
-                                    child: ClipOval(
-                                        child: pic != "" ?Image.network(pic,  fit: BoxFit.fill) :Image.network("https://img.freepik.com/premium-vector/anonymous-user-circle-icon-vector-illustration-flat-style-with-long-shadow_520826-1931.jpg?w=2000",  fit: BoxFit.fill)
+                          child: Row(
+                            children: [
+                              Flexible(
+                                flex: 1,
+                                child: Stack(
+                                  children: [
+                                    // Circular avatar with image or placeholder
+
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 10),
+                                      child: CircleAvatar(
+                                        radius: 40,
+                                        backgroundColor: Colors.grey, // Placeholder color
+                                        backgroundImage: pic == null || pic == ""
+                                            ? NetworkImage("https://img.freepik.com/premium-vector/anonymous-user-circle-icon-vector-illustration-flat-style-with-long-shadow_520826-1931.jpg?w=2000")
+                                            : NetworkImage(pic)
                                     ),
-                                  ),
-                                ),
-                              )),
-                          Flexible(
-                              flex: 2,
-                              child: Container(
-                                height: 150,
+                                    ),
+
+                                    // Loader
+                                    // if (is_image_loading)
+                                    //   Positioned.fill(
+                                    //     child: CircularProgressIndicator(),
+                                    //   ),
+                                  ],
+                                ),),
+                              Flexible(
+                                  flex: 2,
+                                  child: Container(
+                                    height: 150,
 // color: Colors.orange,
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 10,left: 10),
-                                      child: Text(name,
-                                        softWrap: false,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                        padding: EdgeInsets.only(top: 10,left: 10),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.email,
-                                              size: 20,
-                                              color: Colors.grey,
-                                            ),
-                                            SizedBox(width: 4,),
-                                            Text(email,
-
-                                              style: TextStyle(
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 10,left: 10),
+                                          child: Text(name,
+                                            softWrap: false,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 15,
-//fontWeight: FontWeight.bold
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                    ),
-                                    Padding(
-                                        padding: EdgeInsets.only(top: 3,left: 10),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.add_business_outlined,
-                                              size: 20,
-                                              color: Colors.grey,
-                                            ),
-                                            SizedBox(width: 4,),
-                                            Text(department,
-
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16,
-//fontWeight: FontWeight.bold
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                    ),
-                                    Padding(
-                                        padding: EdgeInsets.only(top: 3,left: 10),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.equalizer,
-                                              size: 20,
-                                              color: Colors.grey,
-                                            ),
-                                            SizedBox(width: 4,),
-                                            Text(skillset,
-
-
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 12,
-//fontWeight: FontWeight.bold
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                    ),
-                                    Padding(
-                                        padding: EdgeInsets.only(top: 3,left: 10),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.phone_android_sharp,
-                                              size: 20,
-                                              color: Colors.grey,
-                                            ),
-                                            SizedBox(width: 4,),
-                                            Text(phoneNo,
-
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16,
-//fontWeight: FontWeight.bold
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                    ),
-
-                                  ],
-                                ),
-                              ))
-                        ],
-                      ),
-
-                    )
-                ),
-              )),
-          Flexible(
-              flex: 3,
-              child: Container(
-                width: double.infinity,
-                //color: Colors.red,
-                child: ListView.builder(
-                    itemCount: TeamA_joinUser.length,//myProjectId.length,
-                    itemBuilder: (BuildContext context, int index){
-                      return StreamBuilder(
-                        stream: FirebaseFirestore.instance.collection('users').doc(TeamA_joinUser[index]).snapshots(),
-                        builder: (context, snapshot){
-                          if (snapshot.data == null ) {
-                            return Center(child: Text('NO DATA'));
-                          }
-                          return Center(
-                              child: Container(
-                                margin: EdgeInsets.all(10),
-                                height: 150,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.6),
-                                      spreadRadius: 6, blurRadius: 7,
-                                      offset: Offset(0, 3), // changes position of shadow
-                                    ),
-                                  ],
-                                ),
-                                child: Row(
-                                  children: [
-                                    Flexible(
-                                        flex: 1,
-                                        child: Container(
-                                          height: 150,
-                                          color: Colors.teal[900],
-                                          child: Center(
-                                            child: CircleAvatar(
-                                              radius: 50,
-                                              child: ClipOval(
-                                                  child: snapshot.data?['picture'] != "" ?Image.network(snapshot.data?['picture'],  fit: BoxFit.fill) :Image.network("https://img.freepik.com/premium-vector/anonymous-user-circle-icon-vector-illustration-flat-style-with-long-shadow_520826-1931.jpg?w=2000",  fit: BoxFit.fill)
-                                              ),
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold
                                             ),
                                           ),
-                                        )),
-                                    Flexible(
-                                        flex: 2,
-                                        child: Stack(
-                                          children: [
-                                            Container(
-                                              height: 150,
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(top: 10,left: 10),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.email,
+                                                  size: 20,
+                                                  color: Colors.grey,
+                                                ),
+                                                SizedBox(width: 4,),
+                                                Text(email,
+
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+//fontWeight: FontWeight.bold
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(top: 3,left: 10),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.add_business_outlined,
+                                                  size: 20,
+                                                  color: Colors.grey,
+                                                ),
+                                                SizedBox(width: 4,),
+                                                Text(department,
+
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+//fontWeight: FontWeight.bold
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(top: 3,left: 10),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.equalizer,
+                                                  size: 20,
+                                                  color: Colors.grey,
+                                                ),
+                                                SizedBox(width: 4,),
+                                                Text(skillset,
+
+
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12,
+//fontWeight: FontWeight.bold
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(top: 3,left: 10),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.phone_android_sharp,
+                                                  size: 20,
+                                                  color: Colors.grey,
+                                                ),
+                                                SizedBox(width: 4,),
+                                                Text(phoneNo,
+
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+//fontWeight: FontWeight.bold
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                        ),
+
+                                      ],
+                                    ),
+                                  ))
+                            ],
+                          ),
+
+                        )
+                    ),
+                  )),
+              Flexible(
+                  flex: 3,
+                  child: Container(
+                    width: double.infinity,
+                    //color: Colors.red,
+                    child: ListView.builder(
+                        itemCount: TeamA_joinUser.length,//myProjectId.length,
+                        itemBuilder: (BuildContext context, int index){
+                          return StreamBuilder(
+                            stream: FirebaseFirestore.instance.collection('users').doc(TeamA_joinUser[index]).snapshots(),
+                            builder: (context, snapshot){
+                              if (snapshot.data == null ) {
+                                return Center(child: Text('NO DATA'));
+                              }
+                              return Center(
+                                  child: Container(
+                                    margin: EdgeInsets.all(10),
+                                    height: 150,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.6),
+                                          spreadRadius: 6, blurRadius: 7,
+                                          offset: Offset(0, 3), // changes position of shadow
+                                        ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Flexible(
+                                          flex: 1,
+                                          child: Stack(
+                                            children: [
+                                              // Circular avatar with image or placeholder
+
+                                              CircleAvatar(
+                                                  radius: 40,
+                                                  backgroundColor: Colors.grey, // Placeholder color
+                                                  backgroundImage: snapshot.data?["picture"] == null || snapshot.data?["picture"] == ""
+                                                      ? NetworkImage("https://img.freepik.com/premium-vector/anonymous-user-circle-icon-vector-illustration-flat-style-with-long-shadow_520826-1931.jpg?w=2000")
+                                                      : NetworkImage(snapshot.data?["picture"])
+                                              ),
+
+                                              // Loader
+                                              // if (is_image_loading)
+                                              //   Positioned.fill(
+                                              //     child: CircularProgressIndicator(),
+                                              //   ),
+                                            ],
+                                          ),),
+                                        Flexible(
+                                            flex: 3,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  height: 150,
 // color: Colors.orange,
-                                              child: Column(
-                                                children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.only(top: 10,left: 0),
-                                                    child: Text(snapshot.data?['fullname'],
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 20,
-                                                          fontWeight: FontWeight.bold
+                                                  child: Column(
+                                                    children: [
+                                                      Padding(
+                                                        padding: EdgeInsets.only(top: 10,left: 0),
+                                                        child: Text(snapshot.data?['fullname'],
+                                                          style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize: 20,
+                                                              fontWeight: FontWeight.bold
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                          padding: EdgeInsets.only(top: 10,left: 10),
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons.email,
+                                                                size: 15,
+                                                                color: Colors.grey,
+                                                              ),
+                                                              SizedBox(width: 4,),
+                                                              Text(snapshot.data?['email'],
+                                                                style: TextStyle(
+                                                                  color: Colors.black,
+                                                                  fontSize: 11,
+//fontWeight: FontWeight.bold
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          )
+                                                      ),
+                                                      Padding(
+                                                          padding: EdgeInsets.only(top: 3,left: 10),
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons.add_business_outlined,
+                                                                size: 20,
+                                                                color: Colors.grey,
+                                                              ),
+                                                              SizedBox(width: 4,),
+                                                              Text(snapshot.data?['deptname'],
+
+                                                                style: TextStyle(
+                                                                  color: Colors.black,
+                                                                  fontSize: 16,
+//fontWeight: FontWeight.bold
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          )
+                                                      ),
+                                                      Padding(
+                                                          padding: EdgeInsets.only(top: 3,left: 10),
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons.equalizer,
+                                                                size: 20,
+                                                                color: Colors.grey,
+                                                              ),
+                                                              SizedBox(width: 4,),
+                                                              Text(snapshot.data?['skillset'],
+
+                                                                style: TextStyle(
+                                                                  color: Colors.black,
+                                                                  fontSize: 16,
+//fontWeight: FontWeight.bold
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          )
+                                                      ),
+                                                      Padding(
+                                                          padding: EdgeInsets.only(top: 3,left: 10),
+                                                          child: Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons.phone_android_sharp,
+                                                                size: 20,
+                                                                color: Colors.grey,
+                                                              ),
+                                                              SizedBox(width: 4,),
+                                                              Text(snapshot.data?['phoneNumber'],
+
+                                                                style: TextStyle(
+                                                                  color: Colors.black,
+                                                                  fontSize: 16,
+//fontWeight: FontWeight.bold
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          )
+                                                      ),
+
+                                                    ],
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment: Alignment.bottomRight,
+                                                  child: Container(
+                                                    height: 30,
+                                                    width: 30,
+                                                    //color: Colors.green,
+                                                    child: InkWell(
+                                                      onTap: (){
+                                                        setState(() {
+                                                          _isloading = true;
+                                                        });
+                                                        print("button pressed");
+                                                        print(snapshot.data?['id']);
+                                                        deleteUser(snapshot.data?['id']);
+                                                      },
+                                                      child: Icon(
+                                                        Icons.delete,
+                                                        size: 25,
+                                                        color: Colors.red,
                                                       ),
                                                     ),
                                                   ),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(top: 10,left: 10),
-                                                      child: Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons.email,
-                                                            size: 15,
-                                                            color: Colors.grey,
-                                                          ),
-                                                          SizedBox(width: 4,),
-                                                          Text(snapshot.data?['email'],
-                                                            style: TextStyle(
-                                                              color: Colors.black,
-                                                              fontSize: 11,
-//fontWeight: FontWeight.bold
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )
-                                                  ),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(top: 3,left: 10),
-                                                      child: Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons.add_business_outlined,
-                                                            size: 20,
-                                                            color: Colors.grey,
-                                                          ),
-                                                          SizedBox(width: 4,),
-                                                          Text(snapshot.data?['deptname'],
-
-                                                            style: TextStyle(
-                                                              color: Colors.black,
-                                                              fontSize: 16,
-//fontWeight: FontWeight.bold
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )
-                                                  ),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(top: 3,left: 10),
-                                                      child: Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons.equalizer,
-                                                            size: 20,
-                                                            color: Colors.grey,
-                                                          ),
-                                                          SizedBox(width: 4,),
-                                                          Text(snapshot.data?['skillset'],
-
-                                                            style: TextStyle(
-                                                              color: Colors.black,
-                                                              fontSize: 16,
-//fontWeight: FontWeight.bold
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )
-                                                  ),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(top: 3,left: 10),
-                                                      child: Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons.phone_android_sharp,
-                                                            size: 20,
-                                                            color: Colors.grey,
-                                                          ),
-                                                          SizedBox(width: 4,),
-                                                          Text(snapshot.data?['phoneNumber'],
-
-                                                            style: TextStyle(
-                                                              color: Colors.black,
-                                                              fontSize: 16,
-//fontWeight: FontWeight.bold
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                            Align(
-                                              alignment: Alignment.bottomRight,
-                                              child: Container(
-                                                height: 30,
-                                                width: 30,
-                                                //color: Colors.green,
-                                                child: InkWell(
-                                                  onTap: (){
-                                                    print("button pressed");
-                                                    print(snapshot.data?['id']);
-                                                    deleteUser(snapshot.data?['id']);
-                                                  },
-                                                  child: Icon(
-                                                    Icons.delete,
-                                                    size: 25,
-                                                    color: Colors.red,
-                                                  ),
                                                 ),
-                                              ),
-                                            )
-                                          ],
-                                        ))
-                                  ],
-                                ),
+                                              ],
+                                            ))
+                                      ],
+                                    ),
 
-                              )
+                                  )
+                              );
+                            },
                           );
-                        },
-                      );
-                    }
-                ),
+                        }
+                    ),
+                  )
               )
-          )
+            ],
+          ),
+          Visibility(visible:_isloading,child: Center(child: CircularProgressIndicator(),))
         ],
       )
     );
   }
 }
+

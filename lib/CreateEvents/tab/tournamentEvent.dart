@@ -31,6 +31,8 @@ class _tournamentEventState extends State<tournamentEvent> {
   var userSelectedTime = [];
   var deviceToken = "";
   var isloading = false;
+  var login_user_dept = "";
+  var login_user_phoneNumber = "";
 
   NotificationServices notificationServices = NotificationServices();
   List<DropdownMenuItem<String>>? totalPersonDropDownList = [];
@@ -89,6 +91,8 @@ class _tournamentEventState extends State<tournamentEvent> {
     setState(() {
       EventAuthor = daaa['id'];
       authorName = daaa['fullname'];
+      login_user_dept = daaa['deptname'];
+      login_user_phoneNumber = daaa['phoneNumber'];
       print(EventAuthor);
     });
   }
@@ -125,6 +129,8 @@ class _tournamentEventState extends State<tournamentEvent> {
       tornamentNameController.clear();
       timeSlotsList = ['9-10 am','10-11 am','11-12 am','12-1 pm','3-4 pm','4-5 pm'];
       date = "Pick a Date";
+      total_winning.clear();
+      per_team.clear();
 
     });
 
@@ -528,73 +534,77 @@ class _tournamentEventState extends State<tournamentEvent> {
                   ),
                   onPressed: () async{
 
-                    setState(() {
-                      isloading = true;
-                    });
-                    var sportsImage = "";
-                    if (selectedsports == "Table Tennis"){
-                      setState(() {
-                        sportsImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/360_F_303275863_EWavqozgkXmiSNoz3zKXoQKcZcGJoGyt.jpeg?alt=media&token=6de2de47-246e-43ac-81d6-4bde71ea869b";
-                      });
-                    }else if (selectedsports == "futsul"){
-                      setState(() {
-                        sportsImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/soccer-ball-design_1818040.jpeg?alt=media&token=735416c8-6e71-41c8-92b5-b963c628ea8a";
-                      });
-                    }else if (selectedsports == "cricket"){
-                      setState(() {
-                        sportsImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/cricket.jpeg?alt=media&token=d04e57c6-3d39-4733-a164-15e7fbe3d9df";
-                      });
-                    }else if (selectedsports == "bedminton"){
-                      setState(() {
-                        sportsImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/360_F_239265142_41Z8WiZDNdGsjVhcK4IGE2EFnZSJxfxs.jpeg?alt=media&token=9459d5c5-cab4-4864-99b0-4bb5a5e1e79e";
-                      });
+                    if(login_user_phoneNumber == "" || login_user_dept == ""){
+                      showAlertDialog(context, "Error", "Kindly update your profile");
                     }else{
                       setState(() {
-                        sportsImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/sport-logo-free-vector.jpeg?alt=media&token=05274441-cbe9-4ec7-b1f7-15b16765ec0f";
+                        isloading = true;
                       });
-                    }
-                    setState(() {
-                      teamAlist.add(EventAuthor);
-                    });
-                    if (tornamentNameController.text == "Tournament Name" ||
-                        userSelectedTime == null ||
-                        date == "Pick a Date" ) {
+                      var sportsImage = "";
+                      if (selectedsports == "Table Tennis"){
+                        setState(() {
+                          sportsImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/360_F_303275863_EWavqozgkXmiSNoz3zKXoQKcZcGJoGyt.jpeg?alt=media&token=6de2de47-246e-43ac-81d6-4bde71ea869b";
+                        });
+                      }else if (selectedsports == "Futsul"){
+                        setState(() {
+                          sportsImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/soccer-ball-design_1818040.jpeg?alt=media&token=735416c8-6e71-41c8-92b5-b963c628ea8a";
+                        });
+                      }else if (selectedsports == "Cricket"){
+                        setState(() {
+                          sportsImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/cricket.jpeg?alt=media&token=d04e57c6-3d39-4733-a164-15e7fbe3d9df";
+                        });
+                      }else if (selectedsports == "Bedminton"){
+                        setState(() {
+                          sportsImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/360_F_239265142_41Z8WiZDNdGsjVhcK4IGE2EFnZSJxfxs.jpeg?alt=media&token=9459d5c5-cab4-4864-99b0-4bb5a5e1e79e";
+                        });
+                      }else{
+                        setState(() {
+                          sportsImage = "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/sport-logo-free-vector.jpeg?alt=media&token=05274441-cbe9-4ec7-b1f7-15b16765ec0f";
+                        });
+                      }
                       setState(() {
-                        isloading = false;
+                        teamAlist.add(EventAuthor);
                       });
-                      showAlertDialog(context, "Error", "Kindly add all event info");
-                    }else{
-                      var eventCreate = await dbmanager.createTournamentEvent(EventAuthor, tornamentNameController.text, selectedLocation, selectedsports, sportsImage, userSelectedTime, date, selectedTp, selectteamss, total_winning.text, per_team.text);
-                      if(eventCreate == true){
+                      if (tornamentNameController.text == "Tournament Name" ||
+                          userSelectedTime == null ||
+                          date == "Pick a Date" ) {
                         setState(() {
                           isloading = false;
                         });
-                        print(deviceToken);
-                        var data = {
-                          'to': deviceToken,
-                          'priority': 'high',
-                          'notification' : {
-                            'title' : 'New Event',
-                            'body' : 'new tournament created'
-                          }
-                        };
-                        await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-                            body: jsonEncode(data) ,
-                            headers: {
-                              'Content-Type' : 'application/json; character=UTF-8',
-                              'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
-                            }
-                        );
-
-                        showAlertDialog(context,"Done","Event created successfully");
-
-                        clearTextInput();
+                        showAlertDialog(context, "Error", "Kindly add all event info");
                       }else{
-                        showAlertDialog(context,"Error","Event Not created");
-                        clearTextInput();
-                      }
-                    }
+                        var eventCreate = await dbmanager.createTournamentEvent(EventAuthor, tornamentNameController.text, selectedLocation, selectedsports, sportsImage, userSelectedTime, date, selectedTp, selectteamss, total_winning.text, per_team.text);
+                        if(eventCreate == true){
+                          setState(() {
+                            isloading = false;
+                          });
+                          print(deviceToken);
+                          var data = {
+                            'to': deviceToken,
+                            'priority': 'high',
+                            'notification' : {
+                              'title' : 'New Event',
+                              'body' : 'new tournament created'
+                            }
+                          };
+                          await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+                              body: jsonEncode(data) ,
+                              headers: {
+                                'Content-Type' : 'application/json; character=UTF-8',
+                                'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
+                              }
+                          );
 
+                          showAlertDialog(context,"Done","Event created successfully");
+
+                          clearTextInput();
+                        }else{
+                          showAlertDialog(context,"Error","Event Not created");
+                          clearTextInput();
+                        }
+                      }
+
+                    }
 
                   },
                   child: Text('Create Event'),

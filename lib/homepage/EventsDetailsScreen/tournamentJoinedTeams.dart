@@ -36,6 +36,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
   final teamName_textController = TextEditingController();
   final tplayer_textController = TextEditingController();
   var role_check = false;
+  var admin_right_to_delete_team = false;
 
   Future getLoginUserData()async{
     var data =  await dbmanager.getData('userBioData');
@@ -46,8 +47,10 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
       loginuserNO = daaa["phoneNumber"];
       if(daaa?['roles'] == 2){
         role_check = true;
+        admin_right_to_delete_team = false;
       }else{
         role_check = false;
+        admin_right_to_delete_team = true;
       }
     });
 
@@ -163,6 +166,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                             teamName_textController.clear();
                             tplayer_textController.clear();
                             setState(() {
+                              _noDataALert = false;
                               joinedTeamList = [];
                               getJoinedTeamList();
                             });
@@ -196,6 +200,31 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
         ),
       ),
     );
+  }
+
+  Future<void> deleteJoinTeam(documentId, tournamentID) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('JoinedTeams')
+          .doc(documentId)
+          .delete().then((value) async {
+        await FirebaseFirestore.instance
+            .collection('TourEvents')
+            .doc(tournamentID)
+            .update({
+          'joinedTeamList': FieldValue.arrayRemove([documentId])
+        });
+        showAlertDialog(context,"Done","You successfully delete the event");
+        setState(() {
+          _isloading = false;
+          joinedTeamList = [];
+          getJoinedTeamList();
+        });
+      });
+      print('Document deleted successfully.');
+    } catch (e) {
+      print('Error deleting document: $e');
+    }
   }
 
   @override
@@ -257,96 +286,154 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                                   ),
                                 ],
                               ),
-                              child: Row(
+                              child: Stack(
                                 children: [
-                                  Container(
-                                      height: 100,
-                                      width: 80,
-                                      child: Center(
-                                        child: Text("${index + 1}",
-                                          style: TextStyle(
-                                              fontSize: 50,
-                                              fontWeight: FontWeight.w900,
-                                              color: Colors.teal
+                                  Row(
+                                  children: [
+                                    Container(
+                                        height: 100,
+                                        width: 80,
+                                        child: Center(
+                                          child: Text("${index + 1}",
+                                            style: TextStyle(
+                                                fontSize: 50,
+                                                fontWeight: FontWeight.w900,
+                                                color: Colors.teal
+                                            ),
                                           ),
-                                        ),
-                                      )
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Container(
-                                          width: 200,
-                                          //color: Colors.green,
-                                          child: Padding(
-                                            padding: EdgeInsets.only(left: 10, top: 5),
-                                            child: Text(snapshot.data?['teamName'],
-                                              softWrap: false,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20
+                                        )
+                                    ),
+                                    Column(
+                                      children: <Widget>[
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Container(
+                                            width: 200,
+                                            //color: Colors.green,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 10, top: 5),
+                                              child: Text(snapshot.data?['teamName'],
+                                                softWrap: false,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Container(
-                                            width: 200,
-                                            //color: Colors.green,
-                                            child: Row(
-                                              children: [
-                                                Padding(
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Container(
+                                              width: 200,
+                                              //color: Colors.green,
+                                              child: Row(
+                                                children: [
+                                                  Padding(
+                                                      padding: EdgeInsets.only(left: 10, top: 5),
+                                                      child: Icon(Icons.person, size: 18,)
+                                                  ),
+                                                  Padding(
                                                     padding: EdgeInsets.only(left: 10, top: 5),
-                                                    child: Icon(Icons.person, size: 18,)
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(left: 10, top: 5),
-                                                  child: Text(snapshot.data?['creatorName'],
-                                                    softWrap: false,
-                                                    maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                        fontSize: 15
+                                                    child: Text(snapshot.data?['creatorName'],
+                                                      softWrap: false,
+                                                      maxLines: 1,
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontSize: 15
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            )
+                                                ],
+                                              )
+                                          ),
                                         ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: Container(
-                                            width: 200,
-                                            //color: Colors.green,
-                                            child: Row(
-                                              children: [
-                                                Padding(
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Container(
+                                              width: 200,
+                                              //color: Colors.green,
+                                              child: Row(
+                                                children: [
+                                                  Padding(
+                                                      padding: EdgeInsets.only(left: 10, top: 5),
+                                                      child: Icon(Icons.phone_android_sharp, size: 18,)
+                                                  ),
+                                                  Padding(
                                                     padding: EdgeInsets.only(left: 10, top: 5),
-                                                    child: Icon(Icons.phone_android_sharp, size: 18,)
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(left: 10, top: 5),
-                                                  child: Text(snapshot.data?['phoneNO'],
-                                                    softWrap: false,
-                                                    maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                        fontSize: 15
+                                                    child: Text(snapshot.data?['phoneNO'],
+                                                      softWrap: false,
+                                                      maxLines: 1,
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontSize: 15
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            )
+                                                ],
+                                              )
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                  Padding(padding: EdgeInsets.only(top: 10, right: 10),
+                                  child: Visibility(
+                                      visible: admin_right_to_delete_team,
+                                      child: Align(
+                                        alignment: Alignment.topRight,
+                                        child: InkWell(
+                                          onTap: (){
+
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text("Want to delete the team in tournament ?"),
+                                                  actions: <Widget>[
+                                                    ElevatedButton(
+                                                      style: ElevatedButton.styleFrom(
+                                                          primary: Colors.red
+                                                        //onPrimary: Colors.black,
+                                                      ),
+                                                      child: Text("No"),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          _isloading = false;
+                                                        });
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                    ),
+                                                    ElevatedButton(
+                                                      style: ElevatedButton.styleFrom(
+                                                          primary: Colors.teal[900]
+                                                        //onPrimary: Colors.black,
+                                                      ),
+                                                      child: Text("Yes"),
+                                                      onPressed: () {
+                                                        _isloading = true;
+                                                        print(snapshot.data?.id,);
+                                                        deleteJoinTeam(
+                                                            snapshot.data?.id,
+                                                            widget.eventID
+                                                        );
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+
+                                          },
+                                          child: Icon(Icons.delete, color: Colors.red,),
+                                        ),
+
+                                      )),)
+
                                 ],
                               )
                           ),

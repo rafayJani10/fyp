@@ -20,6 +20,8 @@ class _friendlyEventState extends State<friendlyEvent> {
   var firebasestore = FirebaseFirestore.instance;
   var date = "Pick a Date";
   var time = [];
+  var login_user_phone_no = "";
+  var login_user_dept = "";
   var userList = [];
   var EventAuthor = "";
   var selectedLocation = "Table Tennis Area";
@@ -91,6 +93,8 @@ class _friendlyEventState extends State<friendlyEvent> {
     var daaa = json.decode(data);
     setState(() {
       EventAuthor = daaa['id'];
+      login_user_dept = daaa['deptname'];
+      login_user_phone_no = daaa['phoneNumber'];
       print(EventAuthor);
     });
   }
@@ -431,62 +435,67 @@ class _friendlyEventState extends State<friendlyEvent> {
                   borderRadius: BorderRadius.circular(32.0)),
             ),
             onPressed: () async {
-              var sportsImage = "";
-              if (selectedsports == "Table Tennis") {
-                setState(() {
-                  sportsImage =
-                  "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/360_F_303275863_EWavqozgkXmiSNoz3zKXoQKcZcGJoGyt.jpeg?alt=media&token=6de2de47-246e-43ac-81d6-4bde71ea869b";
-                });
-              } else if (selectedsports == "futsul") {
-                setState(() {
-                  sportsImage =
-                  "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/soccer-ball-design_1818040.jpeg?alt=media&token=735416c8-6e71-41c8-92b5-b963c628ea8a";
-                });
-              } else if (selectedsports == "cricket") {
-                setState(() {
-                  sportsImage =
-                  "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/cricket.jpeg?alt=media&token=d04e57c6-3d39-4733-a164-15e7fbe3d9df";
-                });
-              } else if (selectedsports == "bedminton") {
-                setState(() {
-                  sportsImage =
-                  "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/360_F_239265142_41Z8WiZDNdGsjVhcK4IGE2EFnZSJxfxs.jpeg?alt=media&token=9459d5c5-cab4-4864-99b0-4bb5a5e1e79e";
-                });
-              } else {
-                setState(() {
-                  sportsImage =
-                  "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/sport-logo-free-vector.jpeg?alt=media&token=05274441-cbe9-4ec7-b1f7-15b16765ec0f";
-                });
-              }
-              setState(() {
-                teamAlist.add(EventAuthor);
-              });
+              if(login_user_phone_no == "" || login_user_dept == ""){
+                showAlertDialog(context, "Error", "Kindlu update your profile");
 
-              if (eventNameController.text == "Event Name" ||
-                  userSelectedTime == null ||
-                  date == "Pick a Date") {
-                showAlertDialog(context, "Error", "Kindly add all event info");
-              } else {
-                var eventCreate = await dbmanager.createFriendlyEventData(
-                    EventAuthor,
-                    eventNameController.text,
-                    selectedLocation,
-                    selectedsports,
-                    sportsImage,
-                    userSelectedTime,
-                    date,
-                    selectedTp,
-                    selectedTp,
-                    1,
-                    0,
-                    teamAlist);
-                if (eventCreate == true) {
-                  showAlertDialog(
-                      context, "Done", "Event created successfully");
-                  clearTextInput();
+              }else{
+                var sportsImage = "";
+                if (selectedsports == "Table Tennis") {
+                  setState(() {
+                    sportsImage =
+                    "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/360_F_303275863_EWavqozgkXmiSNoz3zKXoQKcZcGJoGyt.jpeg?alt=media&token=6de2de47-246e-43ac-81d6-4bde71ea869b";
+                  });
+                } else if (selectedsports == "Futsul") {
+                  setState(() {
+                    sportsImage =
+                    "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/soccer-ball-design_1818040.jpeg?alt=media&token=735416c8-6e71-41c8-92b5-b963c628ea8a";
+                  });
+                } else if (selectedsports == "Cricket") {
+                  setState(() {
+                    sportsImage =
+                    "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/cricket.jpeg?alt=media&token=d04e57c6-3d39-4733-a164-15e7fbe3d9df";
+                  });
+                } else if (selectedsports == "Bedminton") {
+                  setState(() {
+                    sportsImage =
+                    "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/360_F_239265142_41Z8WiZDNdGsjVhcK4IGE2EFnZSJxfxs.jpeg?alt=media&token=9459d5c5-cab4-4864-99b0-4bb5a5e1e79e";
+                  });
                 } else {
-                  showAlertDialog(context, "Error", "Event Not created");
-                  clearTextInput();
+                  setState(() {
+                    sportsImage =
+                    "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/sport-logo-free-vector.jpeg?alt=media&token=05274441-cbe9-4ec7-b1f7-15b16765ec0f";
+                  });
+                }
+                setState(() {
+                  teamAlist.add(EventAuthor);
+                });
+
+                if (eventNameController.text == "Event Name" ||
+                    userSelectedTime == null ||
+                    date == "Pick a Date") {
+                  showAlertDialog(context, "Error", "Kindly add all event info");
+                } else {
+                  var eventCreate = await dbmanager.createFriendlyEventData(
+                      EventAuthor,
+                      eventNameController.text,
+                      selectedLocation,
+                      selectedsports,
+                      sportsImage,
+                      userSelectedTime,
+                      date,
+                      selectedTp,
+                      selectedTp,
+                      1,
+                      0,
+                      teamAlist);
+                  if (eventCreate == true) {
+                    showAlertDialog(
+                        context, "Done", "Event created successfully");
+                    clearTextInput();
+                  } else {
+                    showAlertDialog(context, "Error", "Event Not created");
+                    clearTextInput();
+                  }
                 }
               }
             },

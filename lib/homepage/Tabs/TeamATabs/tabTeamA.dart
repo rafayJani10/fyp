@@ -32,8 +32,9 @@ class _TeamATabState extends State<TeamATab> {
   var joinPersoTeamA = 0;
   var joinedUserStatus = false;
   var _isloading = true;
-  var _isNodataAlert = false;
+  //var _isNodataAlert = false;
   var role_check = false;
+  var admin_delete_team_status = false;
 
   Future getAuthoreData() async{
     var collection = FirebaseFirestore.instance.collection('users');
@@ -65,8 +66,10 @@ class _TeamATabState extends State<TeamATab> {
       useriddd = userid;
       if(daaa?['roles'] == 2){
         role_check = true;
+        admin_delete_team_status = false;
       }else{
         role_check = false;
+        admin_delete_team_status = true;
       }
     });
 
@@ -102,7 +105,7 @@ class _TeamATabState extends State<TeamATab> {
           if(TeamA_joinUser.isNotEmpty){
             _isloading = false;
           }else{
-            _isNodataAlert = true;
+            //_isNodataAlert = true;
             _isloading = false;
           }
         });
@@ -120,7 +123,7 @@ class _TeamATabState extends State<TeamATab> {
           'teamA': FieldValue.arrayUnion([useriddd]),
           'JoindePersonTeamA': joinedUserLength.toString()
         }).then((value) {
-          _isNodataAlert = false;
+          //_isNodataAlert = false;
       setState(() {
         TeamA_joinUser.add(useriddd);
         print(TeamA_joinUser.length + 1);
@@ -136,13 +139,13 @@ class _TeamATabState extends State<TeamATab> {
 
 
   }
-  Future deleteTeam() async{
+  Future deleteTeam(deleteMemeberID) async{
     var collection = FirebaseFirestore.instance.collection('events');
     collection
         .doc(widget.eventId)
         .update(
         {
-          'teamA': FieldValue.arrayRemove([useriddd]),
+          'teamA': FieldValue.arrayRemove([deleteMemeberID]),
         }
     ).then((value){
 
@@ -391,7 +394,7 @@ class _TeamATabState extends State<TeamATab> {
                                               ],
                                             ),),
                                           Flexible(
-                                              flex: 2,
+                                              flex: 3,
                                               child: Stack(
                                                 children: [
                                                   Container(
@@ -501,6 +504,60 @@ class _TeamATabState extends State<TeamATab> {
                                                       ],
                                                     ),
                                                   ),
+
+                                                    Visibility(
+                                                      visible: admin_delete_team_status,
+                                                      child: Align(
+                                                        alignment: Alignment.bottomRight,
+                                                        child: InkWell(
+                                                          onTap: (){
+                                                            showDialog(
+                                                              context: context,
+                                                              builder: (BuildContext context) {
+                                                                return AlertDialog(
+                                                                  title: Text("Want to delete the team member ?"),
+                                                                  actions: <Widget>[
+                                                                    ElevatedButton(
+                                                                      style: ElevatedButton.styleFrom(
+                                                                          primary: Colors.red
+                                                                        //onPrimary: Colors.black,
+                                                                      ),
+                                                                      child: Text("No"),
+                                                                      onPressed: () {
+                                                                        Navigator.of(context).pop();
+                                                                      },
+                                                                    ),
+                                                                    ElevatedButton(
+                                                                      style: ElevatedButton.styleFrom(
+                                                                        primary: Colors.teal[900],
+                                                                        //onPrimary: Colors.black,
+                                                                      ),
+                                                                      child: Text("Yes"),
+                                                                      onPressed: () {
+                                                                        setState(() {
+                                                                          print(snapshot.data?.id);
+                                                                          deleteTeam(snapshot.data?.id);
+                                                                        });
+                                                                        Navigator.of(context).pop();
+                                                                      },
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              },
+                                                            );
+
+
+                                                          },
+                                                          child:  Container(
+                                                            height: 50,
+                                                            width: 50,
+                                                            // color: Colors.green,
+                                                            child: Icon(Icons.delete,
+                                                              color: Colors.red,
+                                                            ),
+                                                          ),
+                                                        )
+                                                    ),),
                                                   if(snapshot.data?['id'] == useriddd)
                                                     Align(
                                                         alignment: Alignment.bottomRight,
@@ -530,7 +587,7 @@ class _TeamATabState extends State<TeamATab> {
                                                                       child: Text("Yes"),
                                                                       onPressed: () {
                                                                         setState(() {
-                                                                          deleteTeam();
+                                                                          deleteTeam(snapshot.data?['id']);
                                                                         });
                                                                         Navigator.of(context).pop();
                                                                       },
@@ -565,24 +622,7 @@ class _TeamATabState extends State<TeamATab> {
                         }
                     ),
                     Visibility(visible:_isloading,child: Center(child: CircularProgressIndicator(),)),
-                    Visibility(visible:_isNodataAlert, child: Center(
-                      child: Container(
-                        height: 400,
-                        width: 300,
-                        //color: Colors.teal,
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 300,
-                              width: 300,
-                              child: Image.asset('assets/images/profile.png'),
-                            ),
-                            SizedBox(height: 40,),
-                            const Text("No User Joined", style: TextStyle(fontSize: 20,  color: Colors.grey),)
-                          ],
-                        ),
-                      ),
-                    )),
+
                   ],
                 )
               )

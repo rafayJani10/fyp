@@ -77,7 +77,6 @@ class _ProflePageState extends State<ProflePage> {
       );
     }
   }
-
   void startPhoneAuthVerification(String phoneNumber) async {
     FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -140,7 +139,6 @@ class _ProflePageState extends State<ProflePage> {
       },
     );
   }
-
   Future<dynamic> getUserData() async{
     var data =  await dbmanager.getData('userBioData');
     var daaa = json.decode(data);
@@ -160,6 +158,7 @@ class _ProflePageState extends State<ProflePage> {
     var docSnapshot = await collection.doc(id).get();
     if (docSnapshot.exists) {
       Map<String, dynamic>? data = docSnapshot.data();
+      dbmanager.saveData('userBioData', data!);
       setState(()  {
         print(data!['fullname']);
         full_nameu = data?['fullname'] ?? "Full name";
@@ -433,19 +432,21 @@ class _ProflePageState extends State<ProflePage> {
                             var skillset = skillsetController.text == "" ? dataa['skillset'] :  skillsetController.text;
                             updateData(dataa['id'],full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset);
                             getuserrDataup(dataa['id']);
-                            if(dataa['phoneNumber'] == ""){
-                             print("no number found");
-                             // startPhoneAuth(PhoneNo);
-                             // Navigator.push(
-                             //   context,
-                             //   MaterialPageRoute(builder: (context) =>  VerificationCodeScreen()),
-                             // );
 
-                           }else{
-                             print("yes");
-                             // updateData(dataa['id'],full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset);
-                             // getuserrDataup(dataa['id']);
-                           }
+
+                           //  if(dataa['phoneNumber'] == ""){
+                           //   print("no number found");
+                           //   // startPhoneAuth(PhoneNo);
+                           //   // Navigator.push(
+                           //   //   context,
+                           //   //   MaterialPageRoute(builder: (context) =>  VerificationCodeScreen()),
+                           //   // );
+                           //
+                           // }else{
+                           //   print("yes");
+                           //   // updateData(dataa['id'],full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset);
+                           //   // getuserrDataup(dataa['id']);
+                           // }
 
 
 

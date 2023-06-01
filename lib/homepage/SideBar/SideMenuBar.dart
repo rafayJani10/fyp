@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/CreateEvents/CreateEvents.dart';
@@ -33,34 +34,52 @@ class _SideMenueBarState extends State<SideMenueBar> {
   var email = "";
   var is_image_loading = true;
 
-
   Future<dynamic> getUserData() async{
     var data =  await dbmanager.getData('userBioData');
     var daaa = json.decode(data);
     setState(() {
-      userName = daaa['fullname'];
-      userImage = daaa["picture"];
-      gender = daaa["gender"];
       userId = daaa["id"];
-      email = daaa["email"];
       if(userImage != ""){
         is_image_loading = false;
       }
 
     });
+    fetchDataFromFirestore();
   }
+
+  void fetchDataFromFirestore() {
+    print("user id ::::::::::::::::::::::");
+    print(userId);
+    FirebaseFirestore.instance.collection('users').doc(userId).get().then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+
+        Map<String, dynamic>? data = documentSnapshot.data() as Map<String, dynamic>?;
+        setState(() {
+          userName = data!["fullname"];
+          email = data["email"];
+          userImage = data["picture"];
+          is_image_loading = false;
+        });
+      }
+    }).catchError((error) {
+      print('Error retrieving data: $error');
+    });
+  }
+
+
+
 
   @override
   void initState() {
 
     super.initState();
     getUserData();
+
   }
 
   @override
   Widget build(BuildContext context) {
-    var LoginUserRole = 1;
-    //getUserData();
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -113,7 +132,7 @@ class _SideMenueBarState extends State<SideMenueBar> {
               )
 
           ),
-           ListTile(
+          ListTile(
              title:   Text("Home"
              ),
              leading: const Icon(
