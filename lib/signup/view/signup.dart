@@ -29,6 +29,13 @@ State<SignUp> createState() => _SignUpState();
 
 class _SignUpState extends State<SignUp> {
 
+  bool validateEmail(String email) {
+
+    final pattern = r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$';
+    final regExp = RegExp(pattern);
+    return regExp.hasMatch(email);
+  }
+
   var dbmanager = DatabaseManager();
   var networkServices = NotificationServices();
   TextEditingController fullnameController = TextEditingController();
@@ -132,35 +139,45 @@ class _SignUpState extends State<SignUp> {
                 SizedBox(height: 20,),
 
                 signInSignUpButton(context, false, () async{
+                  var check_email_verify = validateEmail(EmailController.text);
                   var deviceToken = await networkServices.getDeviceToken();
                   print(deviceToken);
                   dbmanager.SignupWithEmailPassword(EmailController.text, PasswordController.text);
                   if(fullnameController.text == "" || EnrollmentIdController.text == "" || DeptController.text == "" || DeptController.text  == "" || EmailController.text == "" || PasswordController.text == ""){
                     showAlertDialog(context,"Error","incomplete info");
-                  }else{
-                    showAlertDialog(context,"Verification","verification email has been sent");
-                    setState(() {
-                      if (userStatus == false){
-                        timer = Timer.periodic(
-                          Duration(seconds: 10),
-                              (_) async {
-                            var isVerified = await dbmanager.checkEmailVerified();
-                            if(isVerified! == "f"){
-                              print("email not verified");
-                            }else{
-                              print("Email verified successfully :::::::::::::::::::::::::::::::::");
-                              userStatus = true;
-                              dbmanager.userid;
-                              dbmanager.createUserData(fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text, EnrollmentIdController.text, DeptController.text, deviceToken!);
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  LoginScreen()));
-                              timer!.cancel();
-                            }
-                          },
-                        );
-                      }else{
-                        print('suceesfully added darat:::::::::::');
-                      }
-                    });
+                  }
+                  else{
+                    if(check_email_verify == false){
+                      showAlertDialog(context,"Error","Incorrect email");
+                    }else if(PasswordController.text.length <= 8) {
+                      showAlertDialog(context,"Error","Password should be at least 8 character long");
+                    }
+                    else{
+                      showAlertDialog(context,"Verification","verification email has been sent");
+                      setState(() {
+                        if (userStatus == false){
+                          timer = Timer.periodic(
+                            Duration(seconds: 100),
+                                (_) async {
+                              var isVerified = await dbmanager.checkEmailVerified();
+                              if(isVerified! == "f"){
+                                print("email not verified");
+                                showAlertDialog(context,"Not verified","Email not verified");
+                              }else{
+                                print("Email verified successfully :::::::::::::::::::::::::::::::::");
+                                userStatus = true;
+                                dbmanager.userid;
+                                dbmanager.createUserData(fullnameController.text, EmailController.text, PasswordController.text, ConfirmPasswordController.text, EnrollmentIdController.text, DeptController.text, deviceToken!);
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  LoginScreen()));
+                                timer!.cancel();
+                              }
+                            },
+                          );
+                        }else{
+                          print('suceesfully added darat:::::::::::');
+                        }
+                      });
+                    }
                   }
 
                 }),

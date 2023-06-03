@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/homepage/EventsDetailsScreen/tournametEventDetails.dart';
@@ -162,32 +161,36 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                             print("sorry");
                             showAlertDialog(context, "Something Wrong!", "you are not registered in this team ,try again");
                           }else{
-                            print("ssssss done done");
-                            teamName_textController.clear();
-                            tplayer_textController.clear();
-                            setState(() {
-                              _noDataALert = false;
-                              joinedTeamList = [];
-                              getJoinedTeamList();
-                            });
+                            if(teamName_textController.text.isEmpty){
+                              showAlertDialog(context, "Something Wrong!", "Entered team name first");
+                            }else{
+                              print("ssssss done done");
+                              teamName_textController.clear();
+                              tplayer_textController.clear();
+                              setState(() {
+                                _noDataALert = false;
+                                joinedTeamList = [];
+                                getJoinedTeamList();
+                              });
 
-                            Navigator.pop(context);
-                            showAlertDialog(context, "Done", "you are successfukky joined the team ");
-                            var data = {
-                              'to': authoreDeviceToken,
-                              'priority': 'high',
-                              'notification' : {
-                                'title' : 'New Team',
-                                'body' : 'New team included in team list'
-                              }
-                            };
-                            await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-                                body: jsonEncode(data) ,
-                                headers: {
-                                  'Content-Type' : 'application/json; character=UTF-8',
-                                  'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
+                              Navigator.pop(context);
+                              showAlertDialog(context, "Done", "Team created successfully ");
+                              var data = {
+                                'to': authoreDeviceToken,
+                                'priority': 'high',
+                                'notification' : {
+                                  'title' : 'New Team',
+                                  'body' : 'New team included in team list'
                                 }
-                            );
+                              };
+                              await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+                                  body: jsonEncode(data) ,
+                                  headers: {
+                                    'Content-Type' : 'application/json; character=UTF-8',
+                                    'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
+                                  }
+                              );
+                            }
                           }
                         },
                         child: Text('Done'),
@@ -246,245 +249,245 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
   }
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
-      appBar: AppBar(
-        title: const Text("Joined Teams List"),
-        backgroundColor: Colors.teal[900],
-      ),
-      body: Stack(
-        children: [
-          ListView.builder(
-              itemCount: joinedTeamList.length,//myProjectId.length,
-              itemBuilder: (BuildContext context, int index){
-                return StreamBuilder(
-                  stream: FirebaseFirestore.instance.collection('JoinedTeams').doc(joinedTeamList[index]).snapshots(),
-                  builder: (context, snapshot){
-                    if(snapshot.hasData){
-                      return Padding(
-                        padding: EdgeInsets.all(10),
-                        child: InkWell(
-                          onTap: (){
-                            print('team ${snapshot.data?['teamName']} is clicked ');
-                            print(snapshot.data?.id);
-                            var tournamentID = snapshot.data?.id;
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) =>  tournamentEventDetail(authoreId: widget.authoreId,teamID: snapshot.data?.id, role_status: widget.role_status)),
-                            );
-                          },
-                          child: Container(
-                              width: double.infinity,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    spreadRadius: 7,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 0), // changes position of shadow
-                                  ),
-                                ],
-                              ),
-                              child: Stack(
-                                children: [
-                                  Row(
-                                  children: [
-                                    Container(
-                                        height: 100,
-                                        width: 80,
-                                        child: Center(
-                                          child: Text("${index + 1}",
-                                            style: TextStyle(
-                                                fontSize: 50,
-                                                fontWeight: FontWeight.w900,
-                                                color: Colors.teal
-                                            ),
-                                          ),
-                                        )
-                                    ),
-                                    Column(
-                                      children: <Widget>[
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Container(
-                                            width: 200,
-                                            //color: Colors.green,
-                                            child: Padding(
-                                              padding: EdgeInsets.only(left: 10, top: 5),
-                                              child: Text(snapshot.data?['teamName'],
-                                                softWrap: false,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Container(
-                                              width: 200,
-                                              //color: Colors.green,
-                                              child: Row(
-                                                children: [
-                                                  Padding(
-                                                      padding: EdgeInsets.only(left: 10, top: 5),
-                                                      child: Icon(Icons.person, size: 18,)
-                                                  ),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left: 10, top: 5),
-                                                    child: Text(snapshot.data?['creatorName'],
-                                                      softWrap: false,
-                                                      maxLines: 1,
-                                                      overflow: TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                          fontSize: 15
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Container(
-                                              width: 200,
-                                              //color: Colors.green,
-                                              child: Row(
-                                                children: [
-                                                  Padding(
-                                                      padding: EdgeInsets.only(left: 10, top: 5),
-                                                      child: Icon(Icons.phone_android_sharp, size: 18,)
-                                                  ),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left: 10, top: 5),
-                                                    child: Text(snapshot.data?['phoneNO'],
-                                                      softWrap: false,
-                                                      maxLines: 1,
-                                                      overflow: TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                          fontSize: 15
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                          ),
-                                        ),
-                                      ],
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text("Joined Teams List"),
+
+          backgroundColor: Colors.teal[900],
+        ),
+        body: Stack(
+          children: [
+            ListView.builder(
+                itemCount: joinedTeamList.length,//myProjectId.length,
+                itemBuilder: (BuildContext context, int index){
+                  return StreamBuilder(
+                    stream: FirebaseFirestore.instance.collection('JoinedTeams').doc(joinedTeamList[index]).snapshots(),
+                    builder: (context, snapshot){
+                      if(snapshot.hasData){
+                        return Padding(
+                          padding: EdgeInsets.all(10),
+                          child: InkWell(
+                            onTap: (){
+                              print('team ${snapshot.data?['teamName']} is clicked ');
+                              print(snapshot.data?.id);
+                              var tournamentID = snapshot.data?.id;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) =>  tournamentEventDetail(authoreId: widget.authoreId,teamID: snapshot.data?.id, role_status: widget.role_status)),
+                              );
+                            },
+                            child: Container(
+                                width: double.infinity,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 7,
+                                      blurRadius: 4,
+                                      offset: Offset(0, 0), // changes position of shadow
                                     ),
                                   ],
                                 ),
-                                  Padding(padding: EdgeInsets.only(top: 10, right: 10),
-                                  child: Visibility(
-                                      visible: admin_right_to_delete_team,
-                                      child: Align(
-                                        alignment: Alignment.topRight,
-                                        child: InkWell(
-                                          onTap: (){
-
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: Text("Want to delete the team in tournament ?"),
-                                                  actions: <Widget>[
-                                                    ElevatedButton(
-                                                      style: ElevatedButton.styleFrom(
-                                                          primary: Colors.red
-                                                        //onPrimary: Colors.black,
-                                                      ),
-                                                      child: Text("No"),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _isloading = false;
-                                                        });
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                    ),
-                                                    ElevatedButton(
-                                                      style: ElevatedButton.styleFrom(
-                                                          primary: Colors.teal[900]
-                                                        //onPrimary: Colors.black,
-                                                      ),
-                                                      child: Text("Yes"),
-                                                      onPressed: () {
-                                                        _isloading = true;
-                                                        print(snapshot.data?.id,);
-                                                        deleteJoinTeam(
-                                                            snapshot.data?.id,
-                                                            widget.eventID
-                                                        );
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-
-                                          },
-                                          child: Icon(Icons.delete, color: Colors.red,),
+                                child: Stack(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                            height: 100,
+                                            width: 80,
+                                            child: Center(
+                                              child: Text("${index + 1}",
+                                                style: TextStyle(
+                                                    fontSize: 50,
+                                                    fontWeight: FontWeight.w900,
+                                                    color: Colors.teal
+                                                ),
+                                              ),
+                                            )
                                         ),
+                                        Column(
+                                          children: <Widget>[
+                                            Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Container(
+                                                width: 200,
+                                                //color: Colors.green,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(left: 10, top: 5),
+                                                  child: Text(snapshot.data?['teamName'],
+                                                    softWrap: false,
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 20
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Container(
+                                                  width: 200,
+                                                  //color: Colors.green,
+                                                  child: Row(
+                                                    children: [
+                                                      Padding(
+                                                          padding: EdgeInsets.only(left: 10, top: 5),
+                                                          child: Icon(Icons.person, size: 18,)
+                                                      ),
+                                                      Padding(
+                                                        padding: EdgeInsets.only(left: 10, top: 5),
+                                                        child: Text(snapshot.data?['creatorName'],
+                                                          softWrap: false,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                              fontSize: 15
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Container(
+                                                  width: 200,
+                                                  //color: Colors.green,
+                                                  child: Row(
+                                                    children: [
+                                                      Padding(
+                                                          padding: EdgeInsets.only(left: 10, top: 5),
+                                                          child: Icon(Icons.phone_android_sharp, size: 18,)
+                                                      ),
+                                                      Padding(
+                                                        padding: EdgeInsets.only(left: 10, top: 5),
+                                                        child: Text(snapshot.data?['phoneNO'],
+                                                          softWrap: false,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                              fontSize: 15
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(padding: EdgeInsets.only(top: 10, right: 10),
+                                      child: Visibility(
+                                          visible: admin_right_to_delete_team,
+                                          child: Align(
+                                            alignment: Alignment.topRight,
+                                            child: InkWell(
+                                              onTap: (){
 
-                                      )),)
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: Text("Want to delete the team in tournament ?"),
+                                                      actions: <Widget>[
+                                                        ElevatedButton(
+                                                          style: ElevatedButton.styleFrom(
+                                                              primary: Colors.red
+                                                            //onPrimary: Colors.black,
+                                                          ),
+                                                          child: Text("No"),
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              _isloading = false;
+                                                            });
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                        ),
+                                                        ElevatedButton(
+                                                          style: ElevatedButton.styleFrom(
+                                                              primary: Colors.teal[900]
+                                                            //onPrimary: Colors.black,
+                                                          ),
+                                                          child: Text("Yes"),
+                                                          onPressed: () {
+                                                            _isloading = true;
+                                                            print(snapshot.data?.id,);
+                                                            deleteJoinTeam(
+                                                                snapshot.data?.id,
+                                                                widget.eventID
+                                                            );
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
 
-                                ],
-                              )
-                          ),
-                        ),);
-                    }
-                    return SizedBox();
-                  },
-                );
-              }
-          ),
-          Visibility(visible:_isloading,child: Center(child: CircularProgressIndicator(),)),
-          Visibility(visible:_noDataALert, child: Center(
-            child: Container(
-              height: 400,
-              width: 300,
-              //color: Colors.teal,
-              child: Column(
-                children: [
-                  Container(
-                    height: 300,
-                    width: 300,
-                    child: Image.asset('assets/images/team.png'),
-                  ),
-                  SizedBox(height: 40,),
-                  Text("No Team Joined", style: TextStyle(fontSize: 20,  color: Colors.grey),)
-                ],
-              ),
+                                              },
+                                              child: Icon(Icons.delete, color: Colors.red,),
+                                            ),
+
+                                          )),)
+
+                                  ],
+                                )
+                            ),
+                          ),);
+                      }
+                      return SizedBox();
+                    },
+                  );
+                }
             ),
-          )),
-        ],
-      ),
+            Visibility(visible:_isloading,child: Center(child: CircularProgressIndicator(),)),
+            Visibility(visible:_noDataALert, child: Center(
+              child: Container(
+                height: 400,
+                width: 300,
+                //color: Colors.teal,
+                child: Column(
+                  children: [
+                    Container(
+                      height: 300,
+                      width: 300,
+                      child: Image.asset('assets/images/team.png'),
+                    ),
+                    SizedBox(height: 40,),
+                    Text("No Team Joined", style: TextStyle(fontSize: 20,  color: Colors.grey),)
+                  ],
+                ),
+              ),
+            )),
+          ],
+        ),
 
-     floatingActionButton: Visibility(
-       visible: role_check,
-       child: FloatingActionButton.extended(
-         onPressed: () {
+        floatingActionButton: Visibility(
+          visible: role_check,
+          child: FloatingActionButton.extended(
+            onPressed: () {
 
-         showDialog(
-           context: context,
-           builder: (BuildContext context) {
-             return joinTeamForm();
-           },
-         );
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return joinTeamForm();
+                },
+              );
 
-       },
-         label:  const Text('Create Your Team',
-           style: TextStyle(color: Colors.white),),
-         icon:  Icon(Icons.add,color: Colors.white,),
-         backgroundColor: Colors.teal[900],
-     ),)
+            },
+            label:  const Text('Create Your Team',
+              style: TextStyle(color: Colors.white),),
+            icon:  Icon(Icons.add,color: Colors.white,),
+            backgroundColor: Colors.teal[900],
+          ),)
     );
   }
 }
-

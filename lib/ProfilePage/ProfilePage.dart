@@ -42,6 +42,7 @@ class _ProflePageState extends State<ProflePage> {
   var enrollmentu = "";
   var departmentu = "";
   var skillsetu = "" ;
+  var isloading  = false;
 
   TextEditingController userNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -157,9 +158,11 @@ class _ProflePageState extends State<ProflePage> {
     var collection = FirebaseFirestore.instance.collection('users');
     var docSnapshot = await collection.doc(id).get();
     if (docSnapshot.exists) {
+
       Map<String, dynamic>? data = docSnapshot.data();
       dbmanager.saveData('userBioData', data!);
       setState(()  {
+        isloading = false;
         print(data!['fullname']);
         full_nameu = data?['fullname'] ?? "Full name";
         genderu = data!['gender'] ?? "Gender";
@@ -199,7 +202,9 @@ class _ProflePageState extends State<ProflePage> {
     var updateDataa = await dbmanager.updataUserData(userId,full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset);
     if(updateDataa! == true){
       print("dataa updated");
+      getuserrDataup(user_id);
       showAlertDialog(context,"Done","Data Updated Successfully");
+
       dbmanager.saveData('userBioData', dataa);
     }else{
       print("data not updated");
@@ -211,6 +216,9 @@ class _ProflePageState extends State<ProflePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    setState(() {
+      isloading = true;
+    });
     getUserData();
    // getuserrDataup();
 
@@ -224,243 +232,256 @@ class _ProflePageState extends State<ProflePage> {
         title: const Text("Edit Profile"),
         backgroundColor: Colors.teal[900],
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Flexible(
-              flex: 1,
-              child: Container(
-                width: double.infinity,
-                //color: Colors.green,
-                child: Center(
-                  child: CircleAvatar(
-                      radius: 70,
-                      child: Stack(
-                        children: [
-                          CircleAvatar(
-                            radius: 70,
-                            backgroundColor: Colors.grey, // Placeholder color
-                            backgroundImage: dataa["picture"] != null
-                                ? NetworkImage(dataa["picture"])
-                                : NetworkImage("https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"), // Use NetworkImage only when imageUrl is not null
-                          ),
-                          Align(
-                              alignment: FractionalOffset.bottomRight,
-                              child: InkWell(
-                                onTap: (){
-                                  getImage();
-                                },
-                                child: Container(
-                                  margin: EdgeInsetsDirectional.only(bottom: 2),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.teal[900],
-                                  ),
-                                  height: 50,
-                                  width: 50,
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.camera_alt,
-                                      color: Colors.white,
-                                      size: 25,
+          Column(
+            children: [
+              Flexible(
+                  flex: 1,
+                  child: Container(
+                    width: double.infinity,
+                    //color: Colors.green,
+                    child: Center(
+                      child: CircleAvatar(
+                          radius: 70,
+                          child: Stack(
+                            children: [
+                              CircleAvatar(
+                                radius: 70,
+                                backgroundColor: Colors.grey, // Placeholder color
+                                backgroundImage: dataa["picture"] != null
+                                    ? NetworkImage(dataa["picture"])
+                                    : NetworkImage("https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"), // Use NetworkImage only when imageUrl is not null
+                              ),
+                              Align(
+                                  alignment: FractionalOffset.bottomRight,
+                                  child: InkWell(
+                                    onTap: (){
+                                      getImage();
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsetsDirectional.only(bottom: 2),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.teal[900],
+                                      ),
+                                      height: 50,
+                                      width: 50,
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          color: Colors.white,
+                                          size: 25,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
+                                  )
                               )
+                            ],
                           )
-                        ],
-                      )
-                  ),
-                ),
-              )),
-          Flexible(
-              flex: 3,
-              child: Container(
-                  width: double.infinity,
-                  // color: Colors.red,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: userNameController,
-                            decoration: InputDecoration(
-                              labelStyle:   TextStyle(
-                                  color: Colors.black
-                              ),
-                              border: OutlineInputBorder(),
-                              labelText: "Full Name" ,
-                              hintText: dataa["fullname"],
-                              hintStyle: TextStyle(color: Colors.grey),
-                              fillColor: Colors.white54,
-                              //filled: true
-
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            //enabled: false,
-                            controller: emailController,
-                            decoration: InputDecoration(
-                              labelStyle:   TextStyle(
-                                  color: Colors.black
-                              ),
-                              border: OutlineInputBorder(),
-                              labelText: "Email",
-                              hintText: dataa['email'],
-                              hintStyle: TextStyle(color: Colors.grey),
-                              fillColor: Colors.white54,
-                             // hintText: "userName",
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: enrollmentController,
-                            decoration: InputDecoration(
-                              labelStyle: TextStyle(
-                                  color: Colors.black
-                              ),
-                              border: OutlineInputBorder(),
-                              labelText: "Enrollment No",
-                              hintText: dataa["enrollmentNo"],
-                              hintStyle: TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: departmentController,
-                            decoration: InputDecoration(
-                              labelStyle: TextStyle(
-                                  color: Colors.black
-                              ),
-                              border: OutlineInputBorder(),
-                              labelText: "department Name",
-                              hintText: dataa["deptname"],
-                              hintStyle: TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: ageController,
-                            decoration: InputDecoration(
-                              labelStyle:   TextStyle(
-                                  color: Colors.black
-                              ),
-                              border: OutlineInputBorder(),
-                              labelText: "Age",
-                              hintText: dataa["age"],
-                              hintStyle: TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: genderController,
-                            decoration: InputDecoration(
-                                labelStyle:   TextStyle(
-                                    color: Colors.black
-                                ),
-                              border: OutlineInputBorder(),
-                              labelText: "gender",
-                              hintText: dataa["gender"],
-                              hintStyle: TextStyle(color: Colors.grey),
-
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-                            controller: phoneNumberController,
-                            decoration: InputDecoration(
-                              labelStyle: TextStyle(
-                                  color: Colors.black
-                              ),
-                              border: OutlineInputBorder(),
-                              labelText: "Phone Number",
-                              hintText: dataa["phoneNumber"],
-                              hintStyle: TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: TextField(
-
-                            controller: skillsetController,
-                            decoration: InputDecoration(
-
-                              labelStyle: TextStyle(
-                                  color: Colors.black
-                              ),
-                              border: OutlineInputBorder(),
-                              labelText: "Game Skill",
-                              hintText: dataa["skillset"],
-                              hintStyle: TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                        ),
-
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.teal[900],
-                            onPrimary: Colors.white,
-                            shadowColor: Colors.green,
-                            elevation: 6,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(32.0)),
-                            minimumSize: Size(200, 50), //////// HERE
-                          ),
-                          onPressed: () {
-                            var full_name = userNameController.text == "" ? full_nameu: userNameController.text;
-                            var gender = genderController.text == "" ?dataa['gender'] : genderController.text;
-                            var agee = ageController.text == "" ? dataa['age'] : ageController.text;
-                            var PhoneNo = phoneNumberController.text == "" ? dataa['phoneNumber'] : phoneNumberController.text;
-                            var picture = imageurlfromfirestore == "" ?pictureu: imageurlfromfirestore;
-                            var enrollment = enrollmentController.text == "" ? dataa['enrollmentNo'] : enrollmentController.text;
-                            var department = departmentController.text == "" ? dataa['deptname'] : departmentController.text;
-                            var skillset = skillsetController.text == "" ? dataa['skillset'] :  skillsetController.text;
-                            updateData(dataa['id'],full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset);
-                            getuserrDataup(dataa['id']);
-
-
-                           //  if(dataa['phoneNumber'] == ""){
-                           //   print("no number found");
-                           //   // startPhoneAuth(PhoneNo);
-                           //   // Navigator.push(
-                           //   //   context,
-                           //   //   MaterialPageRoute(builder: (context) =>  VerificationCodeScreen()),
-                           //   // );
-                           //
-                           // }else{
-                           //   print("yes");
-                           //   // updateData(dataa['id'],full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset);
-                           //   // getuserrDataup(dataa['id']);
-                           // }
-
-
-
-                          },
-                          child: Text('Update'),
-                        ),
-                        SizedBox(height: 30,)
-                      ],
+                      ),
                     ),
+                  )),
+              Flexible(
+                  flex: 3,
+                  child: Container(
+                      width: double.infinity,
+                      // color: Colors.red,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextField(
+                                controller: userNameController,
+                                decoration: InputDecoration(
+                                  labelStyle:   TextStyle(
+                                      color: Colors.black
+                                  ),
+                                  border: OutlineInputBorder(),
+                                  labelText: full_nameu,
+                                  hintText: "Full Name",
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  fillColor: Colors.white54,
+                                  //filled: true
+
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextField(
+                                enabled: false,
+                                controller: emailController,
+                                decoration: InputDecoration(
+                                  labelStyle:   TextStyle(
+                                      color: Colors.black
+                                  ),
+                                  border: OutlineInputBorder(),
+                                  labelText:  dataa['email'],
+                                  hintText: "Email",
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  fillColor: Colors.white54,
+                                  // hintText: "userName",
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextField(
+                                controller: enrollmentController,
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(
+                                      color: Colors.black
+                                  ),
+                                  border: OutlineInputBorder(),
+                                  labelText:  enrollmentu,
+                                  hintText: "Enrollment  Number",
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextField(
+                                controller: departmentController,
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(
+                                      color: Colors.black
+                                  ),
+                                  border: OutlineInputBorder(),
+                                  labelText: departmentu,
+                                  hintText: "Department Name",
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextField(
+                                controller: ageController,
+                                decoration: InputDecoration(
+                                  labelStyle:   TextStyle(
+                                      color: Colors.black
+                                  ),
+                                  border: OutlineInputBorder(),
+                                  labelText : ageeu,
+                                  hintText: "Age",
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextField(
+                                controller: genderController,
+                                decoration: InputDecoration(
+                                  labelStyle:   TextStyle(
+                                      color: Colors.black
+                                  ),
+                                  border: OutlineInputBorder(),
+                                  labelText: genderu,
+                                  hintText: "Gender",
+                                  hintStyle: TextStyle(color: Colors.grey),
+
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextField(
+                                controller: phoneNumberController,
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(
+                                      color: Colors.black
+                                  ),
+                                  border: OutlineInputBorder(),
+                                  labelText: PhoneNou,
+                                  hintText: "Phone Number",
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(15),
+                              child: TextField(
+
+                                controller: skillsetController,
+                                decoration: InputDecoration(
+
+                                  labelStyle: TextStyle(
+                                      color: Colors.black
+                                  ),
+                                  border: OutlineInputBorder(),
+                                  labelText: skillsetu,
+                                  hintText: "Game Skill",
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                            ),
+
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.teal[900],
+                                onPrimary: Colors.white,
+                                shadowColor: Colors.green,
+                                elevation: 6,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(32.0)),
+                                minimumSize: Size(200, 50), //////// HERE
+                              ),
+                              onPressed: () {
+                                var full_name = userNameController.text == "" ? full_nameu: userNameController.text;
+                                var gender = genderController.text == "" ?dataa['gender'] : genderController.text;
+                                var agee = ageController.text == "" ? dataa['age'] : ageController.text;
+                                var PhoneNo = phoneNumberController.text == "" ? dataa['phoneNumber'] : phoneNumberController.text;
+                                var picture = imageurlfromfirestore == "" ?pictureu: imageurlfromfirestore;
+                                var enrollment = enrollmentController.text == "" ? dataa['enrollmentNo'] : enrollmentController.text;
+                                var department = departmentController.text == "" ? dataa['deptname'] : departmentController.text;
+                                var skillset = skillsetController.text == "" ? dataa['skillset'] :  skillsetController.text;
+                                updateData(dataa['id'],full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset);
+                                getuserrDataup(dataa['id']);
+
+
+                                //  if(dataa['phoneNumber'] == ""){
+                                //   print("no number found");
+                                //   // startPhoneAuth(PhoneNo);
+                                //   // Navigator.push(
+                                //   //   context,
+                                //   //   MaterialPageRoute(builder: (context) =>  VerificationCodeScreen()),
+                                //   // );
+                                //
+                                // }else{
+                                //   print("yes");
+                                //   // updateData(dataa['id'],full_name,gender,agee,PhoneNo,picture,enrollment,department,skillset);
+                                //   // getuserrDataup(dataa['id']);
+                                // }
+
+
+
+                              },
+                              child: Text('Update'),
+                            ),
+                            SizedBox(height: 30,)
+                          ],
+                        ),
+                      )
                   )
               )
-          )
+            ],
+          ),
+          Visibility(
+            visible: isloading,
+            child: Container(
+              color: Colors.black.withOpacity(0.5), // Overlay color
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ),
         ],
-      ),
+      )
     );
   }
 }

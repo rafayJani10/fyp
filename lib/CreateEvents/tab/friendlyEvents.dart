@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/databaseManager/databaseManager.dart';
 import '../../UIcomponents/UIcomponents.dart';
+import 'package:http/http.dart' as http;
 
 class friendlyEvent extends StatefulWidget {
   const friendlyEvent({Key? key}) : super(key: key);
@@ -29,6 +30,7 @@ class _friendlyEventState extends State<friendlyEvent> {
   var teamAlist = [];
   var selectedTp = "2";
   var tteams = "2";
+  var deviceToken = "";
 
   var timeSlotsList = ['9-10 am','10-11 am','11-12 am','12-1 pm','3-4 pm','4-5 pm'];
   var userSelectedTime = [];
@@ -140,6 +142,28 @@ class _friendlyEventState extends State<friendlyEvent> {
       date = "Pick a Date";
     });
   }
+  Future getAdminDeviceToken()async{
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .get();
+
+    querySnapshot.docs.forEach((doc) {
+      final roles = doc.get('roles');
+      print(roles);
+      // prints the name value of each document in the "users" collection
+      if(roles == -1){
+        setState(() {
+          deviceToken = doc.get('deviceToken');
+        });
+        print(deviceToken);
+
+      }else{
+        print('sorry no admin found');
+      }
+      print("device token ::::::::: $deviceToken");
+      //print(authorName);
+    });
+  }
 
 
   @override
@@ -148,6 +172,7 @@ class _friendlyEventState extends State<friendlyEvent> {
     super.initState();
     getUserData();
     getTimeSlot();
+    getAdminDeviceToken();
   }
 
   @override
@@ -491,7 +516,23 @@ class _friendlyEventState extends State<friendlyEvent> {
                   if (eventCreate == true) {
                     showAlertDialog(
                         context, "Done", "Event created successfully");
+
                     clearTextInput();
+                    var data = {
+                      'to': deviceToken,
+                      'priority': 'high',
+                      'notification' : {
+                        'title' : 'New Event',
+                        'body' : 'New friendly event created'
+                      }
+                    };
+                    await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+                        body: jsonEncode(data) ,
+                        headers: {
+                          'Content-Type' : 'application/json; character=UTF-8',
+                          'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
+                        }
+                    );
                   } else {
                     showAlertDialog(context, "Error", "Event Not created");
                     clearTextInput();

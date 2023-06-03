@@ -287,15 +287,31 @@ class _MytournamentEventListState extends State<MytournamentEventList> {
                                ),
                                Align(
                                  alignment: Alignment.topRight,
-                                 child: Container(
-                                   height: 30,
-                                   width: 80,
-                                   color: snapshot.data?['approval']! == true ? Colors.green : Colors.red,
-                                   child: Center(
-                                     child: Text(snapshot.data?['approval']! == true ? 'Approved' : 'Not Approved',
-                                       style: TextStyle(fontSize: 10, color: Colors.white),),
-                                   ),
-                                 ),
+                                 child: snapshot.data?['approval']! != true
+                                   ? Container(
+                                     height: 30,
+                                     width: 100,
+                                     //color: Colors.white,
+                                     child: Row(
+                                       children: [
+                                        Center(child:  Icon(Icons.schedule,color: Colors.orangeAccent,)),
+                                         SizedBox(width: 5,),
+                                         Text("pending..", style: TextStyle(color: Colors.orangeAccent),)
+                                       ],
+                                     )
+                                 )
+                                   : Container(
+                                     height: 30,
+                                     width: 100,
+                                     //color: Colors.white,
+                                     child: Row(
+                                       children: [
+                                         Center(child:  Icon(Icons.task_alt_outlined,color: Colors.lightGreen,)),
+                                         SizedBox(width: 5,),
+                                         Text("Approved", style: TextStyle(color: Colors.lightGreen),)
+                                       ],
+                                     )
+                                 )
                                )
                              ],
                            ),

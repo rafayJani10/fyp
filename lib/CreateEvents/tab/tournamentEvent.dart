@@ -533,6 +533,8 @@ class _tournamentEventState extends State<tournamentEvent> {
                         borderRadius: BorderRadius.circular(32.0)),
                   ),
                   onPressed: () async{
+                    print(";;;;;;;;;;;;;;;;;;;;;;");
+                    print(deviceToken);
 
                     if(login_user_phoneNumber == "" || login_user_dept == ""){
                       showAlertDialog(context, "Error", "Kindly update your profile");
@@ -595,7 +597,7 @@ class _tournamentEventState extends State<tournamentEvent> {
                               }
                           );
 
-                          showAlertDialog(context,"Done","Event created successfully");
+                          showAlertDialog(context,"Done","Event created successfully, waiting for approval");
 
                           clearTextInput();
                         }else{
