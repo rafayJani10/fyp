@@ -250,9 +250,7 @@ class _tournamentEventListState extends State<tournamentEventList> {
                                                                     top: 15),
                                                             height: 50,
                                                             child: Text(
-                                                                snapshot.data?.docs[
-                                                                        index]
-                                                                    ['name'],
+                                                                snapshot.data?.docs[index]['name'],
                                                                 softWrap: false,
                                                                 maxLines: 1,
                                                                 overflow:

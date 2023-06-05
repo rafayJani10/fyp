@@ -121,10 +121,10 @@ class DatabaseManager {
       Map<String, dynamic> data = queryDocumentSnapshot.data();
       var emails = data['email'];
       var password = data['password'];
-      print("input id : $emailcheck");
-      print("input password : $passwordcheck");
-      print("id from firebase : $emails");
-      print("password from firebase : $password");
+      // print("input id : $emailcheck");
+      // print("input password : $passwordcheck");
+      // print("id from firebase : $emails");
+      // print("password from firebase : $password");
       if(emails == emailcheck && password == passwordcheck) {
         print("matched $emails");
         //user Data save in shared prefernce

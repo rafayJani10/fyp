@@ -172,8 +172,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 30,
                     ),
                     signInSignUpButton(context, true, () async{
-
-                      print("object ::::::::::::::::::");
                       if(emailController.text == "" || passwordController.text == ""){
                         print("no email password");
                         showAlertDialog(context,"Authentication Failed","Fill the email or password");

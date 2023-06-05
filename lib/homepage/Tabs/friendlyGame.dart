@@ -59,7 +59,9 @@ class _FriendlyGameState extends State<FriendlyGame> {
         });
       }else{
         setState(() {
-          roles = true;
+
+
+
         });
       }
     });
