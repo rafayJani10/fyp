@@ -100,7 +100,7 @@ class DatabaseManager {
           'enrollmentNo': enrollmentno,
           'deptname': deptName,
           'picture' :  "",
-          'phoneNumber': userNumber,
+          'phoneNumber': "",
           'age':'',
           'gender':'',
           'skillset':"",

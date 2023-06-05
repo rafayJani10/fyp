@@ -51,5 +51,7 @@
 	<string>we used to upload user image</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>use image for upload profile image in firebase</string>
+	<key>NSFileProviderDomainUsageDescription</key>
+	<string></string>
 </dict>
 </plist>
