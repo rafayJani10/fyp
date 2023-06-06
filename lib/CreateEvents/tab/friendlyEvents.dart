@@ -34,6 +34,7 @@ class _friendlyEventState extends State<friendlyEvent> {
 
   var timeSlotsList = ['9-10 am','10-11 am','11-12 am','12-1 pm','3-4 pm','4-5 pm'];
   var userSelectedTime = [];
+  var _isloading = false;
 
   List<Map<String, dynamic>> timeSlotModelList = [
     {'time': '9-10 am', 'isBooked': false},
@@ -166,6 +167,8 @@ class _friendlyEventState extends State<friendlyEvent> {
   }
 
 
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -179,372 +182,400 @@ class _friendlyEventState extends State<friendlyEvent> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Center(
-        child: Column(
-          children: <Widget>[
-            Padding(padding: EdgeInsets.only(top: 35)),
-            Padding(
-                padding: EdgeInsets.all(8.0),
-                child: TextField(
-                  obscureText: false,
-                  controller: eventNameController,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintStyle: TextStyle(color: Colors.black),
-                      labelStyle: TextStyle(color: Colors.black),
-                      labelText: 'Event Name',
-                      hintText: "Enter Event Name"),
-                )),
-            Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 60,
-                  //color: Colors.red,
-                  child: Row(
-                    children: [
-                      Flexible(
-                          flex: 1,
-                          child: Container(
-                              height: 60,
-                              //color: Colors.teal,
-                              child: Center(
-                                child: Text("Select Sports"),
-                              ))),
-                      // SizedBox(width: 10,),
-                      Flexible(
-                          flex: 1,
-                          child: Container(
-                            height: 60,
-                            //color: Colors.blue,
-                            child: Center(
-                              child: DropdownButton(
-                                value: selectedsports,
-                                items: sportsList,
-                                onChanged: (String? value) {
-                                  setState(() {
-                                    selectedsports = value!;
-                                  });
-                                },
-                              ),
-                            ),
-                          ))
-                    ],
-                  ),
-                )),
-            Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Container(
-                  width: double.infinity,
-                  height: 60,
-                  //color: Colors.red,
-                  child: Row(
-                    children: [
-                      Flexible(
-                          flex: 1,
-                          child: Container(
-                              height: 60,
-                              //color: Colors.teal,
-                              child: Center(
-                                child: Text("Select Sports Area"),
-                              ))),
-                      // SizedBox(width: 10,),
-                      Flexible(
-                          flex: 1,
-                          child: Container(
-                              height: 60,
+        child: Stack(
+          children: [
+            Column(
+              children: <Widget>[
+                Padding(padding: EdgeInsets.only(top: 35)),
+                Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: TextField(
+                      obscureText: false,
+                      controller: eventNameController,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintStyle: TextStyle(color: Colors.black),
+                          labelStyle: TextStyle(color: Colors.black),
+                          labelText: 'Event Name',
+                          hintText: "Enter Event Name"),
+                    )),
+                Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                      width: double.infinity,
+                      height: 60,
+                      //color: Colors.red,
+                      child: Row(
+                        children: [
+                          Flexible(
+                              flex: 1,
+                              child: Container(
+                                  height: 60,
+                                  //color: Colors.teal,
+                                  child: Center(
+                                    child: Text("Select Sports"),
+                                  ))),
+                          // SizedBox(width: 10,),
+                          Flexible(
+                              flex: 1,
+                              child: Container(
+                                height: 60,
+                                //color: Colors.blue,
+                                child: Center(
+                                  child: DropdownButton(
+                                    value: selectedsports,
+                                    items: sportsList,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        selectedsports = value!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ))
+                        ],
+                      ),
+                    )),
+                Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                      width: double.infinity,
+                      height: 60,
+                      //color: Colors.red,
+                      child: Row(
+                        children: [
+                          Flexible(
+                              flex: 1,
+                              child: Container(
+                                  height: 60,
+                                  //color: Colors.teal,
+                                  child: Center(
+                                    child: Text("Select Sports Area"),
+                                  ))),
+                          // SizedBox(width: 10,),
+                          Flexible(
+                              flex: 1,
+                              child: Container(
+                                  height: 60,
+                                  //color: Colors.blue,
+                                  child: Center(
+                                    child: DropdownButton(
+                                      value: selectedLocation,
+                                      items: locationList,
+                                      onChanged: (String? value) {
+                                        setState(() {
+                                          selectedLocation = value!;
+                                        });
+                                      },
+                                    ),
+                                  )))
+                        ],
+                      ),
+                    )),
+                Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                        width: double.infinity,
+                        height: 60,
+                        child: Row(
+                          children: [
+                            Flexible(
+                                flex: 1,
+                                child: Container(
+                                    height: 60,
+                                    //color: Colors.teal,
+                                    child: Center(
+                                      child: Text("Number of Players"),
+                                    ))),
+                            Flexible(
+                              flex: 1,
                               //color: Colors.blue,
                               child: Center(
                                 child: DropdownButton(
-                                  value: selectedLocation,
-                                  items: locationList,
+                                  value: selectedTp,
+                                  items: selectedTotalPerson,
                                   onChanged: (String? value) {
                                     setState(() {
-                                      selectedLocation = value!;
+                                      selectedTp = value!;
                                     });
                                   },
                                 ),
-                              )))
-                    ],
-                  ),
-                )),
-            Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Container(
-                    width: double.infinity,
-                    height: 60,
-                    child: Row(
-                      children: [
-                        Flexible(
-                            flex: 1,
-                            child: Container(
-                                height: 60,
-                                //color: Colors.teal,
-                                child: Center(
-                                  child: Text("Number of Players"),
-                                ))),
-                        Flexible(
-                          flex: 1,
-                          //color: Colors.blue,
-                          child: Center(
-                            child: DropdownButton(
-                              value: selectedTp,
-                              items: selectedTotalPerson,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  selectedTp = value!;
-                                });
-                              },
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
-                    ))),
-            Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Container(
-                    width: double.infinity,
-                    height: 60,
-                    //color: Colors.red,
-                    child: Row(
-                      children: [
-                        Flexible(
-                            flex: 1,
-                            child: Container(
-                                height: 60,
-                                //color: Colors.teal,
-                                child: Center(
-                                  child: Text("Number of teams"),
-                                ))),
-                        Flexible(
-                          flex: 1,
-                          //color: Colors.blue,
-                          child: Center(
-                            child: DropdownButton(
-                              value: tteams,
-                              items: teams,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  tteams = value!;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ))),
-            Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Container(
-                  //padding: EdgeInsets.all(8.0),
-                  height: 50,
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                              color: Colors.black,
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Flexible(
-                                flex: 3,
+                          ],
+                        ))),
+                Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                        width: double.infinity,
+                        height: 60,
+                        //color: Colors.red,
+                        child: Row(
+                          children: [
+                            Flexible(
+                                flex: 1,
                                 child: Container(
-                                  height: 50,
-                                  child: Center(child: Text(date)),
+                                    height: 60,
+                                    //color: Colors.teal,
+                                    child: Center(
+                                      child: Text("Number of teams"),
+                                    ))),
+                            Flexible(
+                              flex: 1,
+                              //color: Colors.blue,
+                              child: Center(
+                                child: DropdownButton(
+                                  value: tteams,
+                                  items: teams,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      tteams = value!;
+                                    });
+                                  },
                                 ),
                               ),
-                              Flexible(
-                                  flex: 1,
-                                  child: InkWell(
-                                    onTap: () async {
-                                      DateTime? datePicked = await showDatePicker(
-                                        context: context,
-                                        initialDate: DateTime.now(),
-                                        firstDate: DateTime.now(),
-                                        lastDate: DateTime(2030),
-                                      );
-                                      if (datePicked != null) {
-                                        print(
-                                            "${datePicked.day}/${datePicked
-                                                .month}/${datePicked.year}");
-                                        var formattDate =
-                                            "${datePicked.day}/${datePicked
-                                            .month}/${datePicked.year}";
-                                        setState(() {
-                                          date = formattDate;
-                                        });
-                                        CheckTheTimeSlots();
-
-
-                                      }
-                                    },
+                            ),
+                          ],
+                        ))),
+                Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                      //padding: EdgeInsets.all(8.0),
+                      height: 50,
+                      width: double.infinity,
+                      child: Row(
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Flexible(
+                                    flex: 3,
                                     child: Container(
                                       height: 50,
-                                      child: const Center(
-                                          child:
-                                          Icon(Icons.calendar_month_sharp)),
+                                      child: Center(child: Text(date)),
                                     ),
-                                  )),
-                            ],
-                          ),
-                          //color: Colors.green,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                              color: Colors.black,
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Flexible(
-                                flex: 3,
-                                child: Container(
-                                  height: 50,
-                                  child: Center(child: Text('Pick a time')),
-                                ),
-                              ),
-                              Flexible(
-                                  flex: 1,
-                                  child: InkWell(
-                                    onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (BuildContext context) {
-                                          return TimeSlotsDialog(timeSlotsList,userSelectedTime,
-                                                  (value, index) {
-                                                // setState(() {
-                                                //   timeSlotModelList[index]['isBooked'] = value;
-                                                // });
-                                              });
+                                  ),
+                                  Flexible(
+                                      flex: 1,
+                                      child: InkWell(
+                                        onTap: () async {
+                                          DateTime? datePicked = await showDatePicker(
+                                            context: context,
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime.now(),
+                                            lastDate: DateTime(2030),
+                                          );
+                                          if (datePicked != null) {
+                                            print(
+                                                "${datePicked.day}/${datePicked
+                                                    .month}/${datePicked.year}");
+                                            var formattDate =
+                                                "${datePicked.day}/${datePicked
+                                                .month}/${datePicked.year}";
+                                            setState(() {
+                                              date = formattDate;
+                                            });
+                                            CheckTheTimeSlots();
+
+
+                                          }
                                         },
-                                      );
-                                    },
+                                        child: Container(
+                                          height: 50,
+                                          child: const Center(
+                                              child:
+                                              Icon(Icons.calendar_month_sharp)),
+                                        ),
+                                      )),
+                                ],
+                              ),
+                              //color: Colors.green,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Flexible(
+                                    flex: 3,
                                     child: Container(
                                       height: 50,
-                                      child:
-                                      const Center(child: Icon(Icons.timer)),
+                                      child: Center(child: Text('Pick a time')),
                                     ),
-                                  )),
-                            ],
+                                  ),
+                                  Flexible(
+                                      flex: 1,
+                                      child: InkWell(
+                                        onTap: () {
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return TimeSlotsDialog(timeSlotsList,userSelectedTime,
+                                                      (value, index) {
+                                                    // setState(() {
+                                                    //   timeSlotModelList[index]['isBooked'] = value;
+                                                    // });
+                                                  });
+                                            },
+                                          );
+                                        },
+                                        child: Container(
+                                          height: 50,
+                                          child:
+                                          const Center(child: Icon(Icons.timer)),
+                                        ),
+                                      )),
+                                ],
+                              ),
+                              //color: Colors.green,
+                            ),
                           ),
-                          //color: Colors.green,
-                        ),
+                        ],
                       ),
-                    ],
+                    )),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.teal[900],
+                    onPrimary: Colors.white,
+                    shadowColor: Colors.green,
+                    elevation: 6,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32.0)),
                   ),
-                )),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.teal[900],
-                onPrimary: Colors.white,
-                shadowColor: Colors.green,
-                elevation: 6,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(32.0)),
-              ),
-              onPressed: () async {
-                if(login_user_phone_no == "" || login_user_dept == ""){
-                  showAlertDialog(context, "Error", "Kindlu update your profile");
+                  onPressed: () async {
+                    setState(() {
+                      _isloading = true;
+                    });
+                    if(login_user_phone_no == "" || login_user_dept == ""){
+                      showAlertDialog(context, "Error", "Kindlu update your profile");
+                      setState(() {
+                        _isloading = false;
+                      });
 
-                }else{
-                  var sportsImage = "";
-                  if (selectedsports == "Table Tennis") {
-                    setState(() {
-                      sportsImage =
-                      "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/360_F_303275863_EWavqozgkXmiSNoz3zKXoQKcZcGJoGyt.jpeg?alt=media&token=6de2de47-246e-43ac-81d6-4bde71ea869b";
-                    });
-                  } else if (selectedsports == "Futsul") {
-                    setState(() {
-                      sportsImage =
-                      "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/soccer-ball-design_1818040.jpeg?alt=media&token=735416c8-6e71-41c8-92b5-b963c628ea8a";
-                    });
-                  } else if (selectedsports == "Cricket") {
-                    setState(() {
-                      sportsImage =
-                      "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/cricket.jpeg?alt=media&token=d04e57c6-3d39-4733-a164-15e7fbe3d9df";
-                    });
-                  } else if (selectedsports == "Bedminton") {
-                    setState(() {
-                      sportsImage =
-                      "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/360_F_239265142_41Z8WiZDNdGsjVhcK4IGE2EFnZSJxfxs.jpeg?alt=media&token=9459d5c5-cab4-4864-99b0-4bb5a5e1e79e";
-                    });
-                  } else {
-                    setState(() {
-                      sportsImage =
-                      "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/sport-logo-free-vector.jpeg?alt=media&token=05274441-cbe9-4ec7-b1f7-15b16765ec0f";
-                    });
-                  }
-                  setState(() {
-                    teamAlist.add(EventAuthor);
-                  });
+                    }else{
+                      var sportsImage = "";
+                      if (selectedsports == "Table Tennis") {
+                        setState(() {
+                          sportsImage =
+                          "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/360_F_303275863_EWavqozgkXmiSNoz3zKXoQKcZcGJoGyt.jpeg?alt=media&token=6de2de47-246e-43ac-81d6-4bde71ea869b";
+                        });
+                      } else if (selectedsports == "Futsul") {
+                        setState(() {
+                          sportsImage =
+                          "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/soccer-ball-design_1818040.jpeg?alt=media&token=735416c8-6e71-41c8-92b5-b963c628ea8a";
+                        });
+                      } else if (selectedsports == "Cricket") {
+                        setState(() {
+                          sportsImage =
+                          "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/cricket.jpeg?alt=media&token=d04e57c6-3d39-4733-a164-15e7fbe3d9df";
+                        });
+                      } else if (selectedsports == "Bedminton") {
+                        setState(() {
+                          sportsImage =
+                          "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/360_F_239265142_41Z8WiZDNdGsjVhcK4IGE2EFnZSJxfxs.jpeg?alt=media&token=9459d5c5-cab4-4864-99b0-4bb5a5e1e79e";
+                        });
+                      } else {
+                        setState(() {
+                          sportsImage =
+                          "https://firebasestorage.googleapis.com/v0/b/bukc-sports-hub.appspot.com/o/sport-logo-free-vector.jpeg?alt=media&token=05274441-cbe9-4ec7-b1f7-15b16765ec0f";
+                        });
+                      }
+                      setState(() {
+                        teamAlist.add(EventAuthor);
+                      });
 
-                  if (eventNameController.text == "Event Name" ||
-                      userSelectedTime == null ||
-                      date == "Pick a Date") {
-                    showAlertDialog(context, "Error", "Kindly add all event info");
-                  } else {
-                    var eventCreate = await dbmanager.createFriendlyEventData(
-                        EventAuthor,
-                        eventNameController.text,
-                        selectedLocation,
-                        selectedsports,
-                        sportsImage,
-                        userSelectedTime,
-                        date,
-                        selectedTp,
-                        selectedTp,
-                        1,
-                        0,
-                        teamAlist);
-                    if (eventCreate == true) {
-                      showAlertDialog(
-                          context, "Done", "Event created successfully");
+                      if (eventNameController.text == "Event Name" ||
+                          userSelectedTime == null ||
+                          date == "Pick a Date") {
+                        showAlertDialog(context, "Error", "Kindly add all event info");
+                        setState(() {
+                          _isloading = false;
+                        });
+                      } else {
+                        var eventCreate = await dbmanager.createFriendlyEventData(
+                            EventAuthor,
+                            eventNameController.text,
+                            selectedLocation,
+                            selectedsports,
+                            sportsImage,
+                            userSelectedTime,
+                            date,
+                            selectedTp,
+                            selectedTp,
+                            1,
+                            0,
+                            teamAlist);
+                        if (eventCreate == true) {
+                          setState(() {
+                            _isloading = false;
+                          });
+                          showAlertDialog(
+                              context, "Done", "Event created successfully");
 
-                      clearTextInput();
-                      var data = {
-                        'to': deviceToken,
-                        'priority': 'high',
-                        'notification' : {
-                          'title' : 'New Event',
-                          'body' : 'New friendly event created'
+                          clearTextInput();
+                          var data = {
+                            'to': deviceToken,
+                            'priority': 'high',
+                            'notification' : {
+                              'title' : 'New Event',
+                              'body' : 'New friendly event created'
+                            }
+                          };
+                          await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+                              body: jsonEncode(data) ,
+                              headers: {
+                                'Content-Type' : 'application/json; character=UTF-8',
+                                'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
+                              }
+                          );
+                        } else {
+                          showAlertDialog(context, "Error", "Event Not created");
+                          setState(() {
+                            _isloading = false;
+                          });
+                          clearTextInput();
                         }
-                      };
-                      await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-                          body: jsonEncode(data) ,
-                          headers: {
-                            'Content-Type' : 'application/json; character=UTF-8',
-                            'Authorization' : 'key=AAAA4vnms68:APA91bHEf5AiZNGMPVT4jhpwG-ch-xibl1bHViNssWa21fYTsCCs0AMuLGPVqzDnhNOcwGTc_YvGrUqAyKSf2VU-jAJZ70I8J6vhHbZMd2WK898FjxZJ2pJAUv6H_MBF4-lUridh9q8P'
-                          }
-                      );
-                    } else {
-                      showAlertDialog(context, "Error", "Event Not created");
-                      clearTextInput();
+                      }
                     }
-                  }
-                }
-              },
-              child: Text('Create Event'),
+                  },
+                  child: Text('Create Event'),
+                ),
+              ],
+            ),
+            Visibility(
+              visible: _isloading,
+              child: Container(
+                // color: Colors.black.withOpacity(0.5), // Overlay color
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
             ),
           ],
-        ),
+        )
       ),
     );
   }

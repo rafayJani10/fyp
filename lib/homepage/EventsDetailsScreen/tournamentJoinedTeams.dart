@@ -36,7 +36,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
   Future getLoginUserData() async {
     var data = await dbmanager.getData('userBioData');
     var daaa = json.decode(data);
-    var userid = daaa['id'];
+    //var userid = daaa['id'];
     setState(() {
       loginUserName = daaa['fullname'];
       loginuserNO = daaa["phoneNumber"];
@@ -55,12 +55,12 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
         await firestore.collection('TourEvents').doc(widget.eventID).get();
     if (docSnapshot.exists) {
       Map<String, dynamic>? data = docSnapshot.data();
-      print(data?['joinedTeamList']);
       setState(() {
+        joinedTeamList =[];
         for (var i in data?['joinedTeamList']) {
           joinedTeamList.add(i);
         }
-        print(joinedTeamList);
+        print("joined team list : ${joinedTeamList}");
         if (joinedTeamList.isNotEmpty) {
           _isloading = false;
         } else {
@@ -156,9 +156,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                                 eventid);
                             if (jteamHitter == false) {
                               teamName_textController.clear();
-                              //tplayer_textController.clear();
                               Navigator.pop(context);
-                              print("sorry");
                               showAlertDialog(context, "Something Wrong!",
                                   "you are not registered in this team ,try again");
                             } else {
@@ -170,6 +168,7 @@ class _tournamentJoinedTeamsState extends State<tournamentJoinedTeams> {
                                 joinedTeamList = [];
                                 getJoinedTeamList();
                               });
+
 
                               Navigator.pop(context);
                               showAlertDialog(

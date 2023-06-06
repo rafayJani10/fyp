@@ -284,15 +284,12 @@ class DatabaseManager {
 
   /// Login user data save in shared prefernce
   saveData(String key, Map<String, dynamic> value) async {
-    print("inside save data shared prefernce");
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(key, jsonEncode(value));
   }
 
   Future<dynamic> getData(String key) async {
     final prefs = await SharedPreferences.getInstance();
-    print("isnide get function ::::::::::::::::::::::::::::::");
-    print(prefs.get(key));
     return prefs.get(key);
   }
 

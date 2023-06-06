@@ -100,7 +100,7 @@ class NotificationServices {
 
   Future<String?> getDeviceToken()async{
     String? token = await messaging.getToken();
-    print('::::::::::::::::::::: $token');
+    print('Device Token : $token');
     return token!;
   }
 

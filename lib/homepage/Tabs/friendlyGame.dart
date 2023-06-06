@@ -20,8 +20,6 @@ class _FriendlyGameState extends State<FriendlyGame> {
   var serachList = [];
   var searchKey = "";
   var roles = false;
-
-  //Login user data
   var dept = "";
   var phoneNumber = "";
   var _isloading = true;
@@ -45,26 +43,46 @@ class _FriendlyGameState extends State<FriendlyGame> {
     yield* _search;
   }
 
-  Future<dynamic> getUserData() async {
+  Future getLoginUserID() async{
     var data = await dbmanager.getData('userBioData');
     var daaa = json.decode(data);
     setState(() {
-      dept = daaa['deptname'];
-      phoneNumber = daaa['phoneNumber'];
-      print(dept + phoneNumber);
-
-      if(daaa['roles'] == 2){
-        setState(() {
-          roles = false;
-        });
-      }else{
-        setState(() {
-
-
-
-        });
-      }
+      loginUserid = daaa['id'];
+      print("____________________ Login User Id _____________________");
+      print(loginUserid);
     });
+    getUserData();
+}
+
+  Future<dynamic> getUserData() async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      DocumentSnapshot userSnapshot =
+      await firestore.collection('users').doc(loginUserid).get();
+      if (userSnapshot.exists) {
+        Map<String, dynamic>? data = userSnapshot.data() as Map<String, dynamic>?;
+        setState(() {
+          dept = data?["deptname"];
+          phoneNumber = data?['phoneNumber'];
+          print(" Login User Dept & phoneNumber : ${dept + phoneNumber}");
+          if (data!['roles'] == 2) {
+            setState(() {
+              print("Login user role : student");
+              roles = false;
+            });
+          } else {
+            setState(() {
+              roles = true;
+              print("Login user role : Admin}");
+            });
+          }
+        });
+      } else {
+        print('User not found.');
+      }
+    } catch (e) {
+      print('Error fetching password: $e');
+    }
   }
 
   Future<void> deleteDocument(documentId, authore_id) async {
@@ -98,7 +116,7 @@ class _FriendlyGameState extends State<FriendlyGame> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getUserData();
+    getLoginUserID();
   }
 
   @override

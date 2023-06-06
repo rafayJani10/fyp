@@ -111,14 +111,10 @@ class _tournamentEventDetailState extends State<tournamentEventDetail> {
                         ),
                         onPressed: () async {
                           var jteam = await joinTheTeamButton(pSkill_textController.text);
-                          print("ccccccc");
                           if(pSkill_textController.text == ''){
-                            print("jdbjggffaj");
-
                             showAlertDialog(context, "Error!", "Kindly add your skill");
                           }else{
                             if(jteam == true ){
-
                               var _joinedteam = await dbmanager.joinedMemeberInteam(widget.teamID, LoginUserId);
                               Navigator.pop(context);
                               if(_joinedteam == true){

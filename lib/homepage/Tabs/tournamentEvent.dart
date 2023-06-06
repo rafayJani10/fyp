@@ -41,24 +41,46 @@ class _tournamentEventListState extends State<tournamentEventList> {
     yield* _search;
   }
 
-  Future<dynamic> getUserData() async {
+  Future getLoginUserID() async{
     var data = await dbmanager.getData('userBioData');
     var daaa = json.decode(data);
     setState(() {
-      dept = daaa['deptname'];
-      phoneNumber = daaa['phoneNumber'];
-      print(dept + phoneNumber);
-
-      if(daaa['roles'] == 2){
-        setState(() {
-          roles = false;
-        });
-      }else{
-        setState(() {
-          roles = true;
-        });
-      }
+      loginUserid = daaa['id'];
+      print("____________________ Login User Id _____________________");
+      print(loginUserid);
     });
+    getUserData();
+  }
+
+  Future<dynamic> getUserData() async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      DocumentSnapshot userSnapshot =
+      await firestore.collection('users').doc(loginUserid).get();
+      if (userSnapshot.exists) {
+        Map<String, dynamic>? data = userSnapshot.data() as Map<String, dynamic>?;
+        setState(() {
+          dept = data?["deptname"];
+          phoneNumber = data?['phoneNumber'];
+          print(" Login User Dept & phoneNumber : ${dept + phoneNumber}");
+          if (data!['roles'] == 2) {
+            setState(() {
+              print("Login user role : student");
+              roles = false;
+            });
+          } else {
+            setState(() {
+              roles = true;
+              print("Login user role : Admin}");
+            });
+          }
+        });
+      } else {
+        print('User not found.');
+      }
+    } catch (e) {
+      print('Error fetching password: $e');
+    }
   }
 
   Future<void> deleteDocument(documentId, authore_id) async {
@@ -94,7 +116,7 @@ class _tournamentEventListState extends State<tournamentEventList> {
     // TODO: implement initState
     super.initState();
     NotificationServices().getDeviceToken();
-    getUserData();
+    getLoginUserID();
   }
 
   @override
@@ -202,7 +224,7 @@ class _tournamentEventListState extends State<tournamentEventList> {
                                             color: Colors.grey.withOpacity(0.3),
                                             spreadRadius: 6,
                                             blurRadius: 7,
-                                            offset: Offset(0,
+                                            offset: const Offset(0,
                                                 3), // changes position of shadow
                                           ),
                                         ],
@@ -245,7 +267,7 @@ class _tournamentEventListState extends State<tournamentEventList> {
                                                             width:
                                                                 double.infinity,
                                                             padding:
-                                                                EdgeInsets.only(
+                                                                const EdgeInsets.only(
                                                                     left: 10,
                                                                     top: 15),
                                                             height: 50,
@@ -272,18 +294,18 @@ class _tournamentEventListState extends State<tournamentEventList> {
                                                               width: double
                                                                   .infinity,
                                                               height: 50,
-                                                              padding: EdgeInsets
+                                                              padding: const EdgeInsets
                                                                   .only(
                                                                       left: 10),
                                                               //color: Colors.green,
                                                               child: Column(
                                                                 children: [
-                                                                  SizedBox(
+                                                                  const SizedBox(
                                                                       height:
                                                                           5),
                                                                   Row(
                                                                     children: [
-                                                                      Icon(
+                                                                      const Icon(
                                                                         Icons
                                                                             .sports,
                                                                         color: Colors
